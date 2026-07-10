@@ -1,0 +1,117 @@
+# ─────────────────────────────────────────────────────────────
+# OS-generated files
+# ─────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ─────────────────────────────────────────────────────────────
+# Secrets / environment (API keys never belong in git)
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret
+.secrets
+
+# ─────────────────────────────────────────────────────────────
+# Node / package managers
+# ─────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Keep lock files tracked for reproducible installs:
+# package-lock.json / yarn.lock / pnpm-lock.yaml are intentionally NOT ignored.
+
+# ─────────────────────────────────────────────────────────────
+# Build / bundle outputs
+# ─────────────────────────────────────────────────────────────
+dist/
+dist-electron/
+dist_electron/
+out/
+release/
+release-build/
+build/
+.web/
+
+# ─────────────────────────────────────────────────────────────
+# Vite / tooling caches
+# ─────────────────────────────────────────────────────────────
+.vite/
+.cache/
+.temp/
+tmp/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# ─────────────────────────────────────────────────────────────
+# Electron-builder artifacts
+# ─────────────────────────────────────────────────────────────
+builder-debug.yml
+builder-effective-config.yaml
+latest.yml
+latest-mac.yml
+latest-linux.yml
+latest-linux-arm64.yml
+*-unpacked/
+squirrel-windows/
+
+# ─────────────────────────────────────────────────────────────
+# Testing
+# ─────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+*.lcov
+
+# ─────────────────────────────────────────────────────────────
+# Local runtime data / development databases
+# (electron-store writes to the OS user-data directory, but any
+# repo-local SQLite or JSON stores used during dev go here.)
+# ─────────────────────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+dev-data/
+local-storage/
+
+# ─────────────────────────────────────────────────────────────
+# Editor / IDE
+# ─────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# ─────────────────────────────────────────────────────────────
+# Misc
+# ─────────────────────────────────────────────────────────────
+*.log
+logs/
