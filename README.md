@@ -18,6 +18,24 @@ A tongue-in-cheek, retro-styled app for generating TPS reports (inspired by the 
 - **Design & architecture:** [docs/design-doc.md](docs/design-doc.md)
 - **UI mockup:** [docs/ui-mockup.html](docs/ui-mockup.html)
 
+## Getting started
+
+The app is built with Electron, electron-vite, React, and TypeScript, and shares one codebase between the desktop build and the static web "lite" build.
+
+```sh
+npm install
+npm run dev
+```
+
+`npm run dev` launches the desktop app. The same renderer dev server URL it prints can also be opened directly in a regular browser tab to preview the web "lite" experience, since `window.electronAPI` (and therefore desktop-only functionality) is only present inside Electron.
+
+### Build scripts
+
+- `npm run build`: typechecks and builds the desktop app via electron-builder.
+- `npm run build:web`: builds the renderer and copies the platform-agnostic static bundle to `dist-web/` for deployment (for example, to GitHub Pages).
+- `npm run lint` / `npm run format`: ESLint and Prettier for `src/` and the project config files.
+- `npm run typecheck`: strict TypeScript checks for both the main/preload and renderer contexts.
+
 ## Contributing
 
 Please open issues or pull requests for ideas, bugs, or enhancements.

@@ -47,6 +47,7 @@ pnpm-debug.log*
 dist/
 dist-electron/
 dist_electron/
+dist-web/
 out/
 release/
 release-build/
