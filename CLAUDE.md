@@ -49,6 +49,12 @@ When creating a GitHub issue, provide clear descriptions of bugs or feature requ
 
 Write clear, descriptive commit messages that start with a verb. Focus commits on the actual functionality or changes made, not the development process. Reference issue numbers when commits relate to specific GitHub issues. Never auto-commit changes. Always give the user the opportunity to review changes before committing.
 
+When Claude substantially authors or edits the changes in a commit, add a trailer crediting the specific model that helped, naming the model in the trailer, for example:
+
+```markdown
+Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+```
+
 ### Branch management
 
 Create feature branches from main following the pattern `feature/description` or `fix/description`. Keep branches focused on single features or bug fixes.

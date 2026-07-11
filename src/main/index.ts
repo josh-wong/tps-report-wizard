@@ -30,7 +30,17 @@ function createWindow(): void {
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
+    // Only ever hand off http(s) links to the OS browser — never file://,
+    // javascript:, or other schemes that could be smuggled in via
+    // AI-generated report content in a later phase (SEC-3).
+    try {
+      const url = new URL(details.url)
+      if (url.protocol === 'https:' || url.protocol === 'http:') {
+        shell.openExternal(details.url)
+      }
+    } catch {
+      // Malformed URL — ignore rather than risk passing it to the shell.
+    }
     return { action: 'deny' }
   })
 
