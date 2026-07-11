@@ -1,0 +1,69 @@
+# Build artifacts
+dist/
+dist-electron/
+dist_electron/
+out/
+release/
+release-build/
+build/
+.web/
+
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+*.secret
+.secrets
+
+# IDE and editor config
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.log
+logs/
+
+# Cache
+.cache/
+.vite/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Testing and coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Electron packaged output and builder artifacts
+*.exe
+*.dmg
+*.AppImage
+*.blockmap
+builder-debug.yml
+builder-effective-config.yaml
+latest.yml
+latest-mac.yml
+latest-linux.yml
+latest-linux-arm64.yml
+*-unpacked/
+squirrel-windows/
+
+# Local runtime data / development databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+dev-data/
+local-storage/

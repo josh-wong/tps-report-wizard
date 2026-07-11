@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Initech TPS Report Wizard '99 – UI Mockups</title>
+<style>
+  :root {
+    --silver: #c0c0c0;
+    --silver-light: #dfdfdf;
+    --gray: #808080;
+    --navy1: #000080;
+    --navy2: #1084d0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: Tahoma, "MS Sans Serif", Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    color: #000;
+    background: #008080;
+    -webkit-font-smoothing: none;
+  }
+  .raised {
+    background: var(--silver);
+    box-shadow: inset -1px -1px #000, inset 1px 1px #fff,
+                inset -2px -2px var(--gray), inset 2px 2px var(--silver-light);
+  }
+  .sunken {
+    background: #fff;
+    box-shadow: inset -1px -1px #fff, inset 1px 1px var(--gray),
+                inset -2px -2px var(--silver-light), inset 2px 2px #000;
+  }
+  .window { width: 640px; max-width: 96vw; margin: 0 auto 24px; }
+  .titlebar {
+    background: linear-gradient(90deg, var(--navy1), var(--navy2));
+    color: #fff; font-weight: bold;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 3px 3px 3px 6px; user-select: none;
+  }
+  .titlebar .t-left { display: flex; align-items: center; gap: 6px; }
+  .titlebar .t-btns { display: flex; gap: 2px; }
+  .t-btn {
+    width: 18px; height: 16px; line-height: 12px; text-align: center;
+    color: #000; font-weight: bold; font-size: 11px; cursor: pointer;
+  }
+  .t-btn:active { box-shadow: inset -1px -1px #fff, inset 1px 1px #000,
+                inset -2px -2px var(--silver-light), inset 2px 2px var(--gray); }
+  .menubar { display: flex; gap: 2px; padding: 2px 6px; border-bottom: 1px solid var(--gray); }
+  .menubar span { padding: 2px 7px; cursor: pointer; }
+  .menubar span:hover { background: var(--navy1); color: #fff; }
+  .menubar span u { text-decoration: underline; }
+  .body { padding: 12px; }
+  fieldset { border: 1px solid var(--gray); border-top-color:#fff; border-left-color:#fff; margin: 0 0 12px; padding: 12px; }
+  fieldset legend { padding: 0 4px; }
+  label { display: inline-block; }
+  .field { padding: 4px 6px; }
+  .btn {
+    padding: 4px 12px; font-family: inherit; font-size: 12px; cursor: pointer;
+    border: none; color: #000;
+  }
+  .btn:active { box-shadow: inset -1px -1px #fff, inset 1px 1px #000,
+                inset -2px -2px var(--silver-light), inset 2px 2px var(--gray); }
+  .statusbar { display: flex; justify-content: space-between; gap: 6px; padding: 3px; border-top: 1px solid #fff; }
+  .status-panel {
+    padding: 2px 6px; flex: 0 0 auto;
+    box-shadow: inset -1px -1px #fff, inset 1px 1px var(--gray);
+  }
+  .memo {
+    background: #ffffcc; border: 1px solid var(--gray);
+    padding: 6px 8px; margin-bottom: 12px; color: #555;
+  }
+  .green { color: #008000; }
+  .red { color: #a02020; }
+  .badge { border: 1px solid var(--gray); padding: 1px 6px; }
+  .mono { font-family: "Courier New", monospace; }
+  input[type=text], input[type=password], select, textarea {
+    font-family: inherit; font-size: 12px; border: none; padding: 4px 6px;
+    background: #fff; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus, .btn:focus { outline: 1px dotted #000; outline-offset: -4px; }
+  textarea { resize: none; }
+  .app-header { padding: 18px 12px 6px; text-align: center; color: #fff; }
+  .app-header h1 { margin: 0; font-size: 15px; }
+  .app-header p { margin: 4px 0 0; font-size: 11px; color: #cfe8e8; }
+  .switcher {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 4px;
+    padding: 10px; margin: 0 auto 8px; max-width: 96vw;
+  }
+  .tab { padding: 5px 14px; cursor: pointer; border: none; font-family: inherit; font-size: 12px; }
+  .tab.active { box-shadow: inset -1px -1px #fff, inset 1px 1px #000,
+                inset -2px -2px var(--silver-light), inset 2px 2px var(--gray);
+                font-weight: bold; }
+  .screen { display: none; padding-bottom: 30px; }
+  .screen.active { display: block; }
+  .ctl { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+  .box { width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; flex: 0 0 auto; }
+  .radio { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto; display:inline-flex; align-items:center; justify-content:center; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: #000; }
+  .row { display: grid; grid-template-columns: 100px 1fr; gap: 6px 10px; align-items: center; }
+  .stack > * + * { margin-top: 8px; }
+  .note { color: #555; font-size: 11px; }
+  .hidden { display: none !important; }
+  .samples { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sample { padding: 8px; cursor: pointer; }
+  .sample:active { box-shadow: inset -1px -1px #fff, inset 1px 1px #000,
+                inset -2px -2px var(--silver-light), inset 2px 2px var(--gray); }
+  .sample .s-title { font-weight: bold; margin-bottom: 3px; }
+  .sample .s-desc { color: #555; font-size: 11px; }
+  .bobs { display: flex; gap: 10px; margin-bottom: 12px; }
+  .bob { text-align: center; }
+  .bob-face { width: 46px; height: 46px; margin: 0 auto 3px; display:flex; align-items:center; justify-content:center; font-size: 22px; }
+  .verdict { display: inline-block; padding: 4px 12px; font-weight: bold; border: 2px solid; }
+  .v-circle { background: #ffffcc; border-color: #a08000; color: #806000; }
+  .v-basement { background: #ffe0e0; border-color: #a02020; color: #802020; }
+  .v-ship { background: #e0ffe0; border-color: #008000; color: #006000; }
+  .preview-canvas { background: #808080; padding: 20px; box-shadow: inset 2px 2px #606060; }
+  .paper { background: #fff; color: #000; width: 380px; max-width: 100%; margin: 0 auto 16px; padding: 26px 30px; box-shadow: 3px 3px 6px rgba(0,0,0,.4); font-size: 11px; line-height: 1.5; }
+  .paper.cover { border-top: 6px double #000; }
+  .paper h2 { text-align: center; letter-spacing: 1px; margin: 0 0 4px; font-size: 15px; }
+  .paper .stamp { text-align:center; border:1px solid #000; display:inline-block; padding:2px 8px; font-size:10px; transform: rotate(-4deg); margin-top: 8px; }
+  .paper hr { border: none; border-top: 1px solid #000; margin: 10px 0; }
+  .kv { display:grid; grid-template-columns: 90px 1fr; gap: 3px 8px; margin-top: 8px; }
+  .footer-note { text-align:center; color:#fff; font-size:11px; padding: 4px 12px 30px; opacity:.85; }
+  /* modal + toast */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: center; justify-content: center; z-index: 50; }
+  .overlay.show { display: flex; }
+  .dialog { width: 380px; max-width: 92vw; }
+  .dialog .body { padding: 14px; display: flex; gap: 12px; align-items: flex-start; }
+  .dialog .icon { font-size: 28px; flex: 0 0 auto; }
+  .dialog .actions { display: flex; justify-content: center; gap: 8px; padding: 0 14px 14px; }
+  .toast { position: fixed; bottom: 16px; right: 16px; width: 300px; z-index: 60; display: none; }
+  .toast.show { display: block; }
+  .toast .body { padding: 10px 12px; color:#555; }
+  .hint { font-size: 10px; color:#cfe8e8; text-align:center; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>Initech TPS Report Wizard '99</h1>
+  <p>UI mockups &middot; design reference (not the build) &middot; click a screen below</p>
+</div>
+
+<div class="switcher raised">
+  <button class="tab active" data-target="s-main">Main</button>
+  <button class="tab" data-target="s-empty">Empty / Samples</button>
+  <button class="tab" data-target="s-settings">Settings</button>
+  <button class="tab" data-target="s-bobs">The Bobs</button>
+  <button class="tab" data-target="s-print">Print Preview</button>
+</div>
+
+<!-- ============ SCREEN: MAIN ============ -->
+<div class="screen active" id="s-main">
+  <div class="window raised">
+    <div class="titlebar">
+      <span class="t-left">&#128196; New TPS Report &mdash; TPS-0042</span>
+      <span class="t-btns">
+        <span class="t-btn raised" id="btn-min" title="Minimize">_</span><span class="t-btn raised">&#9633;</span><span class="t-btn raised" id="btn-close" title="Close">&times;</span>
+      </span>
+    </div>
+    <div class="menubar">
+      <span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>R</u>eports</span><span><u>F</u>lair</span><span><u>H</u>elp</span>
+    </div>
+    <div class="body">
+      <div class="memo hidden" id="cover-nag">&#128172; Yeeeah&hellip; if you could go ahead and re-attach that new cover sheet, that'd be greeeat. &mdash; B. Lumbergh</div>
+
+      <div class="row" style="margin-bottom:10px;">
+        <label>Report ID</label><div class="field sunken mono">TPS-0042</div>
+        <label>Author</label><div class="field sunken">Peter Gibbons</div>
+        <label>Department</label><div class="field sunken">Software / Y2K Remediation</div>
+      </div>
+
+      <label style="display:block;margin-bottom:4px;">Describe what happened (we'll write the rest) &mdash; <span class="note">your input</span></label>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <div class="sunken" style="flex:1;"><input type="text" value="the printer jammed again" style="color:#555;"></div>
+        <button class="btn raised">&#10024; Generate</button>
+      </div>
+
+      <label style="display:block;margin-bottom:4px;">Report body &mdash; <span class="note">AI-generated output</span></label>
+      <div class="sunken" style="margin-bottom:12px;">
+        <textarea rows="4" style="line-height:1.5;color:#333;">Per the initiative to align cross-functional stakeholder deliverables, this specification documents a recurring peripheral output event impacting throughput. Corrective action items have been circled back and socialized with all relevant parties pending further alignment.</textarea>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <label class="ctl" id="cover-toggle"><span class="box sunken" id="cover-box">&#10003;</span> Attach new cover sheet <span class="note">(you got the memo)</span></label>
+        <label class="ctl">Tone
+          <div class="sunken" style="padding-right:2px;">
+            <select><option>Passive-Aggressive Lumbergh</option><option>Corporate</option><option>Milton Mumble</option><option>The Bobs</option></select>
+          </div>
+        </label>
+      </div>
+      <div class="note" style="margin-top:8px;">&#9432; Try it: uncheck the cover sheet, or click minimize / close up top.</div>
+    </div>
+    <div class="statusbar">
+      <span class="status-panel"><span class="green">&#9679;</span> AI: Claude &middot; connection greeeat</span>
+      <span style="display:flex;gap:6px;">
+        <span class="status-panel red">&#9873; 15 flair</span>
+        <span class="status-panel green">Y2K Compliant &#10003;</span>
+      </span>
+    </div>
+  </div>
+  <div class="footer-note">The flagship screen. "Describe what happened" is your input; "Report body" is what Generate writes from it, in the selected tone. Local engine and AI produce identical business value (none).</div>
+</div>
+
+<!-- ============ SCREEN: EMPTY / SAMPLES ============ -->
+<div class="screen" id="s-empty">
+  <div class="window raised">
+    <div class="titlebar">
+      <span class="t-left">&#128196; Initech TPS Report Wizard '99</span>
+      <span class="t-btns">
+        <span class="t-btn raised">_</span><span class="t-btn raised">&#9633;</span><span class="t-btn raised">&times;</span>
+      </span>
+    </div>
+    <div class="menubar">
+      <span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>R</u>eports</span><span><u>F</u>lair</span><span><u>H</u>elp</span>
+    </div>
+    <div class="body">
+      <div style="text-align:center;padding:8px 0 14px;">
+        <div style="font-size:26px;">&#128193;</div>
+        <div style="font-weight:bold;margin-top:4px;">No reports yet. Did you get the memo?</div>
+        <div class="note">Start a new report, or open one of these field-tested classics.</div>
+        <button class="btn raised" style="margin-top:10px;">&#43; New TPS Report</button>
+      </div>
+
+      <fieldset>
+        <legend>Sample reports</legend>
+        <div class="samples">
+          <div class="sample raised">
+            <div class="s-title">The Printer Incident</div>
+            <div class="s-desc">PC LOAD LETTER. What does that even mean.</div>
+          </div>
+          <div class="sample raised">
+            <div class="s-title">Missing Red Swingline</div>
+            <div class="s-desc">Filed by M. Waddams. Escalation pending.</div>
+          </div>
+          <div class="sample raised">
+            <div class="s-title">Y2K Remediation Status</div>
+            <div class="s-desc">Two-digit years, zero-digit confidence.</div>
+          </div>
+          <div class="sample raised">
+            <div class="s-title">Flair Compliance Audit</div>
+            <div class="s-desc">You have 15. The minimum is 15. Hmm.</div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="statusbar">
+      <span class="status-panel">Ready.</span>
+      <span class="status-panel green">Y2K Compliant &#10003;</span>
+    </div>
+  </div>
+  <div class="footer-note">First-run empty state (FR-4a). The sample library lets someone open, read, and share a report with zero setup and no key &mdash; the whole point of the web-lite demo.</div>
+</div>
+
+<!-- ============ SCREEN: SETTINGS ============ -->
+<div class="screen" id="s-settings">
+  <div class="window raised">
+    <div class="titlebar">
+      <span class="t-left">&#9881; Settings &mdash; AI Provider</span>
+      <span class="t-btns">
+        <span class="t-btn raised">_</span><span class="t-btn raised">&#9633;</span><span class="t-btn raised">&times;</span>
+      </span>
+    </div>
+    <div class="body">
+      <fieldset>
+        <legend>Report engine</legend>
+        <div class="stack">
+          <label class="ctl"><span class="radio sunken"><span class="dot"></span></span> Use my AI key (desktop only)</label>
+          <label class="ctl"><span class="radio sunken"></span> Corporate Nonsense Engine (offline, no key)</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>AI provider</legend>
+        <div class="stack">
+          <div style="display:flex;gap:20px;">
+            <label class="ctl"><span class="radio sunken"><span class="dot"></span></span> Claude</label>
+            <label class="ctl"><span class="radio sunken"></span> OpenAI</label>
+          </div>
+          <div class="row">
+            <label>API key</label>
+            <div class="sunken"><input type="password" value="sk-ant-xxxxxxxxxxxxxxxx"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="btn raised">Test connection</button>
+            <span class="green">&#10003; Great. Great, great, great.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="memo" style="background:#eef;border-color:#88a;">
+        &#128274; Your key is encrypted locally (safeStorage) and never leaves this machine. Calls go out from the main process &mdash; the app never puts your key in the browser or a URL.
+      </div>
+    </div>
+    <div class="statusbar">
+      <span class="status-panel">Settings</span>
+      <span class="status-panel note">Web build: this screen is hidden entirely.</span>
+    </div>
+  </div>
+  <div class="footer-note">Desktop-only (FR-10&ndash;15). The provider toggle and key field never render on the web build; the platform shim feature-detects Electron and hides them.</div>
+</div>
+
+<!-- ============ SCREEN: THE BOBS ============ -->
+<div class="screen" id="s-bobs">
+  <div class="window raised">
+    <div class="titlebar">
+      <span class="t-left">&#128188; Performance Review &mdash; The Bobs</span>
+      <span class="t-btns">
+        <span class="t-btn raised">_</span><span class="t-btn raised">&#9633;</span><span class="t-btn raised">&times;</span>
+      </span>
+    </div>
+    <div class="body">
+      <div class="bobs">
+        <div class="bob"><div class="bob-face sunken">&#128104;</div><div>Bob Slydell</div></div>
+        <div class="bob"><div class="bob-face sunken">&#128104;</div><div>Bob Porter</div></div>
+        <div style="flex:1;" class="sunken" >
+          <div style="padding:8px;">
+            <div class="note" style="margin-bottom:4px;">Now reviewing:</div>
+            <div class="mono">TPS-0042 &mdash; "The Printer Incident"</div>
+          </div>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>The assessment</legend>
+        <p style="margin:0 0 10px;">So we took a look at your deliverable, and&hellip; look, the cover sheet's there, the synergy's there. But at a high level, we're seeing a lot of process and not a lot of&hellip; well. Let me ask you something.</p>
+        <p style="margin:0 0 12px;font-weight:bold;">"So&hellip; what would you say ya <em>do</em> here?"</p>
+        <div style="text-align:center;">
+          <div class="verdict v-circle">Verdict: Circle back</div>
+        </div>
+      </fieldset>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <button class="btn raised" id="btn-bobs">Send to the Bobs again</button>
+        <span class="note">Verdict odds: Circle back 55% &middot; Basement 35% &middot; Ship it 10%</span>
+      </div>
+    </div>
+    <div class="statusbar">
+      <span class="status-panel">Under review&hellip;</span>
+      <span class="status-panel note">AI mode: real critique &middot; Web: canned zingers</span>
+    </div>
+  </div>
+  <div class="footer-note">Bobs Review (FR-20&ndash;22a). Same LLMProvider plumbing as generation, different persona. Verdict weighting skews negative and film-accurate; here's the dominant "Circle back."</div>
+</div>
+
+<!-- ============ SCREEN: PRINT PREVIEW ============ -->
+<div class="screen" id="s-print">
+  <div class="window raised">
+    <div class="titlebar">
+      <span class="t-left">&#128438; Print Preview</span>
+      <span class="t-btns">
+        <span class="t-btn raised">_</span><span class="t-btn raised">&#9633;</span><span class="t-btn raised">&times;</span>
+      </span>
+    </div>
+    <div class="body" style="padding:0;">
+      <div style="display:flex;gap:6px;padding:8px 10px;align-items:center;border-bottom:1px solid var(--gray);">
+        <button class="btn raised" id="btn-print">Print</button>
+        <button class="btn raised" id="btn-exportpdf">Export PDF</button>
+        <span class="status-panel" style="margin-left:auto;">&#9203; PC LOAD LETTER&hellip; resolving&hellip;</span>
+      </div>
+      <div class="preview-canvas">
+        <div class="paper cover">
+          <h2>TPS REPORT</h2>
+          <div style="text-align:center;font-weight:bold;letter-spacing:2px;">&mdash; COVER SHEET &mdash;</div>
+          <div style="text-align:center;" class="note">INITECH &middot; a wholly-owned subsidiary of itself</div>
+          <hr>
+          <div class="kv">
+            <div>Report ID:</div><div>TPS-0042</div>
+            <div>Author:</div><div>Peter Gibbons</div>
+            <div>Department:</div><div>Software / Y2K Remediation</div>
+            <div>Date:</div><div>Friday (feels like Monday)</div>
+          </div>
+          <div style="text-align:center;"><span class="stamp">NEW COVER SHEET &mdash; PER THE MEMO</span></div>
+        </div>
+        <div class="paper">
+          <div style="font-weight:bold;">TPS-0042 &mdash; Testing Procedure Specification</div>
+          <hr>
+          <p>Per the initiative to align cross-functional stakeholder deliverables, this specification documents a recurring peripheral output event impacting throughput.</p>
+          <p>Corrective action items have been circled back and socialized with all relevant parties pending further alignment. No further reading is required, or, historically, performed.</p>
+          <hr>
+          <div class="note">Filed. Nobody will read this. Efficiency achieved.</div>
+        </div>
+      </div>
+    </div>
+    <div class="statusbar">
+      <span class="status-panel">2 pages (cover + report)</span>
+      <span class="status-panel green">Y2K Compliant &#10003;</span>
+    </div>
+  </div>
+  <div class="footer-note">Print/PDF preview (FR-23&ndash;25). Cover sheet page renders whenever the toggle is on. The "PC LOAD LETTER" state is pure gag &mdash; it always resolves fine. PDF generation is client-side so it works on web too.</div>
+</div>
+
+<!-- ============ LUMBERGH "YOU CAN'T LEAVE" DIALOG ============ -->
+<div class="overlay" id="leave-overlay">
+  <div class="dialog window raised" style="margin:0;">
+    <div class="titlebar">
+      <span class="t-left">&#128172; Initech</span>
+      <span class="t-btns"><span class="t-btn raised" id="dlg-x">&times;</span></span>
+    </div>
+    <div class="body">
+      <div class="icon">&#9749;</div>
+      <div>
+        <p style="margin:0 0 6px;font-weight:bold;">Yeeeah&hellip; about that.</p>
+        <p style="margin:0;" id="leave-quote">I'm gonna need you to go ahead and finish that TPS report before you head out. That'd be greeeat.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn raised" id="btn-stay">Okay, I'll finish it</button>
+      <button class="btn raised" id="btn-leave">Close anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COVER-SHEET GATE DIALOG ============ -->
+<div class="overlay" id="gate-overlay">
+  <div class="dialog window raised" style="margin:0;">
+    <div class="titlebar">
+      <span class="t-left">&#128172; Initech &mdash; per the memo</span>
+      <span class="t-btns"><span class="t-btn raised" id="gate-x">&times;</span></span>
+    </div>
+    <div class="body">
+      <div class="icon">&#128203;</div>
+      <div>
+        <p style="margin:0 0 6px;font-weight:bold;">Cover sheet required.</p>
+        <p style="margin:0;" id="gate-msg">Yeeeah&hellip; I'm gonna need that new cover sheet on there before this goes out. That'd be greeeat.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn raised" id="gate-attach">Attach cover sheet &amp; continue</button>
+      <button class="btn raised" id="gate-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOAST (auto re-open nag) ============ -->
+<div class="toast window raised" id="reopen-toast">
+  <div class="titlebar">
+    <span class="t-left">&#128196; TPS Report Wizard</span>
+    <span class="t-btns"><span class="t-btn raised" id="toast-x">&times;</span></span>
+  </div>
+  <div class="body" id="toast-msg">Sounds like somebody's got a case of the Mondays. Your report's still open&hellip;</div>
+</div>
+
+<script>
+  var tabs = document.querySelectorAll('.tab');
+  var screens = document.querySelectorAll('.screen');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      screens.forEach(function(s){ s.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Cover-sheet toggle -> Lumbergh nag banner
+  var coverOn = true;
+  var coverBox = document.getElementById('cover-box');
+  var coverNag = document.getElementById('cover-nag');
+  document.getElementById('cover-toggle').addEventListener('click', function(){
+    coverOn = !coverOn;
+    coverBox.innerHTML = coverOn ? '&#10003;' : '';
+    coverNag.classList.toggle('hidden', coverOn);
+  });
+
+  // "You can't just leave" on minimize / close
+  var overlay = document.getElementById('leave-overlay');
+  var quote = document.getElementById('leave-quote');
+  var toast = document.getElementById('reopen-toast');
+  var toastMsg = document.getElementById('toast-msg');
+  var minQuote = "You can minimize, but the report doesn't minimize itself. I'm gonna need you to go ahead and come back to it.";
+  var closeQuote = "I'm gonna need you to go ahead and finish that TPS report before you head out. That'd be greeeat.";
+
+  function showLeave(q){ quote.textContent = q; overlay.classList.add('show'); }
+  function hideLeave(){ overlay.classList.remove('show'); }
+  document.getElementById('btn-min').addEventListener('click', function(){ showLeave(minQuote); });
+  document.getElementById('btn-close').addEventListener('click', function(){ showLeave(closeQuote); });
+  document.getElementById('btn-stay').addEventListener('click', hideLeave);
+  document.getElementById('dlg-x').addEventListener('click', hideLeave);
+
+  // "Close anyway" -> it comes right back (the whole joke)
+  document.getElementById('btn-leave').addEventListener('click', function(){
+    hideLeave();
+    toastMsg.innerHTML = "Sounds like somebody's got a case of the Mondays. Your report's still open &mdash; you're gonna want to finish that.";
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 5000);
+  });
+  document.getElementById('toast-x').addEventListener('click', function(){ toast.classList.remove('show'); });
+
+  // Cover-sheet gate on Print / Export / Bobs
+  var gateOverlay = document.getElementById('gate-overlay');
+  var gateMsg = document.getElementById('gate-msg');
+  function setCover(on){
+    coverOn = on;
+    coverBox.innerHTML = on ? '&#10003;' : '';
+    coverNag.classList.toggle('hidden', on);
+  }
+  function proceedToast(msg){
+    toastMsg.innerHTML = msg;
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 3500);
+  }
+  function gateOrProceed(gateText, okText){
+    if (coverOn) { proceedToast(okText); }
+    else { gateMsg.innerHTML = gateText; gateOverlay.classList.add('show'); gateOverlay.dataset.ok = okText; }
+  }
+  document.getElementById('btn-print').addEventListener('click', function(){
+    gateOrProceed("Yeeeah&hellip; I'm gonna need that new cover sheet on there before this goes out.", "Printing&hellip; PC LOAD LETTER&hellip; there we go. Filed.");
+  });
+  document.getElementById('btn-exportpdf').addEventListener('click', function(){
+    gateOrProceed("Yeeeah&hellip; I'm gonna need that new cover sheet on there before we export. That'd be greeeat.", "Exported. Two pages: cover + report.");
+  });
+  document.getElementById('btn-bobs').addEventListener('click', function(){
+    gateOrProceed("The Bobs: we're gonna need to see a cover sheet before we can, uh, evaluate you here.", "Sending to the Bobs&hellip; they'll circle back.");
+  });
+  document.getElementById('gate-attach').addEventListener('click', function(){
+    setCover(true);
+    gateOverlay.classList.remove('show');
+    proceedToast("Cover sheet attached. " + (gateOverlay.dataset.ok || "Proceeding."));
+  });
+  function closeGate(){ gateOverlay.classList.remove('show'); }
+  document.getElementById('gate-cancel').addEventListener('click', closeGate);
+  document.getElementById('gate-x').addEventListener('click', closeGate);
+</script>
+</body>
+</html>
