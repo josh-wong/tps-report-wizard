@@ -8,7 +8,7 @@
 | **Status** | Reviewed – open questions resolved |
 | **Version** | 0.2 |
 | **Owner** | Josh |
-| **Type** | Cross-platform desktop app (Electron) + static web "lite" demo |
+| **Type** | Cross-platform desktop app (Electron) + static web "lite" version |
 | **Tone** | Tongue-in-cheek. This is a joke. The joke is that it works. |
 
 ---
@@ -20,7 +20,7 @@ A deliberately over-engineered app for producing **TPS reports**—the canonical
 It ships in two forms from one codebase:
 
 - A **downloadable desktop app** (Windows / macOS / Linux) with optional AI report generation via the user's own OpenAI or Claude API key.
-- A **static web "lite" demo** (e.g. GitHub Pages) that runs the comedy experience with no key, no backend, and no AI.
+- A **static web "lite" version** (e.g. GitHub Pages) that runs the comedy experience with no key, no backend, and no AI.
 
 The look and feel is committed late-'90s Initech: beige window chrome, navy title bars, raised buttons, "Y2K Compliant ✓."
 
@@ -61,7 +61,7 @@ In _Office Space_, Peter Gibbons is ambushed by roughly eight managers—Lumberg
 
 - **Primary – "The fan who ships."** Knows the movie by heart, wants a working desk toy, will actually generate a report to screenshot and share.
 - **Secondary – "The tinkerer."** Has an OpenAI or Claude key already, wants to see the AI mode produce plausible corporate prose on demand.
-- **Tertiary – "The link-clicker."** Sent the web demo by a friend, has no key, wants to press one button and laugh.
+- **Tertiary – "The link-clicker."** Sent the web version by a friend, has no key, wants to press one button and laugh.
 
 ---
 
@@ -162,7 +162,7 @@ One repo, one renderer, two deploys:
 | **API key** | Never requested or handled | Encrypted locally via `safeStorage` |
 | **Bobs Review** | Canned zingers | AI-generated critique |
 | **Backend** | None | None (main process acts as trusted local backend) |
-| **Purpose** | Instant, no-friction comedy demo | Full experience |
+| **Purpose** | Instant, no-friction comedy version | Full experience |
 
 **Why AI is desktop-only (not a limitation, a boundary):** a static page can't safely hold a user's key—it would sit exposed in the browser, and both OpenAI and Anthropic block browser-origin calls by default. Rather than stand up a key-handling proxy (more infra + a real liability), AI lives on the desktop, where the key is encrypted locally and calls go out from the main process. Web = no-key comedy; desktop = private, local AI.
 
@@ -216,7 +216,7 @@ One repo, one renderer, two deploys:
 
 - M1 – A user can produce and export a complete, cover-sheeted report in under 60 seconds with no configuration.
 - M2 – Local and AI outputs are indistinguishable in *business value* (target: 0 for both). ✔ by design.
-- M3 – Web demo loads and generates with zero setup and zero key prompts.
+- M3 – Web version loads and generates with zero setup and zero key prompts.
 - M4 – At least one person screenshots a generated report and sends it to a coworker unprompted.
 - M5 – Zero API keys ever leave a user's machine improperly.
 

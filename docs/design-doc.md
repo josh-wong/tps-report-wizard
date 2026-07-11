@@ -37,7 +37,7 @@ One TypeScript codebase, one React renderer, two deploy targets:
                           └───────────────┘   └──────────────────────┘
 ```
 
-The renderer is provider- and platform-agnostic. It calls a single `generate()` / `review()` surface and never knows whether the work happened via AI in the main process or the local engine in-page. This is the seam that lets the same UI ship as both a full desktop app and a key-free web demo.
+The renderer is provider- and platform-agnostic. It calls a single `generate()` / `review()` surface and never knows whether the work happened via AI in the main process or the local engine in-page. This is the seam that lets the same UI ship as both a full desktop app and a key-free web version.
 
 ---
 
