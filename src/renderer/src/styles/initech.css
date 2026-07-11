@@ -1,0 +1,68 @@
+/*
+ * Light Initech-specific overrides on top of 98.css (docs/product-requirements-doc.md TC-5).
+ * Keep this file small: it should only carry period-accurate flavor (navy
+ * title bar, memo banner, status bar) that 98.css doesn't already provide.
+ */
+
+:root {
+  --initech-navy-1: #000080;
+  --initech-navy-2: #1084d0;
+  --initech-memo-yellow: #ffffcc;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #008080;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.tps-window {
+  width: 100%;
+  max-width: 640px;
+}
+
+.tps-window .title-bar {
+  background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
+}
+
+.menu-bar {
+  display: flex;
+  gap: 2px;
+  padding: 2px 6px;
+  background: silver;
+  border-bottom: 1px solid #808080;
+  font-size: 12px;
+}
+
+.menu-bar span {
+  padding: 2px 7px;
+  cursor: pointer;
+}
+
+.menu-bar span:hover {
+  background: var(--initech-navy-1);
+  color: #fff;
+}
+
+.memo-banner {
+  background: var(--initech-memo-yellow);
+  border: 1px solid #808080;
+  color: #555;
+  padding: 6px 8px;
+  margin-bottom: 12px;
+}
+
+.tps-body p {
+  margin: 0 0 8px;
+}
+
+.tps-body p:last-child {
+  margin-bottom: 0;
+}

@@ -1,0 +1,12 @@
+out
+dist
+dist-web
+node_modules
+package-lock.json
+
+# Pre-existing repo docs/templates use their own formatting conventions
+# (see .github/copilot-instructions.md) and are out of scope for this tool.
+docs/
+.github/
+CLAUDE.md
+README.md
