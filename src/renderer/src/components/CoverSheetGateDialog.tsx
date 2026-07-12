@@ -21,8 +21,8 @@ function CoverSheetGateDialog({ onProceed, onCancel }: CoverSheetGateDialogProps
           <p>Cover sheet required to proceed with this action.</p>
           <div className="dialog-actions">
             <button onClick={onCancel}>Cancel</button>
-            <button onClick={onProceed} className="primary-button">
-              Attach cover sheet &amp; continue
+            <button onClick={onProceed} className="primary-button" accessKey="a">
+              <u>A</u>ttach cover sheet &amp; continue
             </button>
           </div>
         </div>

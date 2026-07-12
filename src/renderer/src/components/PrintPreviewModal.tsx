@@ -78,14 +78,17 @@ function PrintPreviewModal({
           </div>
         </div>
         <div className="print-preview-actions">
-          <button onClick={onClose}>Close</button>
-          <button onClick={onPrint}>
+          <button onClick={onClose} accessKey="c">
+            <u>C</u>lose
+          </button>
+          <button onClick={onPrint} accessKey="p">
             <u>P</u>rint
           </button>
           <button
             onClick={onExport}
             disabled={exporting}
             className="primary-button"
+            accessKey="e"
           >
             {exporting ? 'PC LOAD LETTER...' : '💾 Export PDF'}
           </button>
