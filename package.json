@@ -1,7 +1,7 @@
 {
   "name": "tps-report-wizard",
   "version": "0.1.0",
-  "description": "Initech TPS Report Wizard '99 \u2014 a tongue-in-cheek, retro-styled desktop app (and web \"lite\" version) for generating TPS reports.",
+  "description": "Initech TPS Report Wizard '99 — a tongue-in-cheek, retro-styled desktop app (and web \"lite\" version) for generating TPS reports.",
   "main": "./out/main/index.js",
   "author": "josh-wong",
   "license": "MIT",
@@ -23,9 +23,10 @@
     "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
-    "98.css": "^0.1.21",
     "@electron-toolkit/preload": "^3.0.2",
-    "@electron-toolkit/utils": "^4.0.0"
+    "@electron-toolkit/utils": "^4.0.0",
+    "98.css": "^0.1.21",
+    "electron-store": "^8.2.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

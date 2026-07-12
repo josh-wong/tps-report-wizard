@@ -1,15 +1,12 @@
-// Shared domain types used by both the Electron main process and the React
-// renderer. Keeping these in one module (imported by both sides of the IPC
-// boundary) prevents the AI and local engines from drifting apart.
-// See docs/design-doc.md §5 and §8.
-
 export type Provider = 'claude' | 'openai'
 
-export type Tone = 'corporate' | 'lumbergh' | 'milton' | 'bobs'
+export const TONES = ['corporate', 'lumbergh', 'milton', 'bobs'] as const
+export type Tone = (typeof TONES)[number]
 
 export type Verdict = 'circle_back' | 'basement' | 'ship_it'
 
-export type ReportStatus = 'draft' | 'filed'
+export const REPORT_STATUSES = ['draft', 'filed'] as const
+export type ReportStatus = (typeof REPORT_STATUSES)[number]
 
 export interface Report {
   id: string // "TPS-0042"
