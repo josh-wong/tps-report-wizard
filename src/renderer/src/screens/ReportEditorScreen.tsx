@@ -27,6 +27,7 @@ function ReportEditorScreen({
   const [showGate, setShowGate] = useState(false)
   const [showPrintPreview, setShowPrintPreview] = useState(false)
   const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState<string | null>(null)
   const [pendingAction, setPendingAction] = useState<'print' | 'export' | null>(null)
 
   const update = (patch: Partial<Report>): void => {
@@ -55,6 +56,7 @@ function ReportEditorScreen({
 
   const doExportPdf = async (effectiveReport: typeof report): Promise<void> => {
     setExporting(true)
+    setExportError(null)
     let canceled = false
     try {
       if (isDesktop && window.electronAPI) {
@@ -63,6 +65,9 @@ function ReportEditorScreen({
       } else {
         window.print()
       }
+    } catch (err) {
+      setExportError(err instanceof Error ? err.message : 'Export failed')
+      canceled = true
     } finally {
       setExporting(false)
       if (!canceled) setShowPrintPreview(false)
@@ -210,6 +215,7 @@ function ReportEditorScreen({
           }}
           onExport={() => doExportPdf(report)}
           exporting={exporting}
+          exportError={exportError}
         />
       )}
     </div>

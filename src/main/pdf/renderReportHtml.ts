@@ -52,7 +52,6 @@ export function renderReportHtml(report: Report): string {
 
     .print-page {
       page-break-after: always;
-      padding: 32px;
       min-height: 9in;
       background: white;
     }

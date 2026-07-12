@@ -78,7 +78,7 @@ async function exportReportPdf(report: Report): Promise<{ path: string } | null>
 
   try {
     const html = renderReportHtml(report)
-    await offscreenWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
+    await offscreenWindow.loadURL(`data:text/html;base64,${Buffer.from(html).toString('base64')}`)
 
     const pdfBuffer = await offscreenWindow.webContents.printToPDF({
       pageSize: { height: 279600, width: 215900 },

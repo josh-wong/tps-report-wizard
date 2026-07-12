@@ -3,7 +3,10 @@ interface CoverSheetGateDialogProps {
   onCancel: () => void
 }
 
-function CoverSheetGateDialog({ onProceed, onCancel }: CoverSheetGateDialogProps): React.JSX.Element {
+function CoverSheetGateDialog({
+  onProceed,
+  onCancel
+}: CoverSheetGateDialogProps): React.JSX.Element {
   return (
     <div className="modal-overlay">
       <div className="window dialog-window">
