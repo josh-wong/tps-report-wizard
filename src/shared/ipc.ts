@@ -37,5 +37,5 @@ export interface IpcApi {
   getReport(id: string): Promise<Report | null>
   saveReport(r: Report): Promise<void>
   removeReport(id: string): Promise<void>
-  exportPdf(r: Report): Promise<{ path: string }>
+  exportPdf(r: Report): Promise<{ path: string } | null>
 }

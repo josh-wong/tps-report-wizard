@@ -36,12 +36,12 @@ function ReportEditorScreen({
   const handleAttachCoverSheet = (): void => {
     update({ coverSheet: true })
     setShowGate(false)
+    setPendingAction(null)
     if (pendingAction === 'print') {
       setShowPrintPreview(true)
     } else if (pendingAction === 'export') {
-      handleExportPdf()
+      doExportPdf({ ...report, coverSheet: true })
     }
-    setPendingAction(null)
   }
 
   const handlePrint = (): void => {
@@ -53,24 +53,29 @@ function ReportEditorScreen({
     setShowPrintPreview(true)
   }
 
-  const handleExportPdf = async (): Promise<void> => {
-    if (!report.coverSheet) {
-      setShowGate(true)
-      setPendingAction('export')
-      return
-    }
-
+  const doExportPdf = async (effectiveReport: typeof report): Promise<void> => {
     setExporting(true)
+    let canceled = false
     try {
       if (isDesktop && window.electronAPI) {
-        await window.electronAPI.exportPdf(report)
+        const result = await window.electronAPI.exportPdf(effectiveReport)
+        if (result === null) canceled = true
       } else {
         window.print()
       }
     } finally {
       setExporting(false)
-      setShowPrintPreview(false)
+      if (!canceled) setShowPrintPreview(false)
     }
+  }
+
+  const handleExportPdf = (): void => {
+    if (!report.coverSheet) {
+      setShowGate(true)
+      setPendingAction('export')
+      return
+    }
+    doExportPdf(report)
   }
 
   return (
@@ -203,7 +208,7 @@ function ReportEditorScreen({
             setShowPrintPreview(false)
             window.print()
           }}
-          onExport={handleExportPdf}
+          onExport={() => doExportPdf(report)}
           exporting={exporting}
         />
       )}

@@ -1,3 +1,4 @@
+import { writeFile } from 'fs/promises'
 import { ipcMain, BrowserWindow, dialog } from 'electron'
 import { IPC_CHANNELS } from '@shared/ipc'
 import type { ReportStore } from '@shared/store'
@@ -61,22 +62,18 @@ export function registerReportIpcHandlers(store: ReportStore): void {
   })
 }
 
-async function exportReportPdf(report: Report): Promise<{ path: string }> {
+async function exportReportPdf(report: Report): Promise<{ path: string } | null> {
   const result = await dialog.showSaveDialog({
     defaultPath: `TPS-Report-${report.id}.pdf`,
     filters: [{ name: 'PDF Files', extensions: ['pdf'] }]
   })
 
   if (result.canceled || !result.filePath) {
-    throw new Error('Export canceled')
+    return null
   }
 
   const offscreenWindow = new BrowserWindow({
-    show: false,
-    webPreferences: {
-      contextIsolation: false,
-      nodeIntegration: true
-    }
+    show: false
   })
 
   try {
@@ -88,7 +85,7 @@ async function exportReportPdf(report: Report): Promise<{ path: string }> {
       printBackground: true
     })
 
-    await require('fs/promises').writeFile(result.filePath, pdfBuffer)
+    await writeFile(result.filePath, pdfBuffer)
 
     return { path: result.filePath }
   } finally {

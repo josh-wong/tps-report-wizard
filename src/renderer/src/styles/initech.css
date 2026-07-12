@@ -348,9 +348,28 @@ body {
   .editor-footer,
   .editor-actions,
   .print-preview-actions,
-  .modal-overlay,
   .memo-banner {
     display: none;
+  }
+
+  .modal-overlay {
+    position: static;
+    background: none;
+    display: block;
+  }
+
+  .print-preview-window {
+    box-shadow: none;
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+
+  .print-preview-content {
+    background: none;
+    padding: 0;
+    gap: 0;
+    overflow: visible;
   }
 
   .window-body {
@@ -363,6 +382,7 @@ body {
     padding: 0.5in;
     min-height: 9in;
     background: white;
+    box-shadow: none;
   }
 
   .print-page:last-child {
