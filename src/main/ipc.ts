@@ -1,8 +1,10 @@
-import { ipcMain } from 'electron'
+import { writeFile } from 'fs/promises'
+import { ipcMain, BrowserWindow, dialog } from 'electron'
 import { IPC_CHANNELS } from '@shared/ipc'
 import type { ReportStore } from '@shared/store'
 import type { Report, Tone, ReportStatus } from '@shared/types'
 import { TONES, REPORT_STATUSES } from '@shared/types'
+import { renderReportHtml } from './pdf/renderReportHtml'
 
 const VALID_TONES = new Set(TONES)
 const VALID_STATUSES = new Set(REPORT_STATUSES)
@@ -54,4 +56,39 @@ export function registerReportIpcHandlers(store: ReportStore): void {
     if (!isValidId(id)) throw new Error('Invalid report id')
     return store.remove(id)
   })
+  ipcMain.handle(IPC_CHANNELS.exportPdf, async (_event, report: unknown) => {
+    if (!isValidReport(report)) throw new Error('Invalid report payload')
+    return exportReportPdf(report as Report)
+  })
+}
+
+async function exportReportPdf(report: Report): Promise<{ path: string } | null> {
+  const result = await dialog.showSaveDialog({
+    defaultPath: `TPS-Report-${report.id}.pdf`,
+    filters: [{ name: 'PDF Files', extensions: ['pdf'] }]
+  })
+
+  if (result.canceled || !result.filePath) {
+    return null
+  }
+
+  const offscreenWindow = new BrowserWindow({
+    show: false
+  })
+
+  try {
+    const html = renderReportHtml(report)
+    await offscreenWindow.loadURL(`data:text/html;base64,${Buffer.from(html).toString('base64')}`)
+
+    const pdfBuffer = await offscreenWindow.webContents.printToPDF({
+      pageSize: { height: 279600, width: 215900 },
+      printBackground: true
+    })
+
+    await writeFile(result.filePath, pdfBuffer)
+
+    return { path: result.filePath }
+  } finally {
+    offscreenWindow.destroy()
+  }
 }

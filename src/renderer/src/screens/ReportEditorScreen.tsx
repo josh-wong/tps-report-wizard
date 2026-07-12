@@ -1,5 +1,9 @@
+import { useState } from 'react'
 import type { Report, Tone } from '@shared/types'
 import { TONE_LABELS } from '../report/toneLabels'
+import { isDesktop } from '../platform/isDesktop'
+import CoverSheetGateDialog from '../components/CoverSheetGateDialog'
+import PrintPreviewModal from '../components/PrintPreviewModal'
 
 interface ReportEditorScreenProps {
   report: Report
@@ -20,8 +24,63 @@ function ReportEditorScreen({
   onSave,
   onBack
 }: ReportEditorScreenProps): React.JSX.Element {
+  const [showGate, setShowGate] = useState(false)
+  const [showPrintPreview, setShowPrintPreview] = useState(false)
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState<string | null>(null)
+  const [pendingAction, setPendingAction] = useState<'print' | 'export' | null>(null)
+
   const update = (patch: Partial<Report>): void => {
     onChange({ ...report, ...patch, updatedAt: Date.now() })
+  }
+
+  const handleAttachCoverSheet = (): void => {
+    update({ coverSheet: true })
+    setShowGate(false)
+    setPendingAction(null)
+    if (pendingAction === 'print') {
+      setShowPrintPreview(true)
+    } else if (pendingAction === 'export') {
+      doExportPdf({ ...report, coverSheet: true })
+    }
+  }
+
+  const handlePrint = (): void => {
+    if (!report.coverSheet) {
+      setShowGate(true)
+      setPendingAction('print')
+      return
+    }
+    setShowPrintPreview(true)
+  }
+
+  const doExportPdf = async (effectiveReport: typeof report): Promise<void> => {
+    setExporting(true)
+    setExportError(null)
+    let canceled = false
+    try {
+      if (isDesktop && window.electronAPI) {
+        const result = await window.electronAPI.exportPdf(effectiveReport)
+        if (result === null) canceled = true
+      } else {
+        window.print()
+      }
+    } catch (err) {
+      setExportError(err instanceof Error ? err.message : 'Export failed')
+      canceled = true
+    } finally {
+      setExporting(false)
+      if (!canceled) setShowPrintPreview(false)
+    }
+  }
+
+  const handleExportPdf = (): void => {
+    if (!report.coverSheet) {
+      setShowGate(true)
+      setPendingAction('export')
+      return
+    }
+    doExportPdf(report)
   }
 
   return (
@@ -125,10 +184,40 @@ function ReportEditorScreen({
         <button type="button" accessKey="b" onClick={onBack}>
           <u>B</u>ack
         </button>
+        <button type="button" accessKey="p" onClick={handlePrint}>
+          <u>P</u>rint
+        </button>
+        <button type="button" accessKey="e" onClick={handleExportPdf} disabled={exporting}>
+          {exporting ? 'Exporting...' : <><u>E</u>xport PDF</>}
+        </button>
         <button type="button" accessKey="s" onClick={onSave}>
           <u>S</u>ave
         </button>
       </div>
+
+      {showGate && (
+        <CoverSheetGateDialog
+          onProceed={handleAttachCoverSheet}
+          onCancel={() => {
+            setShowGate(false)
+            setPendingAction(null)
+          }}
+        />
+      )}
+
+      {showPrintPreview && (
+        <PrintPreviewModal
+          report={report}
+          onClose={() => setShowPrintPreview(false)}
+          onPrint={() => {
+            setShowPrintPreview(false)
+            window.print()
+          }}
+          onExport={() => doExportPdf(report)}
+          exporting={exporting}
+          exportError={exportError}
+        />
+      )}
     </div>
   )
 }
