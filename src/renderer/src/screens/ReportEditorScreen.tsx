@@ -121,11 +121,11 @@ function ReportEditorScreen({
       </div>
 
       <div className="editor-actions">
-        <button type="button" onClick={onBack}>
-          ← Back
+        <button type="button" accessKey="b" onClick={onBack}>
+          <u>B</u>ack
         </button>
-        <button type="button" onClick={onSave}>
-          💾 Save
+        <button type="button" accessKey="s" onClick={onSave}>
+          <u>S</u>ave
         </button>
       </div>
     </div>
