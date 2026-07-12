@@ -12,12 +12,9 @@ import ReportEditorScreen from './screens/ReportEditorScreen'
 const reportStore = makeReportStore()
 const reportEngine = makeReportEngine()
 
-type Screen = 'list' | 'editor'
-
 function App(): React.JSX.Element {
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
-  const [screen, setScreen] = useState<Screen>('list')
   const [activeReport, setActiveReport] = useState<Report | null>(null)
   const [generating, setGenerating] = useState(false)
 
@@ -30,12 +27,10 @@ function App(): React.JSX.Element {
 
   const handleNew = (): void => {
     setActiveReport(createDraftReport(reports))
-    setScreen('editor')
   }
 
   const handleOpen = (report: Report): void => {
     setActiveReport(report)
-    setScreen('editor')
   }
 
   const handleGenerate = async (): Promise<void> => {
@@ -52,22 +47,27 @@ function App(): React.JSX.Element {
   const handleSave = async (): Promise<void> => {
     if (!activeReport) return
     const report = { ...activeReport, status: 'filed' as const }
-    await reportStore.save(report)
-    setReports(await reportStore.list())
-    setActiveReport(null)
-    setScreen('list')
+    try {
+      await reportStore.save(report)
+      setReports((prev) => {
+        const i = prev.findIndex((r) => r.id === report.id)
+        return i >= 0 ? [...prev.slice(0, i), report, ...prev.slice(i + 1)] : [...prev, report]
+      })
+      setActiveReport(null)
+    } catch (err) {
+      console.error('Failed to save report:', err)
+    }
   }
 
   const handleBack = (): void => {
     setActiveReport(null)
-    setScreen('list')
   }
 
   return (
     <div className="window tps-window">
       <div className="title-bar">
         <div className="title-bar-text">
-          {screen === 'editor' && activeReport
+          {activeReport
             ? `📋 ${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
             : "📋 Initech TPS Report Wizard '99"}
         </div>
@@ -94,7 +94,7 @@ function App(): React.JSX.Element {
           <u>H</u>elp
         </span>
       </div>
-      {screen === 'editor' && activeReport ? (
+      {activeReport ? (
         <ReportEditorScreen
           report={activeReport}
           generating={generating}

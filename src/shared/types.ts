@@ -1,10 +1,12 @@
 export type Provider = 'claude' | 'openai'
 
-export type Tone = 'corporate' | 'lumbergh' | 'milton' | 'bobs'
+export const TONES = ['corporate', 'lumbergh', 'milton', 'bobs'] as const
+export type Tone = (typeof TONES)[number]
 
 export type Verdict = 'circle_back' | 'basement' | 'ship_it'
 
-export type ReportStatus = 'draft' | 'filed'
+export const REPORT_STATUSES = ['draft', 'filed'] as const
+export type ReportStatus = (typeof REPORT_STATUSES)[number]
 
 export interface Report {
   id: string // "TPS-0042"

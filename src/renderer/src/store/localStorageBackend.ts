@@ -4,6 +4,7 @@ import type { ReportStore } from '@shared/store'
 import type { Report } from '@shared/types'
 
 const STORAGE_KEY = 'tps-reports'
+const SEEDED_KEY = 'tps-seeded'
 
 function readAll(): Report[] {
   const raw = localStorage.getItem(STORAGE_KEY)
@@ -23,8 +24,9 @@ function writeAll(reports: Report[]): void {
 export class LocalStorageBackend implements ReportStore {
   async list(): Promise<Report[]> {
     const reports = readAll()
-    if (reports.length === 0) {
+    if (reports.length === 0 && !localStorage.getItem(SEEDED_KEY)) {
       writeAll(SAMPLE_REPORTS)
+      localStorage.setItem(SEEDED_KEY, '1')
       return [...SAMPLE_REPORTS]
     }
     return reports

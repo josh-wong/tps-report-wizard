@@ -2,9 +2,10 @@ import { ipcMain } from 'electron'
 import { IPC_CHANNELS } from '@shared/ipc'
 import type { ReportStore } from '@shared/store'
 import type { Report, Tone, ReportStatus } from '@shared/types'
+import { TONES, REPORT_STATUSES } from '@shared/types'
 
-const VALID_TONES = new Set<string>(['corporate', 'lumbergh', 'milton', 'bobs'])
-const VALID_STATUSES = new Set<string>(['draft', 'filed'])
+const VALID_TONES = new Set(TONES)
+const VALID_STATUSES = new Set(REPORT_STATUSES)
 
 function isValidId(id: unknown): id is string {
   return typeof id === 'string' && id.length > 0
@@ -12,8 +13,19 @@ function isValidId(id: unknown): id is string {
 
 function isValidReport(r: unknown): r is Report {
   if (!r || typeof r !== 'object') return false
-  const { id, author, department, date, seed, body, tone, coverSheet, status, createdAt, updatedAt } =
-    r as Record<string, unknown>
+  const {
+    id,
+    author,
+    department,
+    date,
+    seed,
+    body,
+    tone,
+    coverSheet,
+    status,
+    createdAt,
+    updatedAt
+  } = r as Record<string, unknown>
   return (
     isValidId(id) &&
     typeof author === 'string' &&
@@ -39,6 +51,7 @@ export function registerReportIpcHandlers(store: ReportStore): void {
     return store.save(report)
   })
   ipcMain.handle(IPC_CHANNELS.removeReport, (_event, id: unknown) => {
-    if (isValidId(id)) return store.remove(id)
+    if (!isValidId(id)) throw new Error('Invalid report id')
+    return store.remove(id)
   })
 }

@@ -6,12 +6,13 @@ import type { Report } from '@shared/types'
 
 interface ReportsSchema {
   reports: Report[]
+  seeded: boolean
 }
 
 export class ElectronStoreBackend implements ReportStore {
   private readonly store = new Store<ReportsSchema>({
     name: 'tps-reports',
-    defaults: { reports: [] }
+    defaults: { reports: [], seeded: false }
   })
 
   private readRaw(): Report[] {
@@ -20,8 +21,9 @@ export class ElectronStoreBackend implements ReportStore {
 
   async list(): Promise<Report[]> {
     const reports = this.readRaw()
-    if (reports.length === 0) {
+    if (reports.length === 0 && !this.store.get('seeded')) {
       this.store.set('reports', SAMPLE_REPORTS)
+      this.store.set('seeded', true)
       return [...SAMPLE_REPORTS]
     }
     return reports
@@ -43,6 +45,9 @@ export class ElectronStoreBackend implements ReportStore {
   }
 
   async remove(id: string): Promise<void> {
-    this.store.set('reports', this.readRaw().filter((r) => r.id !== id))
+    this.store.set(
+      'reports',
+      this.readRaw().filter((r) => r.id !== id)
+    )
   }
 }
