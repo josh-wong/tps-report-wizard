@@ -18,13 +18,21 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-/* 98.css sets font-family explicitly on form controls, overriding body
-   inheritance. Re-declare here so Segoe UI applies consistently. */
+/* 98.css explicitly sets "Pixelated MS Sans Serif" on all of these selectors
+   in one grouped rule. Match and override every target so Segoe UI applies
+   consistently across all windows, dialogs, form controls, and text. */
+.window,
+.title-bar,
 button,
 input,
+label,
+legend,
+li[role='tab'],
+option,
 select,
+table,
 textarea,
-label {
+ul.tree-view {
   font-family: 'Segoe UI', Arial, sans-serif;
 }
 
