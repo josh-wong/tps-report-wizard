@@ -1,0 +1,58 @@
+import { safeStorage } from 'electron'
+import Store from 'electron-store'
+import type { Provider } from '@shared/types'
+
+interface KeyStoreData {
+  provider: Provider | null
+  // Encrypted key bytes stored as base64 strings, one per provider.
+  encryptedKeys: Partial<Record<Provider, string>>
+}
+
+const store = new Store<KeyStoreData>({
+  name: 'provider-keys',
+  defaults: { provider: null, encryptedKeys: {} }
+})
+
+export interface KeyStore {
+  saveKey(provider: Provider, key: string): void
+  getKey(provider: Provider): string | null
+  setProvider(provider: Provider): void
+  getStatus(): { provider: Provider | null; hasKey: boolean }
+}
+
+export function createKeyStore(): KeyStore {
+  return {
+    saveKey(provider: Provider, key: string): void {
+      if (!safeStorage.isEncryptionAvailable()) {
+        throw new Error('safeStorage encryption is not available on this machine.')
+      }
+      const encrypted = safeStorage.encryptString(key)
+      const encryptedKeys = store.get('encryptedKeys')
+      store.set('encryptedKeys', { ...encryptedKeys, [provider]: encrypted.toString('base64') })
+    },
+
+    getKey(provider: Provider): string | null {
+      if (!safeStorage.isEncryptionAvailable()) return null
+      const encryptedKeys = store.get('encryptedKeys')
+      const b64 = encryptedKeys[provider]
+      if (!b64) return null
+      try {
+        return safeStorage.decryptString(Buffer.from(b64, 'base64'))
+      } catch {
+        return null
+      }
+    },
+
+    setProvider(provider: Provider): void {
+      store.set('provider', provider)
+    },
+
+    getStatus(): { provider: Provider | null; hasKey: boolean } {
+      const provider = store.get('provider')
+      if (!provider) return { provider: null, hasKey: false }
+      const encryptedKeys = store.get('encryptedKeys')
+      const hasKey = !!encryptedKeys[provider]
+      return { provider, hasKey }
+    }
+  }
+}

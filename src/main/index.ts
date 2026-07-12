@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { registerReportIpcHandlers } from './ipc'
 import { ElectronStoreBackend } from './store/electronStoreBackend'
+import { createKeyStore } from './keyStore'
 
 const CONTENT_SECURITY_POLICY =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
@@ -79,7 +80,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  registerReportIpcHandlers(new ElectronStoreBackend())
+  registerReportIpcHandlers(new ElectronStoreBackend(), createKeyStore())
 
   createWindow()
 

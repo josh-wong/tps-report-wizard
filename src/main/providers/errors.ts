@@ -1,0 +1,21 @@
+// Converts raw provider/network errors into in-character messages before they
+// cross the IPC boundary (SEC-3, design doc §15). Never leaks stack traces or
+// raw API response bodies to the renderer.
+export function humanizeError(err: unknown): string {
+  if (err instanceof Error) {
+    const msg = err.message.toLowerCase()
+    if (msg.includes('401') || msg.includes('unauthorized') || msg.includes('invalid api key')) {
+      return 'Yeaaah… that key doesn’t seem to be working. If you could go ahead and check it.'
+    }
+    if (msg.includes('429') || msg.includes('rate limit')) {
+      return 'The Bobs are in a meeting. Rate limit hit — try again in a moment.'
+    }
+    if (msg.includes('network') || msg.includes('fetch') || msg.includes('econnrefused')) {
+      return "Can't reach the server right now. Check your connection and try again."
+    }
+    if (msg.includes('quota') || msg.includes('billing') || msg.includes('insufficient')) {
+      return 'Your account appears to be out of quota. Check your billing details.'
+    }
+  }
+  return 'Something went wrong on our end. Try again, or use the Nonsense Engine.'
+}

@@ -1,23 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import '98.css'
 import './styles/initech.css'
-import type { Report } from '@shared/types'
+import type { Provider, Report } from '@shared/types'
 import { isDesktop } from './platform/isDesktop'
 import { makeReportStore } from './store'
 import { makeReportEngine } from './engine/makeReportEngine'
 import { createDraftReport } from './report/createDraftReport'
 import ReportListScreen from './screens/ReportListScreen'
 import ReportEditorScreen from './screens/ReportEditorScreen'
+import SettingsScreen from './screens/SettingsScreen'
+
+type Screen = 'list' | 'editor' | 'settings'
 
 const reportStore = makeReportStore()
-const reportEngine = makeReportEngine()
 
 function App(): React.JSX.Element {
+  const [screen, setScreen] = useState<Screen>('list')
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [activeReport, setActiveReport] = useState<Report | null>(null)
   const [generating, setGenerating] = useState(false)
+
+  const [providerStatus, setProviderStatus] = useState<{
+    provider: Provider | null
+    hasKey: boolean
+  }>({ provider: null, hasKey: false })
 
   useEffect(() => {
     reportStore
@@ -27,12 +35,27 @@ function App(): React.JSX.Element {
       .finally(() => setLoading(false))
   }, [])
 
+  useEffect(() => {
+    if (!isDesktop) return
+    window.electronAPI
+      .getProviderStatus()
+      .then(setProviderStatus)
+      .catch((err) => console.error('Failed to get provider status:', err))
+  }, [])
+
+  const reportEngine = useMemo(
+    () => makeReportEngine(providerStatus.hasKey),
+    [providerStatus.hasKey]
+  )
+
   const handleNew = (): void => {
     setActiveReport(createDraftReport(reports))
+    setScreen('editor')
   }
 
   const handleOpen = (report: Report): void => {
     setActiveReport(report)
+    setScreen('editor')
   }
 
   const handleGenerate = async (): Promise<void> => {
@@ -41,6 +64,9 @@ function App(): React.JSX.Element {
     try {
       const body = await reportEngine.generate(activeReport.seed, activeReport.tone)
       setActiveReport((prev) => (prev ? { ...prev, body, updatedAt: Date.now() } : null))
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Generation failed.'
+      console.error('Generate failed:', msg)
     } finally {
       setGenerating(false)
     }
@@ -57,6 +83,7 @@ function App(): React.JSX.Element {
         return i >= 0 ? [...prev.slice(0, i), report, ...prev.slice(i + 1)] : [...prev, report]
       })
       setActiveReport(null)
+      setScreen('list')
     } catch (err) {
       console.error('Failed to save report:', err)
       setSaveError('Save failed. Please try again.')
@@ -65,15 +92,30 @@ function App(): React.JSX.Element {
 
   const handleBack = (): void => {
     setActiveReport(null)
+    setScreen('list')
+  }
+
+  const handleSettingsStatusChange = (provider: Provider | null, hasKey: boolean): void => {
+    setProviderStatus({ provider, hasKey })
+  }
+
+  const aiStatusLabel = (): string => {
+    if (!isDesktop) return 'Web lite — Nonsense Engine only'
+    if (providerStatus.hasKey && providerStatus.provider) {
+      return `AI: ${providerStatus.provider === 'claude' ? 'Claude' : 'OpenAI'} — ready`
+    }
+    return 'AI: off — using the Nonsense Engine'
   }
 
   return (
     <div className="window tps-window">
       <div className="title-bar">
         <div className="title-bar-text">
-          {activeReport
-            ? `📋 ${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
-            : "📋 Initech TPS Report Wizard '99"}
+          {screen === 'settings'
+            ? '⚙ Settings — AI Provider'
+            : activeReport
+              ? `📋 ${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
+              : "📋 Initech TPS Report Wizard '99"}
         </div>
         <div className="title-bar-controls">
           <button aria-label="Minimize"></button>
@@ -94,11 +136,24 @@ function App(): React.JSX.Element {
         <span>
           <u>F</u>lair
         </span>
+        {isDesktop && (
+          <span onClick={() => setScreen(screen === 'settings' ? 'list' : 'settings')}>
+            <u>T</u>ools
+          </span>
+        )}
         <span>
           <u>H</u>elp
         </span>
       </div>
-      {activeReport ? (
+
+      {screen === 'settings' && isDesktop ? (
+        <SettingsScreen
+          initialProvider={providerStatus.provider}
+          initialHasKey={providerStatus.hasKey}
+          onClose={() => setScreen(activeReport ? 'editor' : 'list')}
+          onStatusChange={handleSettingsStatusChange}
+        />
+      ) : screen === 'editor' && activeReport ? (
         <ReportEditorScreen
           report={activeReport}
           generating={generating}
@@ -116,10 +171,9 @@ function App(): React.JSX.Element {
           onOpen={handleOpen}
         />
       )}
+
       <div className="status-bar">
-        <p className="status-bar-field">
-          {isDesktop ? 'AI: off — using the Nonsense Engine' : 'Web lite — Nonsense Engine only'}
-        </p>
+        <p className="status-bar-field">{aiStatusLabel()}</p>
         <p className="status-bar-field">Y2K Compliant ✓</p>
       </div>
     </div>

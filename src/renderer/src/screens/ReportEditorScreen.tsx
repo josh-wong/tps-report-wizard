@@ -188,7 +188,13 @@ function ReportEditorScreen({
           <u>P</u>rint
         </button>
         <button type="button" accessKey="e" onClick={handleExportPdf} disabled={exporting}>
-          {exporting ? 'Exporting...' : <><u>E</u>xport PDF</>}
+          {exporting ? (
+            'Exporting...'
+          ) : (
+            <>
+              <u>E</u>xport PDF
+            </>
+          )}
         </button>
         <button type="button" accessKey="s" onClick={onSave}>
           <u>S</u>ave

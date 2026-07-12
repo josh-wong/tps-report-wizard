@@ -186,6 +186,16 @@ body {
   margin-top: 4px;
 }
 
+.settings-ok {
+  color: #006400;
+  font-size: 12px;
+}
+
+.settings-err {
+  color: #c00;
+  font-size: 12px;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
