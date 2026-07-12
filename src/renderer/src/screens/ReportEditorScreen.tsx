@@ -184,11 +184,11 @@ function ReportEditorScreen({
         <button type="button" accessKey="b" onClick={onBack}>
           <u>B</u>ack
         </button>
-        <button type="button" onClick={handlePrint}>
-          🖨️ Print
+        <button type="button" accessKey="p" onClick={handlePrint}>
+          <u>P</u>rint
         </button>
-        <button type="button" onClick={handleExportPdf} disabled={exporting}>
-          {exporting ? '⏳ Exporting...' : '💾 Export PDF'}
+        <button type="button" accessKey="e" onClick={handleExportPdf} disabled={exporting}>
+          {exporting ? 'Exporting...' : <><u>E</u>xport PDF</>}
         </button>
         <button type="button" accessKey="s" onClick={onSave}>
           <u>S</u>ave
