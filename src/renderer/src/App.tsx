@@ -139,7 +139,7 @@ function App(): React.JSX.Element {
           <u>F</u>lair
         </span>
         {isDesktop && (
-          <span onClick={() => setScreen(screen === 'settings' ? 'list' : 'settings')}>
+          <span onClick={() => setScreen(screen === 'settings' ? (activeReport ? 'editor' : 'list') : 'settings')}>
             <u>T</u>ools
           </span>
         )}
