@@ -70,7 +70,7 @@ function SettingsScreen({
   }
 
   return (
-    <div className="tps-body">
+    <div className="window-body tps-body">
       <fieldset>
         <legend>Report engine</legend>
         <div className="field-row">

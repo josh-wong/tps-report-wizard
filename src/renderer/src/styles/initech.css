@@ -18,6 +18,16 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
 }
 
+/* 98.css sets font-family explicitly on form controls, overriding body
+   inheritance. Re-declare here so Segoe UI applies consistently. */
+button,
+input,
+select,
+textarea,
+label {
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
 #root {
   display: flex;
   justify-content: center;
