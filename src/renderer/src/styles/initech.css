@@ -184,3 +184,151 @@ body {
   color: #c00;
   margin-top: 4px;
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-window {
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dialog-window .title-bar {
+  background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.primary-button {
+  min-width: 140px;
+}
+
+.print-preview-window {
+  width: 90%;
+  max-width: 720px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.print-preview-window .title-bar {
+  background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
+}
+
+.print-preview-content {
+  flex: 1;
+  overflow-y: auto;
+  background: #dfdfdf;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.print-page {
+  background: white;
+  padding: 32px;
+  min-height: 600px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  page-break-after: always;
+}
+
+.cover-sheet-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-sheet-content {
+  width: 100%;
+}
+
+.cover-sheet-logo {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.cover-sheet-title {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  margin-bottom: 40px;
+}
+
+.cover-sheet-memo {
+  text-align: left;
+  margin-bottom: 30px;
+  font-size: 12px;
+}
+
+.cover-sheet-memo p {
+  margin: 8px 0;
+}
+
+.cover-sheet-memo-text {
+  font-style: italic;
+  font-size: 11px;
+  text-align: center;
+  color: #555;
+}
+
+.report-page {
+  text-align: left;
+}
+
+.report-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #000;
+}
+
+.report-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.report-meta {
+  font-size: 11px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.report-body {
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.print-preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 12px;
+  background: silver;
+  border-top: 1px solid #808080;
+}
