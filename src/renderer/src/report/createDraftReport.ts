@@ -9,10 +9,7 @@ function generateReportId(existingIds: ReadonlySet<string>): string {
   return id
 }
 
-// Blank draft for the "New TPS Report" flow (FR-1). Author/department
-// default to the film's protagonist and are editable before or after
-// generation; date defaults to today and is a free-text field (the joke
-// allows "Friday (feels like Monday)").
+// date is free-text so users can write things like "Friday (feels like Monday)".
 export function createDraftReport(existingReports: readonly Report[]): Report {
   const now = Date.now()
   return {

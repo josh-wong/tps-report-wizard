@@ -1,6 +1,4 @@
-// Web "lite" `ReportStore` backend (design doc §8, FR-27, RD-3). Persists
-// both drafts and filed reports to `localStorage` so a refresh keeps work —
-// there is no key custody or other sensitive data on web to worry about.
+// No key custody or sensitive data on web; localStorage is sufficient.
 import { SAMPLE_REPORTS } from '@shared/sampleReports'
 import type { ReportStore } from '@shared/store'
 import type { Report } from '@shared/types'
@@ -33,12 +31,11 @@ export class LocalStorageBackend implements ReportStore {
   }
 
   async get(id: string): Promise<Report | null> {
-    const reports = await this.list()
-    return reports.find((r) => r.id === id) ?? null
+    return readAll().find((r) => r.id === id) ?? null
   }
 
   async save(report: Report): Promise<void> {
-    const reports = await this.list()
+    const reports = readAll()
     const index = reports.findIndex((r) => r.id === report.id)
     if (index >= 0) {
       reports[index] = report
@@ -49,7 +46,6 @@ export class LocalStorageBackend implements ReportStore {
   }
 
   async remove(id: string): Promise<void> {
-    const reports = await this.list()
-    writeAll(reports.filter((r) => r.id !== id))
+    writeAll(readAll().filter((r) => r.id !== id))
   }
 }

@@ -2,11 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { IPC_CHANNELS } from '../shared/ipc'
 import type { IpcApi } from '../shared/ipc'
 
-// Narrow, typed bridge exposed to the renderer. No channel ever returns a
-// decrypted API key (SEC-2). Report persistence handlers (list/get/save/
-// remove) are wired up in the main process; the remaining calls will reject
-// with "no handler registered" until the AI provider and export phases wire
-// them up too — that is expected at this stage.
+// No channel ever returns a decrypted API key (SEC-2).
 const electronAPI: IpcApi = {
   generate: (req) => ipcRenderer.invoke(IPC_CHANNELS.generate, req),
   reviewWithBobs: (req) => ipcRenderer.invoke(IPC_CHANNELS.reviewWithBobs, req),

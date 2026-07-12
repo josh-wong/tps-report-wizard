@@ -1,7 +1,4 @@
-// Prewritten sample report library (FR-4a, RD-2). Surfaced on the empty
-// state so a first-run user — desktop or web, no key required — can open,
-// read, and share a report with zero setup. `ReportStore.list()` seeds these
-// into storage the first time it finds nothing there (design doc §8).
+// Seeded into storage on first list() so a new user sees content without any setup.
 import type { Report } from './types'
 
 const SAMPLE_TIMESTAMP = Date.parse('1999-01-04T09:00:00Z')

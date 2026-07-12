@@ -1,8 +1,3 @@
-// Shared domain types used by both the Electron main process and the React
-// renderer. Keeping these in one module (imported by both sides of the IPC
-// boundary) prevents the AI and local engines from drifting apart.
-// See docs/design-doc.md §5 and §8.
-
 export type Provider = 'claude' | 'openai'
 
 export type Tone = 'corporate' | 'lumbergh' | 'milton' | 'bobs'

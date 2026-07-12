@@ -1,9 +1,3 @@
-// Corporate Nonsense Engine: a fully offline generator that stitches
-// template sentences and word-bank slots into grammatically valid,
-// semantically empty prose (FR-16..FR-19). The `seed` is woven in as a
-// subject noun phrase so the output nods at the user's input without
-// meaning anything. Output length is normalized to 2-3 paragraphs, the
-// same target as AI mode (FR-19), so the two engines are interchangeable.
 import type { Tone } from '@shared/types'
 import type { ToneWordBank } from './wordbanks'
 import { WORD_BANKS } from './wordbanks'

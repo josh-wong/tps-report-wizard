@@ -43,7 +43,7 @@ function App(): React.JSX.Element {
     setGenerating(true)
     try {
       const body = await reportEngine.generate(activeReport.seed, activeReport.tone)
-      setActiveReport({ ...activeReport, body, updatedAt: Date.now() })
+      setActiveReport((prev) => (prev ? { ...prev, body, updatedAt: Date.now() } : null))
     } finally {
       setGenerating(false)
     }
@@ -51,7 +51,8 @@ function App(): React.JSX.Element {
 
   const handleSave = async (): Promise<void> => {
     if (!activeReport) return
-    await reportStore.save(activeReport)
+    const report = { ...activeReport, status: 'filed' as const }
+    await reportStore.save(report)
     setReports(await reportStore.list())
     setActiveReport(null)
     setScreen('list')
@@ -67,7 +68,7 @@ function App(): React.JSX.Element {
       <div className="title-bar">
         <div className="title-bar-text">
           {screen === 'editor' && activeReport
-            ? `📋 New TPS Report — ${activeReport.id}`
+            ? `📋 ${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
             : "📋 Initech TPS Report Wizard '99"}
         </div>
         <div className="title-bar-controls">

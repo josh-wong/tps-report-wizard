@@ -10,9 +10,6 @@ interface ReportEditorScreenProps {
   onBack: () => void
 }
 
-// New/edit TPS Report form (FR-1..FR-4, FR-4a excluded here — that's the
-// list screen). Seed is the input; body is the generated (and then
-// editable) output — the two never blend into one field (FR-2b).
 function ReportEditorScreen({
   report,
   generating,

@@ -1,9 +1,4 @@
-// Typed IPC contract shared by the preload script (implementation) and the
-// renderer (consumer via `window.electronAPI`). Report persistence handlers
-// (list/get/save/remove) are wired up in the main process as of the core
-// report workflow phase; generate/reviewWithBobs/testConnection/saveKey/
-// getProviderStatus/exportPdf remain unwired until the AI provider and
-// export phases. See docs/design-doc.md §3.
+// No channel ever returns a decrypted key (SEC-2).
 import type { BobsResult, Provider, ProviderConfig, Report, Tone } from './types'
 
 export interface GenerateRequest {

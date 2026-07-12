@@ -1,6 +1,4 @@
-// Desktop `ReportStore` backend (design doc §8, FR-27). Persists to a JSON
-// file via electron-store; report content never leaves the machine through
-// this path. Sample reports (FR-4a) are lazily seeded on first read.
+// Report content never leaves the machine through this path (SEC-1).
 import Store from 'electron-store'
 import { SAMPLE_REPORTS } from '@shared/sampleReports'
 import type { ReportStore } from '@shared/store'
@@ -16,8 +14,12 @@ export class ElectronStoreBackend implements ReportStore {
     defaults: { reports: [] }
   })
 
+  private readRaw(): Report[] {
+    return this.store.get('reports')
+  }
+
   async list(): Promise<Report[]> {
-    const reports = this.store.get('reports')
+    const reports = this.readRaw()
     if (reports.length === 0) {
       this.store.set('reports', SAMPLE_REPORTS)
       return [...SAMPLE_REPORTS]
@@ -26,12 +28,11 @@ export class ElectronStoreBackend implements ReportStore {
   }
 
   async get(id: string): Promise<Report | null> {
-    const reports = await this.list()
-    return reports.find((r) => r.id === id) ?? null
+    return this.readRaw().find((r) => r.id === id) ?? null
   }
 
   async save(report: Report): Promise<void> {
-    const reports = await this.list()
+    const reports = this.readRaw()
     const index = reports.findIndex((r) => r.id === report.id)
     if (index >= 0) {
       reports[index] = report
@@ -42,10 +43,6 @@ export class ElectronStoreBackend implements ReportStore {
   }
 
   async remove(id: string): Promise<void> {
-    const reports = await this.list()
-    this.store.set(
-      'reports',
-      reports.filter((r) => r.id !== id)
-    )
+    this.store.set('reports', this.readRaw().filter((r) => r.id !== id))
   }
 }

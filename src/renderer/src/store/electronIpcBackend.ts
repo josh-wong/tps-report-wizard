@@ -1,6 +1,4 @@
-// Desktop `ReportStore` backend. Delegates to the main process over IPC,
-// which persists via `ElectronStoreBackend` (electron-store/JSON) — the
-// renderer never touches the filesystem directly.
+// The renderer never touches the filesystem; all persistence goes through IPC.
 import type { ReportStore } from '@shared/store'
 import type { Report } from '@shared/types'
 

@@ -8,10 +8,6 @@ interface ReportListScreenProps {
   onOpen: (report: Report) => void
 }
 
-// Empty state + report list (FR-4a, FR-26). The sample library (seeded by
-// the store on first run) and any user-saved reports show in the same
-// grid, so a first-run user can open, read, and share a report with zero
-// setup and no key — and the same screen doubles as "reopen a saved report."
 function ReportListScreen({
   reports,
   loading,

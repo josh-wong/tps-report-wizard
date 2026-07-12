@@ -1,8 +1,3 @@
-// Per-tone word banks for the Corporate Nonsense Engine (FR-16..FR-19,
-// design doc §6, OTD-2: template grammar, not Markov). Each tone gets its
-// own sentence templates and slot fillers so output is film-flavored and
-// distinguishable from the other tones while staying interchangeable in
-// shape with AI output.
 import type { Tone } from '@shared/types'
 
 export interface ToneWordBank {
