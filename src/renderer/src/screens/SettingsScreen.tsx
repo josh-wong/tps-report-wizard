@@ -75,16 +75,6 @@ function SettingsScreen({
         <legend>Report engine</legend>
         <div className="field-row">
           <input
-            id="engine-ai"
-            type="radio"
-            name="engine"
-            checked={useAi}
-            onChange={(e) => handleUseAiChange(e.target.checked)}
-          />
-          <label htmlFor="engine-ai">Use my AI key (desktop only)</label>
-        </div>
-        <div className="field-row">
-          <input
             id="engine-local"
             type="radio"
             name="engine"
@@ -93,13 +83,23 @@ function SettingsScreen({
           />
           <label htmlFor="engine-local">Corporate Nonsense Engine (offline, no key)</label>
         </div>
+        <div className="field-row">
+          <input
+            id="engine-ai"
+            type="radio"
+            name="engine"
+            checked={useAi}
+            onChange={(e) => handleUseAiChange(e.target.checked)}
+          />
+          <label htmlFor="engine-ai">Use my AI key (desktop only)</label>
+        </div>
       </fieldset>
 
       {useAi && (
         <fieldset>
           <legend>AI provider</legend>
 
-          <div className="field-row" style={{ marginBottom: 10 }}>
+          <div className="field-row" style={{ marginBottom: 10, gap: 16 }}>
             <input
               id="provider-claude"
               type="radio"
@@ -114,7 +114,6 @@ function SettingsScreen({
               name="provider"
               checked={provider === 'openai'}
               onChange={() => handleProviderChange('openai')}
-              style={{ marginLeft: 16 }}
             />
             <label htmlFor="provider-openai">OpenAI</label>
           </div>
