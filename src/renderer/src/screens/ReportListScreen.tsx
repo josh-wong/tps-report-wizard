@@ -37,10 +37,10 @@ function ReportListScreen({
 
       <fieldset>
         <legend>Reports</legend>
-        {reports.length === 0 ? (
-          <p className="note">
-            {loading ? 'Loading…' : "Nothing filed yet. That's about to change."}
-          </p>
+        {isEmpty ? (
+          <p className="note">{"Nothing filed yet. That's about to change."}</p>
+        ) : loading ? (
+          <p className="note">Loading…</p>
         ) : (
           <div className="report-grid">
             {reports.map((report) => (

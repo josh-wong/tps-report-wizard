@@ -4,6 +4,7 @@ import { TONE_LABELS } from '../report/toneLabels'
 interface ReportEditorScreenProps {
   report: Report
   generating: boolean
+  saveError: string | null
   onChange: (report: Report) => void
   onGenerate: () => void
   onSave: () => void
@@ -13,6 +14,7 @@ interface ReportEditorScreenProps {
 function ReportEditorScreen({
   report,
   generating,
+  saveError,
   onChange,
   onGenerate,
   onSave,
@@ -116,6 +118,8 @@ function ReportEditorScreen({
           </select>
         </label>
       </div>
+
+      {saveError && <p className="save-error note">{saveError}</p>}
 
       <div className="editor-actions">
         <button type="button" accessKey="b" onClick={onBack}>

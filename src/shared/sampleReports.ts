@@ -1,4 +1,4 @@
-// Seeded into storage on first list() so a new user sees content without any setup.
+// Seed data so new users see content on first launch.
 import type { Report } from './types'
 
 const SAMPLE_TIMESTAMP = Date.parse('1999-01-04T09:00:00Z')

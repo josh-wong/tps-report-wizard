@@ -13,8 +13,8 @@ function randomInRange(min: number, max: number): number {
 function fillTemplate(template: string, seed: string, bank: ToneWordBank): string {
   const capitalizedSeed = seed.charAt(0).toUpperCase() + seed.slice(1)
   return template
-    .replace(/\{Seed\}/g, capitalizedSeed)
-    .replace(/\{seed\}/g, seed)
+    .replace(/\{Seed\}/g, () => capitalizedSeed)
+    .replace(/\{seed\}/g, () => seed)
     .replace(/\{buzz\}/g, () => pick(bank.buzzPhrases))
     .replace(/\{noun\}/g, () => pick(bank.nounPhrases))
     .replace(/\{verb\}/g, () => pick(bank.verbPhrases))

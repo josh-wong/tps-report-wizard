@@ -15,6 +15,7 @@ const reportEngine = makeReportEngine()
 function App(): React.JSX.Element {
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [activeReport, setActiveReport] = useState<Report | null>(null)
   const [generating, setGenerating] = useState(false)
 
@@ -22,6 +23,7 @@ function App(): React.JSX.Element {
     reportStore
       .list()
       .then(setReports)
+      .catch((err) => console.error('Failed to load reports:', err))
       .finally(() => setLoading(false))
   }, [])
 
@@ -47,6 +49,7 @@ function App(): React.JSX.Element {
   const handleSave = async (): Promise<void> => {
     if (!activeReport) return
     const report = { ...activeReport, status: 'filed' as const }
+    setSaveError(null)
     try {
       await reportStore.save(report)
       setReports((prev) => {
@@ -56,6 +59,7 @@ function App(): React.JSX.Element {
       setActiveReport(null)
     } catch (err) {
       console.error('Failed to save report:', err)
+      setSaveError('Save failed. Please try again.')
     }
   }
 
@@ -98,6 +102,7 @@ function App(): React.JSX.Element {
         <ReportEditorScreen
           report={activeReport}
           generating={generating}
+          saveError={saveError}
           onChange={setActiveReport}
           onGenerate={handleGenerate}
           onSave={handleSave}

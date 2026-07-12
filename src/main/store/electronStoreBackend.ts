@@ -22,8 +22,7 @@ export class ElectronStoreBackend implements ReportStore {
   async list(): Promise<Report[]> {
     const reports = this.readRaw()
     if (reports.length === 0 && !this.store.get('seeded')) {
-      this.store.set('reports', SAMPLE_REPORTS)
-      this.store.set('seeded', true)
+      this.store.set({ reports: SAMPLE_REPORTS, seeded: true })
       return [...SAMPLE_REPORTS]
     }
     return reports
