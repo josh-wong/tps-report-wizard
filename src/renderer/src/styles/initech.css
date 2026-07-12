@@ -332,3 +332,40 @@ body {
   background: silver;
   border-top: 1px solid #808080;
 }
+
+@media print {
+  body,
+  #root,
+  .tps-window {
+    background: white;
+    padding: 0;
+    margin: 0;
+  }
+
+  .title-bar,
+  .menu-bar,
+  .status-bar,
+  .editor-footer,
+  .editor-actions,
+  .print-preview-actions,
+  .modal-overlay,
+  .memo-banner {
+    display: none;
+  }
+
+  .window-body {
+    border: none;
+    padding: 0;
+  }
+
+  .print-page {
+    page-break-after: always;
+    padding: 0.5in;
+    min-height: 9in;
+    background: white;
+  }
+
+  .print-page:last-child {
+    page-break-after: avoid;
+  }
+}
