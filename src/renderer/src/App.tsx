@@ -21,6 +21,7 @@ function App(): React.JSX.Element {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [activeReport, setActiveReport] = useState<Report | null>(null)
   const [generating, setGenerating] = useState(false)
+  const [generateError, setGenerateError] = useState<string | null>(null)
 
   const [providerStatus, setProviderStatus] = useState<{
     provider: Provider | null
@@ -61,12 +62,13 @@ function App(): React.JSX.Element {
   const handleGenerate = async (): Promise<void> => {
     if (!activeReport) return
     setGenerating(true)
+    setGenerateError(null)
     try {
       const body = await reportEngine.generate(activeReport.seed, activeReport.tone)
       setActiveReport((prev) => (prev ? { ...prev, body, updatedAt: Date.now() } : null))
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Generation failed.'
-      console.error('Generate failed:', msg)
+      setGenerateError(msg)
     } finally {
       setGenerating(false)
     }
@@ -157,6 +159,7 @@ function App(): React.JSX.Element {
         <ReportEditorScreen
           report={activeReport}
           generating={generating}
+          generateError={generateError}
           saveError={saveError}
           onChange={setActiveReport}
           onGenerate={handleGenerate}

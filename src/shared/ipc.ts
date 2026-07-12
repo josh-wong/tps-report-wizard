@@ -30,7 +30,10 @@ export const IPC_CHANNELS = {
 export interface IpcApi {
   generate(req: GenerateRequest): Promise<GenerateResult>
   reviewWithBobs(req: BobsRequest): Promise<BobsResult>
-  testConnection(p: ProviderConfig): Promise<{ ok: boolean; message: string }>
+  testConnection(
+    p: ProviderConfig,
+    candidateKey?: string
+  ): Promise<{ ok: boolean; message: string }>
   saveKey(p: ProviderConfig, key: string): Promise<void> // key crosses IN, never OUT
   getProviderStatus(): Promise<{ provider: Provider | null; hasKey: boolean }>
   listReports(): Promise<Report[]>

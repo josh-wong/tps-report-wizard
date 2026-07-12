@@ -43,7 +43,9 @@ function SettingsScreen({
     setTesting(true)
     setTestResult(null)
     try {
-      const result = await window.electronAPI.testConnection({ provider })
+      // Pass the unsaved key from the input field so the user can test before
+      // committing. Falls back to the stored key in main if the field is empty.
+      const result = await window.electronAPI.testConnection({ provider }, apiKey || undefined)
       setTestResult(result)
     } catch {
       setTestResult({ ok: false, message: 'Connection test failed.' })

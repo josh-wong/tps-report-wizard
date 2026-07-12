@@ -85,14 +85,24 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
     }
   })
 
-  ipcMain.handle(IPC_CHANNELS.testConnection, async (_event, p: unknown) => {
+  ipcMain.handle(IPC_CHANNELS.testConnection, async (_event, p: unknown, candidateKey: unknown) => {
     if (!isValidProviderConfig(p)) return { ok: false, message: 'Invalid provider config.' }
 
-    const key = keyStore.getKey(p.provider)
+    // Prefer the unsaved candidate key passed from the UI so the user can test
+    // before committing. Fall back to the stored key if none was sent.
+    const key =
+      typeof candidateKey === 'string' && candidateKey.trim().length > 0
+        ? candidateKey.trim()
+        : keyStore.getKey(p.provider)
+
     if (!key) return { ok: false, message: 'No key saved for this provider yet.' }
 
     const provider = providerFactory(p, key)
     return provider.test()
+  })
+
+  ipcMain.handle(IPC_CHANNELS.reviewWithBobs, () => {
+    throw new Error('Bobs Review is not yet implemented.')
   })
 
   ipcMain.handle(IPC_CHANNELS.saveKey, (_event, p: unknown, key: unknown) => {

@@ -8,6 +8,7 @@ import PrintPreviewModal from '../components/PrintPreviewModal'
 interface ReportEditorScreenProps {
   report: Report
   generating: boolean
+  generateError: string | null
   saveError: string | null
   onChange: (report: Report) => void
   onGenerate: () => void
@@ -18,6 +19,7 @@ interface ReportEditorScreenProps {
 function ReportEditorScreen({
   report,
   generating,
+  generateError,
   saveError,
   onChange,
   onGenerate,
@@ -178,6 +180,7 @@ function ReportEditorScreen({
         </label>
       </div>
 
+      {generateError && <p className="save-error note">Generate failed: {generateError}</p>}
       {saveError && <p className="save-error note">{saveError}</p>}
 
       <div className="editor-actions">

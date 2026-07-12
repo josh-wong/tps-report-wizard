@@ -6,7 +6,8 @@ import type { IpcApi } from '../shared/ipc'
 const electronAPI: IpcApi = {
   generate: (req) => ipcRenderer.invoke(IPC_CHANNELS.generate, req),
   reviewWithBobs: (req) => ipcRenderer.invoke(IPC_CHANNELS.reviewWithBobs, req),
-  testConnection: (p) => ipcRenderer.invoke(IPC_CHANNELS.testConnection, p),
+  testConnection: (p, candidateKey) =>
+    ipcRenderer.invoke(IPC_CHANNELS.testConnection, p, candidateKey),
   saveKey: (p, key) => ipcRenderer.invoke(IPC_CHANNELS.saveKey, p, key),
   getProviderStatus: () => ipcRenderer.invoke(IPC_CHANNELS.getProviderStatus),
   listReports: () => ipcRenderer.invoke(IPC_CHANNELS.listReports),
