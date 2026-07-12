@@ -1,7 +1,9 @@
 // Typed IPC contract shared by the preload script (implementation) and the
-// renderer (consumer via `window.electronAPI`). No handlers are wired up in
-// the main process yet — that lands with the AI provider and report-workflow
-// phases. See docs/design-doc.md §3.
+// renderer (consumer via `window.electronAPI`). Report persistence handlers
+// (list/get/save/remove) are wired up in the main process as of the core
+// report workflow phase; generate/reviewWithBobs/testConnection/saveKey/
+// getProviderStatus/exportPdf remain unwired until the AI provider and
+// export phases. See docs/design-doc.md §3.
 import type { BobsResult, Provider, ProviderConfig, Report, Tone } from './types'
 
 export interface GenerateRequest {
@@ -24,7 +26,9 @@ export const IPC_CHANNELS = {
   saveKey: 'provider:saveKey',
   getProviderStatus: 'provider:getStatus',
   listReports: 'report:list',
+  getReport: 'report:get',
   saveReport: 'report:save',
+  removeReport: 'report:remove',
   exportPdf: 'report:exportPdf'
 } as const
 
@@ -35,6 +39,8 @@ export interface IpcApi {
   saveKey(p: ProviderConfig, key: string): Promise<void> // key crosses IN, never OUT
   getProviderStatus(): Promise<{ provider: Provider | null; hasKey: boolean }>
   listReports(): Promise<Report[]>
+  getReport(id: string): Promise<Report | null>
   saveReport(r: Report): Promise<void>
+  removeReport(id: string): Promise<void>
   exportPdf(r: Report): Promise<{ path: string }>
 }

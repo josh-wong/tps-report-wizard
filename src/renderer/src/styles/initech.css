@@ -66,3 +66,116 @@ body {
 .tps-body p:last-child {
   margin-bottom: 0;
 }
+
+.note {
+  color: #555;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.tps-body fieldset {
+  margin: 0 0 12px;
+}
+
+.tps-field-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 6px 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.tps-field-grid input {
+  width: 100%;
+}
+
+.report-id-field {
+  padding: 4px 6px;
+  font-family: 'Courier New', monospace;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.seed-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seed-row * {
+  margin-top: 0;
+}
+
+.seed-row input {
+  flex: 1;
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.editor-footer .field-row {
+  margin: 0;
+}
+
+.cover-sheet-toggle {
+  gap: 6px;
+}
+
+.tone-select {
+  gap: 6px;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 8px 0 14px;
+}
+
+.empty-icon {
+  font-size: 26px;
+}
+
+.empty-title {
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.report-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 8px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.report-card-title {
+  font-weight: bold;
+}
+
+.report-card-meta {
+  color: #555;
+  font-size: 11px;
+}
