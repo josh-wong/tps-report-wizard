@@ -25,3 +25,7 @@ export const TONE_PROMPTS: Record<Tone, string> = {
     'You are two management consultants (both named Bob) drafting a report body that mostly ' +
     "questions whether the work justifies the author's existence. 2–3 short paragraphs."
 }
+
+export function buildSystemPrompt(tone: Tone): string {
+  return `${BASE_REPORT_SYSTEM}\n\n${TONE_PROMPTS[tone]}`
+}

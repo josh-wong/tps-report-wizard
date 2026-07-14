@@ -1,5 +1,5 @@
 import type { Tone, Provider } from './types'
-import { TONE_PROMPTS, BASE_REPORT_SYSTEM } from './tonePrompts'
+import { buildSystemPrompt } from './tonePrompts'
 
 // Pricing as of July 2026. Verify against official provider docs before each release:
 // - Anthropic: https://platform.claude.com/docs/en/about-claude/pricing
@@ -22,12 +22,8 @@ function estimateTokens(text: string): number {
   return Math.ceil(text.length * TOKENS_PER_CHARACTER)
 }
 
-export function estimateGenerationCost(
-  seed: string,
-  tone: Tone,
-  provider: Provider
-): number {
-  const systemPrompt = `${BASE_REPORT_SYSTEM}\n\n${TONE_PROMPTS[tone]}`
+export function estimateGenerationCost(seed: string, tone: Tone, provider: Provider): number {
+  const systemPrompt = buildSystemPrompt(tone)
 
   const inputTokens = estimateTokens(seed) + estimateTokens(systemPrompt)
   const maxOutputTokens = 700

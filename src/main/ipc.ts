@@ -5,7 +5,7 @@ import type { GenerateRequest } from '@shared/ipc'
 import type { ReportStore } from '@shared/store'
 import type { Provider, ProviderConfig, Report, Tone, ReportStatus } from '@shared/types'
 import { TONES, REPORT_STATUSES } from '@shared/types'
-import { BASE_REPORT_SYSTEM, TONE_PROMPTS } from '@shared/tonePrompts'
+import { buildSystemPrompt } from '@shared/tonePrompts'
 import { renderReportHtml } from './pdf/renderReportHtml'
 import type { KeyStore } from './keyStore'
 import { providerFactory } from './providers/factory'
@@ -76,7 +76,7 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
       if (!key) throw new Error('NO_AI_KEY')
 
       const provider = providerFactory({ provider: status.provider }, key)
-      const system = `${BASE_REPORT_SYSTEM}\n\n${TONE_PROMPTS[tone]}`
+      const system = buildSystemPrompt(tone)
 
       const body = await provider.complete({ system, user: seed })
       return { body }
