@@ -7,9 +7,18 @@ export function humanizeError(err: unknown): string {
   const status = errorObj?.status as number | undefined
   const errorType = (errorObj?.error as Record<string, unknown>)?.type as string | undefined
 
+  // Handle missing API key
+  if (msg.includes('no_ai_key')) {
+    return 'No API key configured. Set up your OpenAI or Claude API key in Settings.'
+  }
+
   // Check structured error properties first (OpenAI/Anthropic SDKs)
-  if (status === 401 || errorType === 'authentication_error' || errorType === 'invalid_request_error') {
-    return 'Yeaaah… that key doesn\'t seem to be working. If you could go ahead and check it.'
+  if (
+    status === 401 ||
+    errorType === 'authentication_error' ||
+    errorType === 'invalid_request_error'
+  ) {
+    return "Yeaaah… that key doesn't seem to be working. If you could go ahead and check it."
   }
   if (status === 429 || errorType === 'rate_limit_error') {
     return 'The Bobs are in a meeting. Rate limit hit — try again in a moment.'
@@ -20,7 +29,7 @@ export function humanizeError(err: unknown): string {
 
   // Fall back to message string matching
   if (msg.includes('401') || msg.includes('unauthorized') || msg.includes('invalid api key')) {
-    return 'Yeaaah… that key doesn\'t seem to be working. If you could go ahead and check it.'
+    return "Yeaaah… that key doesn't seem to be working. If you could go ahead and check it."
   }
   if (msg.includes('429') || msg.includes('rate limit')) {
     return 'The Bobs are in a meeting. Rate limit hit — try again in a moment.'
