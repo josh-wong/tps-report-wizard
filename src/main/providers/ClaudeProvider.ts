@@ -1,7 +1,12 @@
 import Anthropic from '@anthropic-ai/sdk'
+import type { TextBlock } from '@anthropic-ai/sdk/resources/messages'
 import { MODEL_CONFIG } from '@shared/modelConfig'
 import type { LlmProvider } from './LlmProvider'
 import { humanizeError } from './errors'
+
+function isTextBlock(block: unknown): block is TextBlock {
+  return typeof block === 'object' && block !== null && (block as Record<string, unknown>).type === 'text'
+}
 
 export class ClaudeProvider implements LlmProvider {
   readonly id = 'claude' as const
@@ -31,8 +36,8 @@ export class ClaudeProvider implements LlmProvider {
       messages: [{ role: 'user', content: user }]
     })
     return msg.content
-      .filter((b) => b.type === 'text')
-      .map((b) => (b as { type: 'text'; text: string }).text)
+      .filter(isTextBlock)
+      .map((b) => b.text)
       .join('')
   }
 
