@@ -39,7 +39,7 @@ export function createKeyStore(): KeyStore {
       if (!b64) return null
       try {
         return safeStorage.decryptString(Buffer.from(b64, 'base64'))
-      } catch (err) {
+      } catch {
         console.warn('Failed to decrypt API key for provider:', provider)
         return null
       }
@@ -52,15 +52,13 @@ export function createKeyStore(): KeyStore {
     deleteKey(provider: Provider): boolean {
       const encryptedKeys = store.get('encryptedKeys')
       if (!encryptedKeys || !encryptedKeys[provider]) return false
-      
-      // 1. Remove the specific key entry
+
       const newKeys = { ...encryptedKeys }
       delete newKeys[provider]
       store.set('encryptedKeys', newKeys)
 
-      // 2. Global State Reset (Crucial for Requirement 1/Usability): If we delete a provider and that was the active provider, reset to 'No Key Available'.
-      if (store.get('provider') === provider && !newKeys[provider]) {
-        store.set('provider', null) // Reset the active provider field if it was cleared accidentally
+      if (store.get('provider') === provider) {
+        store.set('provider', null)
       }
       return true
     },
