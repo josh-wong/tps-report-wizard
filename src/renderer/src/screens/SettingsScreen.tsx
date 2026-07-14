@@ -21,6 +21,7 @@ function SettingsScreen({
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const handleSaveKey = async (): Promise<void> => {
     if (!apiKey.trim()) return
@@ -67,6 +68,27 @@ function SettingsScreen({
       onStatusChange(null, false)
     } else if (initialHasKey) {
       onStatusChange(provider, true)
+    }
+  }
+
+  const handleDeleteKey = async (): Promise<void> => {
+    if (!window.confirm(`Delete the ${provider} API key?`)) return
+    setDeleting(true)
+    setSaveMessage(null)
+    setTestResult(null)
+    try {
+      const success = await window.electronAPI.deleteKeys({ provider })
+      if (success) {
+        onStatusChange(null, false)
+        setSaveMessage('Key deleted.')
+        setUseAi(false)
+      } else {
+        setSaveMessage('Failed to delete key.')
+      }
+    } catch {
+      setSaveMessage('Failed to delete key.')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -146,6 +168,11 @@ function SettingsScreen({
             <button type="button" onClick={handleTest} disabled={testing}>
               {testing ? 'Testing…' : 'Test connection'}
             </button>
+            {initialHasKey && (
+              <button type="button" onClick={handleDeleteKey} disabled={deleting}>
+                {deleting ? 'Deleting…' : 'Delete key'}
+              </button>
+            )}
             {testResult && (
               <span className={testResult.ok ? 'settings-ok' : 'settings-err'}>
                 {testResult.ok ? '✓ ' : '✗ '}

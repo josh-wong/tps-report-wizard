@@ -18,6 +18,7 @@ export interface KeyStore {
   getKey(provider: Provider): string | null
   setProvider(provider: Provider): void
   getStatus(): { provider: Provider | null; hasKey: boolean }
+  deleteKey(provider: Provider): boolean
 }
 
 export function createKeyStore(): KeyStore {
@@ -47,12 +48,28 @@ export function createKeyStore(): KeyStore {
       store.set('provider', provider)
     },
 
+    deleteKey(provider: Provider): boolean {
+      const encryptedKeys = store.get('encryptedKeys')
+      if (!encryptedKeys || !encryptedKeys[provider]) return false
+      
+      // 1. Remove the specific key entry
+      const newKeys = { ...encryptedKeys }
+      delete newKeys[provider]
+      store.set('encryptedKeys', newKeys)
+
+      // 2. Global State Reset (Crucial for Requirement 1/Usability): If we delete a provider and that was the active provider, reset to 'No Key Available'.
+      if (store.get('provider') === provider && !newKeys[provider]) {
+        store.set('provider', null) // Reset the active provider field if it was cleared accidentally
+      }
+      return true
+    },
+
     getStatus(): { provider: Provider | null; hasKey: boolean } {
       const provider = store.get('provider')
       if (!provider) return { provider: null, hasKey: false }
       const encryptedKeys = store.get('encryptedKeys')
       const hasKey = !!encryptedKeys[provider]
-      return { provider, hasKey }
+      return { provider: provider as Provider | null, hasKey }
     }
   }
 }
