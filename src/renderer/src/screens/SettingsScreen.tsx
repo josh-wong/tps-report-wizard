@@ -66,8 +66,6 @@ function SettingsScreen({
     setUseAi(checked)
     if (!checked) {
       onStatusChange(null, false)
-    } else if (initialHasKey) {
-      onStatusChange(provider, true)
     }
   }
 
@@ -127,11 +125,19 @@ function SettingsScreen({
             style={{ background: '#ffe', borderColor: '#aa8', marginBottom: 10 }}
           >
             💰 Pricing and models as of July 2026. For up-to-date pricing, check{' '}
-            <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://platform.claude.com/docs/en/about-claude/pricing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Anthropic
             </a>{' '}
             or{' '}
-            <a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://developers.openai.com/api/docs/pricing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               OpenAI
             </a>
             .
@@ -145,7 +151,9 @@ function SettingsScreen({
               checked={provider === 'claude'}
               onChange={() => handleProviderChange('claude')}
             />
-            <label htmlFor="provider-claude">Anthropic (Claude Haiku 4.5) — $1/$5 per 1M tokens</label>
+            <label htmlFor="provider-claude">
+              Anthropic (Claude Haiku 4.5) — $1/$5 per 1M tokens
+            </label>
             <input
               id="provider-openai"
               type="radio"
