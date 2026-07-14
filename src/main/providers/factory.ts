@@ -13,5 +13,7 @@ export function providerFactory(
       return new ClaudeProvider(key, tier)
     case 'openai':
       return new OpenAiProvider(key, tier)
+    default:
+      throw new Error(`Unknown provider: ${config.provider}`)
   }
 }
