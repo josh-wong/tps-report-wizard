@@ -8,6 +8,7 @@ import { TONES, REPORT_STATUSES } from '@shared/types'
 import { BASE_REPORT_SYSTEM, TONE_PROMPTS } from '@shared/tonePrompts'
 import { renderReportHtml } from './pdf/renderReportHtml'
 import type { KeyStore } from './keyStore'
+import type { LlmProvider } from './providers/LlmProvider'
 import { providerFactory } from './providers/factory'
 import { humanizeError } from './providers/errors'
 
@@ -74,7 +75,12 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
     const key = keyStore.getKey(status.provider)
     if (!key) throw new Error('NO_AI_KEY')
 
-    const provider = providerFactory({ provider: status.provider }, key)
+    let provider: LlmProvider
+    try {
+      provider = providerFactory({ provider: status.provider }, key)
+    } catch (err) {
+      throw new Error(`Failed to initialize provider: ${err instanceof Error ? err.message : String(err)}`)
+    }
     const system = `${BASE_REPORT_SYSTEM}\n\n${TONE_PROMPTS[tone]}`
 
     try {
@@ -110,6 +116,11 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
     if (typeof key !== 'string' || key.trim().length === 0) throw new Error('Invalid key')
     keyStore.saveKey(p.provider, key.trim())
     keyStore.setProvider(p.provider)
+  })
+
+  ipcMain.handle(IPC_CHANNELS.deleteKeys, (_event, p: unknown) => {
+    if (!isValidProviderConfig(p)) throw new Error('Invalid provider config')
+    return keyStore.deleteKey(p.provider)
   })
 
   ipcMain.handle(IPC_CHANNELS.getProviderStatus, () => keyStore.getStatus())
