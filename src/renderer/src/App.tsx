@@ -162,6 +162,7 @@ function App(): React.JSX.Element {
       ) : screen === 'editor' && activeReport ? (
         <ReportEditorScreen
           report={activeReport}
+          provider={providerStatus.provider}
           generating={generating}
           generateError={generateError}
           saveError={saveError}

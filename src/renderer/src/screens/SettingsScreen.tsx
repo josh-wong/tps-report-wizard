@@ -130,7 +130,7 @@ function SettingsScreen({
               checked={provider === 'claude'}
               onChange={() => handleProviderChange('claude')}
             />
-            <label htmlFor="provider-claude">Claude</label>
+            <label htmlFor="provider-claude">Claude (Haiku) — $1/$5 per 1M tokens</label>
             <input
               id="provider-openai"
               type="radio"
@@ -138,7 +138,7 @@ function SettingsScreen({
               checked={provider === 'openai'}
               onChange={() => handleProviderChange('openai')}
             />
-            <label htmlFor="provider-openai">OpenAI</label>
+            <label htmlFor="provider-openai">OpenAI (GPT-5.6 Luna) — $1/$6 per 1M tokens</label>
           </div>
 
           <div className="field-row-stacked" style={{ marginBottom: 10 }}>
@@ -190,6 +190,21 @@ function SettingsScreen({
       >
         🔒 Your key is encrypted locally (safeStorage) and never leaves this machine. Calls go out
         from the main process — the app never puts your key in the browser or a URL.
+      </div>
+
+      <div
+        className="memo-banner"
+        style={{ background: '#ffe', borderColor: '#aa8', marginTop: 12 }}
+      >
+        💰 Pricing shown above is current as of July 2026. Check{' '}
+        <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener noreferrer">
+          Anthropic
+        </a>{' '}
+        or{' '}
+        <a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noopener noreferrer">
+          OpenAI
+        </a>{' '}
+        pricing pages for current rates.
       </div>
 
       <div className="editor-actions" style={{ marginTop: 12 }}>

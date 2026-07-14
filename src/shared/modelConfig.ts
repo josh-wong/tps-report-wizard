@@ -1,12 +1,20 @@
 // All model identifiers live here. Never hardcode a model string in feature
 // code (TC-4). Verify current IDs against provider docs before each release.
+//
+// Current pricing (per 1M tokens):
+// - claude-haiku-4-5: $1 input / $5 output
+//   https://platform.claude.com/docs/en/about-claude/pricing
+// - gpt-5.6-luna: $1 input / $6 output
+//   https://developers.openai.com/api/docs/pricing
+//
+// Backup models if primary provider is deprecated:
+// - claude-sonnet-5: $2/$10 (intro pricing through Aug 31, 2026) or $3/$15 standard
+// - gpt-5.6-terra: $2.50/$15
 export const MODEL_CONFIG = {
   claude: {
-    default: 'claude-haiku-4-5-20251001',
-    quality: 'claude-sonnet-4-6'
+    default: 'claude-haiku-4-5'
   },
   openai: {
-    default: 'gpt-4o-mini',
-    quality: 'gpt-4o'
+    default: 'gpt-5.6-luna'
   }
 } as const
