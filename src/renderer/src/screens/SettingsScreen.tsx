@@ -174,7 +174,7 @@ function SettingsScreen({
             <input
               id="api-key"
               type="password"
-              placeholder={provider === 'claude' ? 'sk-ant-…' : 'sk-…'}
+              placeholder={provider === 'claude' ? 'sk-ant-…' : 'sk-proj-…'}
               value={apiKey}
               onChange={(e) => {
                 setApiKey(e.target.value)
