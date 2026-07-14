@@ -1,6 +1,5 @@
 import type { Tone, Provider } from './types'
 import { TONE_PROMPTS, BASE_REPORT_SYSTEM } from './tonePrompts'
-import { MODEL_CONFIG } from './modelConfig'
 
 // Pricing as of July 2026. Verify against official provider docs before each release:
 // - Anthropic: https://platform.claude.com/docs/en/about-claude/pricing
