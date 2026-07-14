@@ -39,7 +39,8 @@ export function createKeyStore(): KeyStore {
       if (!b64) return null
       try {
         return safeStorage.decryptString(Buffer.from(b64, 'base64'))
-      } catch {
+      } catch (err) {
+        console.warn('Failed to decrypt API key for provider:', provider)
         return null
       }
     },
