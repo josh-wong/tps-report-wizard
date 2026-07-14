@@ -8,7 +8,6 @@ import { TONES, REPORT_STATUSES } from '@shared/types'
 import { BASE_REPORT_SYSTEM, TONE_PROMPTS } from '@shared/tonePrompts'
 import { renderReportHtml } from './pdf/renderReportHtml'
 import type { KeyStore } from './keyStore'
-import type { LlmProvider } from './providers/LlmProvider'
 import { providerFactory } from './providers/factory'
 import { humanizeError } from './providers/errors'
 
@@ -67,23 +66,18 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
     if (!isValidGenerateRequest(req)) throw new Error('Invalid generate request')
     const { seed, tone } = req
 
-    const status = keyStore.getStatus()
-    if (!status.hasKey || !status.provider) {
-      throw new Error('NO_AI_KEY')
-    }
-
-    const key = keyStore.getKey(status.provider)
-    if (!key) throw new Error('NO_AI_KEY')
-
-    let provider: LlmProvider
     try {
-      provider = providerFactory({ provider: status.provider }, key)
-    } catch (err) {
-      throw new Error(`Failed to initialize provider: ${err instanceof Error ? err.message : String(err)}`)
-    }
-    const system = `${BASE_REPORT_SYSTEM}\n\n${TONE_PROMPTS[tone]}`
+      const status = keyStore.getStatus()
+      if (!status.hasKey || !status.provider) {
+        throw new Error('NO_AI_KEY')
+      }
 
-    try {
+      const key = keyStore.getKey(status.provider)
+      if (!key) throw new Error('NO_AI_KEY')
+
+      const provider = providerFactory({ provider: status.provider }, key)
+      const system = `${BASE_REPORT_SYSTEM}\n\n${TONE_PROMPTS[tone]}`
+
       const body = await provider.complete({ system, user: seed })
       return { body }
     } catch (err) {
@@ -103,8 +97,12 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
 
     if (!key) return { ok: false, message: 'No key saved for this provider yet.' }
 
-    const provider = providerFactory(p, key)
-    return provider.test()
+    try {
+      const provider = providerFactory(p, key)
+      return provider.test()
+    } catch (err) {
+      return { ok: false, message: humanizeError(err) }
+    }
   })
 
   ipcMain.handle(IPC_CHANNELS.reviewWithBobs, () => {
