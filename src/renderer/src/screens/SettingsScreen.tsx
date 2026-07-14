@@ -145,7 +145,7 @@ function SettingsScreen({
               checked={provider === 'claude'}
               onChange={() => handleProviderChange('claude')}
             />
-            <label htmlFor="provider-claude">Claude (Haiku) — $1/$5 per 1M tokens</label>
+            <label htmlFor="provider-claude">Anthropic (Claude Haiku 4.5) — $1/$5 per 1M tokens</label>
             <input
               id="provider-openai"
               type="radio"
