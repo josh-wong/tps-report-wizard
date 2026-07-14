@@ -58,6 +58,7 @@ function SettingsScreen({
     setProvider(p)
     setTestResult(null)
     setSaveMessage(null)
+    setApiKey('') // Clear the API key state when changing providers.
   }
 
   const handleUseAiChange = (checked: boolean): void => {
