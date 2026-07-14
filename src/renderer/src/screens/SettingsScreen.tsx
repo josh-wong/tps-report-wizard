@@ -122,6 +122,21 @@ function SettingsScreen({
         <fieldset>
           <legend>AI provider</legend>
 
+          <div
+            className="memo-banner"
+            style={{ background: '#ffe', borderColor: '#aa8', marginBottom: 10 }}
+          >
+            💰 Pricing and models as of July 2026. For up-to-date pricing, check{' '}
+            <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener noreferrer">
+              Anthropic
+            </a>{' '}
+            or{' '}
+            <a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noopener noreferrer">
+              OpenAI
+            </a>
+            .
+          </div>
+
           <div className="field-row" style={{ marginBottom: 10, gap: 16 }}>
             <input
               id="provider-claude"
@@ -190,21 +205,6 @@ function SettingsScreen({
       >
         🔒 Your key is encrypted locally (safeStorage) and never leaves this machine. Calls go out
         from the main process — the app never puts your key in the browser or a URL.
-      </div>
-
-      <div
-        className="memo-banner"
-        style={{ background: '#ffe', borderColor: '#aa8', marginTop: 12 }}
-      >
-        💰 Pricing shown above is current as of July 2026. Check{' '}
-        <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener noreferrer">
-          Anthropic
-        </a>{' '}
-        or{' '}
-        <a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noopener noreferrer">
-          OpenAI
-        </a>{' '}
-        pricing pages for current rates.
       </div>
 
       <div className="editor-actions" style={{ marginTop: 12 }}>
