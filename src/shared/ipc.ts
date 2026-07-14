@@ -36,7 +36,7 @@ export interface IpcApi {
     candidateKey?: string
   ): Promise<{ ok: boolean; message: string }>
   saveKey(p: ProviderConfig, key: string): Promise<void> // key crosses IN, never OUT
-  getProviderStatus(): Promise<{ provider: Provider | null; hasKey: boolean }> 
+  getProviderStatus(): Promise<{ provider: Provider | null; hasKey: boolean }>
   deleteKeys(p: ProviderConfig): Promise<boolean>
   listReports(): Promise<Report[]>
   getReport(id: string): Promise<Report | null>

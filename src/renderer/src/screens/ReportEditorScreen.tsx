@@ -147,7 +147,8 @@ function ReportEditorScreen({
         </div>
         {provider && report.seed.trim() && (
           <span className="note">
-            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.tone, provider))} (actual may vary)
+            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.tone, provider))}{' '}
+            (actual may vary)
           </span>
         )}
       </div>
