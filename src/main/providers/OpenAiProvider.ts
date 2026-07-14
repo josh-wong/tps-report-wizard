@@ -6,12 +6,14 @@ import { humanizeError } from './errors'
 export class OpenAiProvider implements LlmProvider {
   readonly id = 'openai' as const
   private readonly model: string
+  private readonly client: OpenAI
 
   constructor(
     private readonly key: string,
     tier: 'default' | 'quality' = 'default'
   ) {
     this.model = MODEL_CONFIG.openai[tier]
+    this.client = new OpenAI({ apiKey: this.key })
   }
 
   async complete({
@@ -23,8 +25,7 @@ export class OpenAiProvider implements LlmProvider {
     user: string
     maxTokens?: number
   }): Promise<string> {
-    const client = new OpenAI({ apiKey: this.key })
-    const res = await client.chat.completions.create({
+    const res = await this.client.chat.completions.create({
       model: this.model,
       max_tokens: maxTokens,
       messages: [
@@ -37,7 +38,7 @@ export class OpenAiProvider implements LlmProvider {
 
   async test(): Promise<{ ok: boolean; message: string }> {
     try {
-      await new OpenAI({ apiKey: this.key }).models.list()
+      await this.client.models.list()
       return { ok: true, message: 'Great. Great, great, great.' }
     } catch (err) {
       return { ok: false, message: humanizeError(err) }

@@ -5,18 +5,24 @@ import type { LlmProvider } from './LlmProvider'
 import { humanizeError } from './errors'
 
 function isTextBlock(block: unknown): block is TextBlock {
-  return typeof block === 'object' && block !== null && (block as Record<string, unknown>).type === 'text'
+  return (
+    typeof block === 'object' &&
+    block !== null &&
+    (block as Record<string, unknown>).type === 'text'
+  )
 }
 
 export class ClaudeProvider implements LlmProvider {
   readonly id = 'claude' as const
   private readonly model: string
+  private readonly client: Anthropic
 
   constructor(
     private readonly key: string,
     tier: 'default' | 'quality' = 'default'
   ) {
     this.model = MODEL_CONFIG.claude[tier]
+    this.client = new Anthropic({ apiKey: this.key })
   }
 
   async complete({
@@ -28,8 +34,7 @@ export class ClaudeProvider implements LlmProvider {
     user: string
     maxTokens?: number
   }): Promise<string> {
-    const client = new Anthropic({ apiKey: this.key })
-    const msg = await client.messages.create({
+    const msg = await this.client.messages.create({
       model: this.model,
       max_tokens: maxTokens,
       system,
@@ -43,7 +48,7 @@ export class ClaudeProvider implements LlmProvider {
 
   async test(): Promise<{ ok: boolean; message: string }> {
     try {
-      await new Anthropic({ apiKey: this.key }).models.list()
+      await this.client.models.list()
       return { ok: true, message: 'Great. Great, great, great.' }
     } catch (err) {
       return { ok: false, message: humanizeError(err) }
