@@ -46,17 +46,17 @@ function BobsReviewScreen({
 
   return (
     <div className="window-body tps-body">
-      <div className="field-row-stacked" style={{ padding: '1rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0' }}>The Bobs' Review</h3>
+      <div style={{ padding: '1rem' }}>
+        <h2 style={{ margin: '0 0 1rem 0' }}>The Bobs' Review</h2>
 
         <div style={{ marginBottom: '1rem', padding: '0.5rem', backgroundColor: '#e8e8e8', border: '1px solid #dfdfdf' }}>
-          <p style={{ margin: '0 0 0.25rem 0', fontWeight: 'bold', fontSize: '0.9em' }}>Report: {report.id}</p>
-          <p style={{ margin: 0, fontSize: '0.8em', color: '#666' }}>Author: {AUTHOR_LABELS[report.author]}</p>
+          <p style={{ margin: '0 0 0.25rem 0', fontWeight: 'bold' }}>Report: {report.id}</p>
+          <p style={{ margin: 0, color: '#666' }}>Author: {AUTHOR_LABELS[report.author]}</p>
         </div>
 
         <fieldset style={{ marginBottom: '1rem' }}>
           <legend>Report Body</legend>
-          <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf', maxHeight: '6rem', overflowY: 'auto', fontSize: '0.85em' }}>
+          <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf', maxHeight: '6rem', overflowY: 'auto' }}>
             <p style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{report.body}</p>
           </div>
         </fieldset>
@@ -64,14 +64,14 @@ function BobsReviewScreen({
         <fieldset style={{ marginBottom: '1rem' }}>
           <legend>Critique</legend>
           <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf' }}>
-            <p style={{ margin: 0, fontSize: '0.9em' }}>{review.critique}</p>
+            <p style={{ margin: 0 }}>{review.critique}</p>
           </div>
         </fieldset>
 
         <fieldset style={{ marginBottom: '1rem' }}>
           <legend>The Question</legend>
           <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf' }}>
-            <p style={{ margin: 0, fontSize: '0.9em', fontStyle: 'italic' }}>{review.question}</p>
+            <p style={{ margin: 0, fontStyle: 'italic' }}>{review.question}</p>
           </div>
         </fieldset>
 
@@ -92,7 +92,6 @@ function BobsReviewScreen({
                 backgroundColor: getVerdictColor(review.verdict),
                 color: '#fff',
                 fontWeight: 'bold',
-                fontSize: '1.1em',
                 borderRadius: '4px',
               }}
             >
