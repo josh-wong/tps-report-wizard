@@ -49,6 +49,19 @@ function App(): React.JSX.Element {
       .catch((err) => console.error('Failed to get provider status:', err))
   }, [])
 
+  useEffect(() => {
+    if (!isDesktop) return
+    const ping = (): void => window.electronAPI.activityPing()
+    window.addEventListener('mousemove', ping)
+    window.addEventListener('keydown', ping)
+    window.addEventListener('click', ping)
+    return () => {
+      window.removeEventListener('mousemove', ping)
+      window.removeEventListener('keydown', ping)
+      window.removeEventListener('click', ping)
+    }
+  }, [])
+
   const reportEngine = useMemo(
     () => makeReportEngine(providerStatus.hasKey),
     [providerStatus.hasKey]

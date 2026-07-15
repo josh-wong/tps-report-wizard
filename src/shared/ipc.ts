@@ -26,7 +26,10 @@ export const IPC_CHANNELS = {
   getReport: 'report:get',
   saveReport: 'report:save',
   removeReport: 'report:remove',
-  exportPdf: 'report:exportPdf'
+  exportPdf: 'report:exportPdf',
+  getQuietMode: 'nag:getQuietMode',
+  setQuietMode: 'nag:setQuietMode',
+  activityPing: 'nag:activityPing'
 } as const
 
 export interface IpcApi {
@@ -45,4 +48,7 @@ export interface IpcApi {
   saveReport(r: Report): Promise<void>
   removeReport(id: string): Promise<void>
   exportPdf(r: Report): Promise<{ path: string } | null>
+  getQuietMode(): Promise<boolean>
+  setQuietMode(enabled: boolean): Promise<void>
+  activityPing(): void
 }

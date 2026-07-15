@@ -65,7 +65,18 @@ export function isValidProviderConfig(p: unknown): p is ProviderConfig {
   return VALID_PROVIDERS.has(provider as Provider)
 }
 
-export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore): void {
+export interface NagIpcHooks {
+  getQuietMode(): boolean
+  setQuietMode(enabled: boolean): void
+  onActivityPing(): void
+  onReportSaved(report: Report): void
+}
+
+export function registerReportIpcHandlers(
+  store: ReportStore,
+  keyStore: KeyStore,
+  nag: NagIpcHooks
+): void {
   ipcMain.handle(IPC_CHANNELS.generate, async (_event, req: unknown) => {
     if (!isValidGenerateRequest(req)) throw new Error('Invalid generate request')
     const { seed, author } = req
@@ -161,9 +172,10 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
   ipcMain.handle(IPC_CHANNELS.getReport, (_event, id: unknown) =>
     isValidId(id) ? store.get(id) : null
   )
-  ipcMain.handle(IPC_CHANNELS.saveReport, (_event, report: unknown) => {
+  ipcMain.handle(IPC_CHANNELS.saveReport, async (_event, report: unknown) => {
     if (!isValidReport(report)) throw new Error('Invalid report payload')
-    return store.save(report)
+    await store.save(report)
+    if (report.status === 'filed') nag.onReportSaved(report)
   })
   ipcMain.handle(IPC_CHANNELS.removeReport, (_event, id: unknown) => {
     if (!isValidId(id)) throw new Error('Invalid report id')
@@ -173,6 +185,13 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
     if (!isValidReport(report)) throw new Error('Invalid report payload')
     return exportReportPdf(report as Report)
   })
+
+  ipcMain.handle(IPC_CHANNELS.getQuietMode, () => nag.getQuietMode())
+  ipcMain.handle(IPC_CHANNELS.setQuietMode, (_event, enabled: unknown) => {
+    if (typeof enabled !== 'boolean') throw new Error('Invalid quiet mode flag')
+    nag.setQuietMode(enabled)
+  })
+  ipcMain.on(IPC_CHANNELS.activityPing, () => nag.onActivityPing())
 }
 
 async function exportReportPdf(report: Report): Promise<{ path: string } | null> {

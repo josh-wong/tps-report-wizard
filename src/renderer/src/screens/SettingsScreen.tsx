@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Provider } from '@shared/types'
 
 interface SettingsScreenProps {
@@ -22,6 +22,19 @@ function SettingsScreen({
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [quietMode, setQuietModeState] = useState(false)
+
+  useEffect(() => {
+    window.electronAPI
+      .getQuietMode()
+      .then(setQuietModeState)
+      .catch((err) => console.error('Failed to get quiet mode:', err))
+  }, [])
+
+  const handleQuietModeChange = (checked: boolean): void => {
+    setQuietModeState(checked)
+    void window.electronAPI.setQuietMode(checked)
+  }
 
   const handleSaveKey = async (): Promise<void> => {
     if (!apiKey.trim()) return
@@ -215,6 +228,19 @@ function SettingsScreen({
         🔒 Your key is encrypted locally (safeStorage) and never leaves this machine. Calls go out
         from the main process — the app never puts your key in the browser or a URL.
       </div>
+
+      <fieldset style={{ marginTop: 12 }}>
+        <legend>Nag notifications</legend>
+        <div className="field-row">
+          <input
+            id="quiet-mode"
+            type="checkbox"
+            checked={quietMode}
+            onChange={(e) => handleQuietModeChange(e.target.checked)}
+          />
+          <label htmlFor="quiet-mode">Quiet mode — don&apos;t nag me about unfiled reports</label>
+        </div>
+      </fieldset>
 
       <div className="editor-actions" style={{ marginTop: 12 }}>
         <button type="button" onClick={onClose}>
