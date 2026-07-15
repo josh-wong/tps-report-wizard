@@ -15,11 +15,11 @@ const VALID_TONES = new Set(TONES)
 const VALID_STATUSES = new Set(REPORT_STATUSES)
 const VALID_PROVIDERS = new Set<Provider>(['claude', 'openai'])
 
-function isValidId(id: unknown): id is string {
+export function isValidId(id: unknown): id is string {
   return typeof id === 'string' && id.length > 0
 }
 
-function isValidReport(r: unknown): r is Report {
+export function isValidReport(r: unknown): r is Report {
   if (!r || typeof r !== 'object') return false
   const {
     id,
@@ -49,13 +49,13 @@ function isValidReport(r: unknown): r is Report {
   )
 }
 
-function isValidGenerateRequest(r: unknown): r is GenerateRequest {
+export function isValidGenerateRequest(r: unknown): r is GenerateRequest {
   if (!r || typeof r !== 'object') return false
   const { seed, tone } = r as Record<string, unknown>
   return typeof seed === 'string' && seed.length > 0 && VALID_TONES.has(tone as Tone)
 }
 
-function isValidProviderConfig(p: unknown): p is ProviderConfig {
+export function isValidProviderConfig(p: unknown): p is ProviderConfig {
   if (!p || typeof p !== 'object') return false
   const { provider } = p as Record<string, unknown>
   return VALID_PROVIDERS.has(provider as Provider)
