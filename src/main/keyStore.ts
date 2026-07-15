@@ -45,8 +45,10 @@ export function createKeyStore(): KeyStore {
       try {
         return safeStorage.decryptString(Buffer.from(b64, 'base64'))
       } catch {
-        console.warn('Failed to decrypt API key for provider:', provider)
-        return null
+        // Distinct from "no key saved" so callers can tell the user their
+        // stored key is corrupted (e.g. OS keychain changed) rather than
+        // just missing.
+        throw new Error('KEY_DECRYPT_FAILED')
       }
     },
 

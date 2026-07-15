@@ -11,6 +11,10 @@ export function humanizeError(err: unknown): string {
   if (msg.includes('no_ai_key')) {
     return 'No API key configured. Set up your OpenAI or Claude API key in Settings.'
   }
+  // Handle a stored key that fails to decrypt (e.g. OS keychain changed)
+  if (msg.includes('key_decrypt_failed')) {
+    return 'Your saved key could not be read. Please re-enter it in Settings.'
+  }
 
   // Check structured error properties first (OpenAI/Anthropic SDKs)
   if (
