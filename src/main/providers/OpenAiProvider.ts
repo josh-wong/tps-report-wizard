@@ -8,11 +8,8 @@ export class OpenAiProvider implements LlmProvider {
   private readonly model: string
   private readonly client: OpenAI
 
-  constructor(
-    private readonly key: string,
-    tier: 'default' | 'quality' = 'default'
-  ) {
-    this.model = MODEL_CONFIG.openai[tier]
+  constructor(private readonly key: string) {
+    this.model = MODEL_CONFIG.openai.default
     this.client = new OpenAI({ apiKey: this.key })
   }
 

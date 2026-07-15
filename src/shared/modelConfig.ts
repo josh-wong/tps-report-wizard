@@ -6,10 +6,6 @@
 //   https://platform.claude.com/docs/en/about-claude/pricing
 // - gpt-5.6-luna: $1 input / $6 output
 //   https://developers.openai.com/api/docs/pricing
-//
-// Backup models if primary provider is deprecated:
-// - claude-sonnet-5: $2/$10 (intro pricing through Aug 31, 2026) or $3/$15 standard
-// - gpt-5.6-terra: $2.50/$15
 export const MODEL_CONFIG = {
   claude: {
     default: 'claude-haiku-4-5'

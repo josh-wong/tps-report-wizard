@@ -17,11 +17,8 @@ export class ClaudeProvider implements LlmProvider {
   private readonly model: string
   private readonly client: Anthropic
 
-  constructor(
-    private readonly key: string,
-    tier: 'default' | 'quality' = 'default'
-  ) {
-    this.model = MODEL_CONFIG.claude[tier]
+  constructor(private readonly key: string) {
+    this.model = MODEL_CONFIG.claude.default
     this.client = new Anthropic({ apiKey: this.key })
   }
 
