@@ -61,17 +61,10 @@ function BobsReviewScreen({
           </div>
         </fieldset>
 
-        <fieldset style={{ marginBottom: '1rem' }}>
+        <fieldset style={{ marginBottom: '1.5rem' }}>
           <legend>Critique</legend>
           <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf' }}>
             <p style={{ margin: 0 }}>{review.critique}</p>
-          </div>
-        </fieldset>
-
-        <fieldset style={{ marginBottom: '1rem' }}>
-          <legend>The Question</legend>
-          <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf' }}>
-            <p style={{ margin: 0, fontStyle: 'italic' }}>{review.question}</p>
           </div>
         </fieldset>
 
