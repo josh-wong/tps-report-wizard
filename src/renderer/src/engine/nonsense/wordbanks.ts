@@ -1,18 +1,18 @@
-import type { Tone } from '@shared/types'
+import type { Author } from '@shared/types'
 
-export interface ToneWordBank {
+export interface AuthorWordBank {
   /** Sentence templates. Slots: {seed} {Seed} {buzz} {noun} {verb} {phrase} */
   sentenceTemplates: string[]
   buzzPhrases: string[]
   nounPhrases: string[]
   verbPhrases: string[]
   phrases: string[]
-  /** One extra closing line appended to the report, tone permitting. */
+  /** One extra closing line appended to the report, author permitting. */
   closingLines: string[]
 }
 
-export const WORD_BANKS: Record<Tone, ToneWordBank> = {
-  corporate: {
+export const WORD_BANKS: Record<Author, AuthorWordBank> = {
+  peter: {
     sentenceTemplates: [
       'Per the initiative to align cross-functional stakeholders on {seed}, this report documents the relevant {noun} and its impact on quarterly {noun}.',
       'Going forward, we will {verb} the {noun} associated with {seed} and socialize the findings with all relevant parties.',

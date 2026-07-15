@@ -1,5 +1,5 @@
 import type { Report } from '@shared/types'
-import { TONE_LABELS } from '../report/toneLabels'
+import { AUTHOR_LABELS } from '../report/authorLabels'
 
 interface ReportListScreenProps {
   reports: Report[]
@@ -52,7 +52,7 @@ function ReportListScreen({
               >
                 <span className="report-card-title">{report.seed || report.id}</span>
                 <span className="report-card-meta">
-                  {report.id} · {TONE_LABELS[report.tone]} · {report.status}
+                  {report.id} · {AUTHOR_LABELS[report.author]} · {report.status}
                 </span>
               </button>
             ))}

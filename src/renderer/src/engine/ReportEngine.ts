@@ -1,5 +1,5 @@
-import type { Tone } from '@shared/types'
+import type { Author } from '@shared/types'
 
 export interface ReportEngine {
-  generate(seed: string, tone: Tone): Promise<string>
+  generate(seed: string, author: Author): Promise<string>
 }

@@ -14,12 +14,11 @@ export function createDraftReport(existingReports: readonly Report[]): Report {
   const now = Date.now()
   return {
     id: generateReportId(new Set(existingReports.map((r) => r.id))),
-    author: 'Peter Gibbons',
+    author: 'peter',
     department: 'Software / Y2K Remediation',
     date: new Date(now).toLocaleDateString(),
     seed: '',
     body: '',
-    tone: 'corporate',
     coverSheet: true,
     status: 'draft',
     createdAt: now,

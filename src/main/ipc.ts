@@ -3,15 +3,15 @@ import { ipcMain, BrowserWindow, dialog } from 'electron'
 import { IPC_CHANNELS } from '@shared/ipc'
 import type { GenerateRequest } from '@shared/ipc'
 import type { ReportStore } from '@shared/store'
-import type { Provider, ProviderConfig, Report, Tone, ReportStatus } from '@shared/types'
-import { TONES, REPORT_STATUSES } from '@shared/types'
-import { buildSystemPrompt } from '@shared/tonePrompts'
+import type { Provider, ProviderConfig, Report, Author, ReportStatus } from '@shared/types'
+import { AUTHORS, REPORT_STATUSES } from '@shared/types'
+import { buildSystemPrompt } from '@shared/authorPrompts'
 import { renderReportHtml } from './pdf/renderReportHtml'
 import type { KeyStore } from './keyStore'
 import { providerFactory } from './providers/factory'
 import { humanizeError } from './providers/errors'
 
-const VALID_TONES = new Set(TONES)
+const VALID_AUTHORS = new Set(AUTHORS)
 const VALID_STATUSES = new Set(REPORT_STATUSES)
 const VALID_PROVIDERS = new Set<Provider>(['claude', 'openai'])
 
@@ -28,7 +28,6 @@ export function isValidReport(r: unknown): r is Report {
     date,
     seed,
     body,
-    tone,
     coverSheet,
     status,
     createdAt,
@@ -36,12 +35,11 @@ export function isValidReport(r: unknown): r is Report {
   } = r as Record<string, unknown>
   return (
     isValidId(id) &&
-    typeof author === 'string' &&
+    VALID_AUTHORS.has(author as Author) &&
     typeof department === 'string' &&
     typeof date === 'string' &&
     typeof seed === 'string' &&
     typeof body === 'string' &&
-    VALID_TONES.has(tone as Tone) &&
     typeof coverSheet === 'boolean' &&
     VALID_STATUSES.has(status as ReportStatus) &&
     typeof createdAt === 'number' &&
@@ -51,8 +49,8 @@ export function isValidReport(r: unknown): r is Report {
 
 export function isValidGenerateRequest(r: unknown): r is GenerateRequest {
   if (!r || typeof r !== 'object') return false
-  const { seed, tone } = r as Record<string, unknown>
-  return typeof seed === 'string' && seed.length > 0 && VALID_TONES.has(tone as Tone)
+  const { seed, author } = r as Record<string, unknown>
+  return typeof seed === 'string' && seed.length > 0 && VALID_AUTHORS.has(author as Author)
 }
 
 export function isValidProviderConfig(p: unknown): p is ProviderConfig {
@@ -64,7 +62,7 @@ export function isValidProviderConfig(p: unknown): p is ProviderConfig {
 export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore): void {
   ipcMain.handle(IPC_CHANNELS.generate, async (_event, req: unknown) => {
     if (!isValidGenerateRequest(req)) throw new Error('Invalid generate request')
-    const { seed, tone } = req
+    const { seed, author } = req
 
     try {
       const status = keyStore.getStatus()
@@ -76,7 +74,7 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
       if (!key) throw new Error('NO_AI_KEY')
 
       const provider = providerFactory({ provider: status.provider }, key)
-      const system = buildSystemPrompt(tone)
+      const system = buildSystemPrompt(author)
 
       const body = await provider.complete({ system, user: seed })
       return { body }

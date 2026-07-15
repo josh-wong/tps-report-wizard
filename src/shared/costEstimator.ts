@@ -1,5 +1,5 @@
-import type { Tone, Provider } from './types'
-import { buildSystemPrompt } from './tonePrompts'
+import type { Author, Provider } from './types'
+import { buildSystemPrompt } from './authorPrompts'
 
 // Pricing as of July 2026. Verify against official provider docs before each release:
 // - Anthropic: https://platform.claude.com/docs/en/about-claude/pricing
@@ -22,8 +22,8 @@ function estimateTokens(text: string): number {
   return Math.ceil(text.length * TOKENS_PER_CHARACTER)
 }
 
-export function estimateGenerationCost(seed: string, tone: Tone, provider: Provider): number {
-  const systemPrompt = buildSystemPrompt(tone)
+export function estimateGenerationCost(seed: string, author: Author, provider: Provider): number {
+  const systemPrompt = buildSystemPrompt(author)
 
   const inputTokens = estimateTokens(seed) + estimateTokens(systemPrompt)
   const maxOutputTokens = 700

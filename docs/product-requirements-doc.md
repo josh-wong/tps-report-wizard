@@ -6,7 +6,7 @@
 |---|---|
 | **Name** | Initech TPS Report Wizard '99 (final) |
 | **Status** | Reviewed – open questions resolved |
-| **Version** | 0.2 |
+| **Version** | 0.3 |
 | **Owner** | Josh |
 | **Type** | Cross-platform desktop app (Electron) + static web "lite" version |
 | **Tone** | Tongue-in-cheek. This is a joke. The joke is that it works. |
@@ -20,6 +20,14 @@
 > 1. **FR-14 (§6.4)** — disabling the AI engine in Settings now persists across app restarts; it previously reverted to AI mode on relaunch because the toggle wasn't tracked separately from key presence.
 > 2. **FR-15 (§6.4)** — provider calls now retry with backoff on rate-limit (429) responses before surfacing an error, per the rate-limiting requirement in the project's contributor guidelines.
 > 3. **FR-12 (§6.4)** — a stored key that fails to decrypt (e.g. the OS keychain changed) now surfaces a distinct "please re-enter your key" message instead of silently behaving as if no key were configured.
+
+> ## ⚠️ Amendments since v0.3
+>
+> The following changes were made during the author-selector refactor (issue #13), after v0.2. They are called out here, and inline with a ⚠️ **Amended** marker at each affected requirement.
+>
+> 1. **FR-1 (§6.1)** — the "Author" field is now a selector (Peter Gibbons / Milton Waddams / Bill Lumbergh / The Bobs) instead of a free-text input, so the author and the generation voice are unified and can never diverge.
+> 2. **FR-8, FR-9 (§6.3)** — the "Tone selector" dropdown was replaced by the Author selector; each option now represents a character from *Office Space* whose distinct voice drives both the byline and the generation style, eliminating the confusing model where Peter could be "written as" someone else.
+> 3. **FR-22c (§6.6)** — added a reviewer-selection rule for Bobs Review: the Bobs cannot review a report whose author is itself "the Bobs"; in that case, a reviewer is randomly selected from the other three characters (Peter, Milton, Lumbergh).
 
 ---
 
@@ -90,12 +98,12 @@ In _Office Space_, Peter Gibbons is ambushed by roughly eight managers—Lumberg
 Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2.
 
 ### 6.1 New TPS Report (P0)
-- FR-1 – A form with: auto-generated Report ID (`TPS-NNNN`), Author, Department, Date, and a report body.
+- FR-1 – ⚠️ **Amended** — A form with: auto-generated Report ID (`TPS-NNNN`), **Author selector** (Peter Gibbons / Milton Waddams / Bill Lumbergh / The Bobs), Department, Date, and a report body.
 - FR-2 – A one-line "Describe what happened (we'll write the rest)" input that the user types; it is the **input seed** for generation and is never itself AI-generated.
 - FR-2b – Only the report **body** is generated from the seed. The description field and the body are distinct: seed in, body out.
 - FR-3 – A **Generate** action that fills the body using the active engine (AI if configured, local otherwise).
 - FR-4 – The body is editable after generation.
-- FR-4a – A small library of **prewritten sample reports** ships with the app, surfaced on the empty state, so a first-run user can open, read, and share one immediately without generating. Samples cover a range of tones and lean into the film's world (the printer, the stapler, Y2K remediation, "moving the needle").
+- FR-4a – A small library of **prewritten sample reports** ships with the app, surfaced on the empty state, so a first-run user can open, read, and share one immediately without generating. Samples cover a range of authors and lean into the film's world (the printer, the stapler, Y2K remediation, "moving the needle").
 
 ### 6.2 The Cover Sheet™ (P0)
 - FR-5 – "Attach new cover sheet" toggle, **default ON**, labeled "(you got the memo)".
@@ -103,9 +111,9 @@ Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2
 - FR-7 – When ON, exported/printed reports include a generated cover sheet page.
 - FR-7a – Print and Export are **gated** on the cover sheet: attempting either with the box unchecked surfaces a Lumbergh gate dialog whose primary action is "Attach cover sheet & continue" (one click re-checks the box and proceeds). No cover-sheet-less export path ships in v1. The gate is near-absolute because it is trivially satisfiable—a gag, not a trap (consistent with FR-6d).
 
-### 6.3 Tone selector – "Lumbergh Mode" (P0)
-- FR-8 – A tone dropdown driving the generation style: `Corporate`, `Passive-Aggressive Lumbergh`, `Milton Mumble`, `The Bobs (consultant-speak)`.
-- FR-9 – Each tone maps to a distinct backend **system-prompt persona** (Corporate, Lumbergh, Milton, the Bobs) that is prepended to the generation call in AI mode, or to a distinct template/word-bank in local mode. The exact prompt strings and token limits are defined in the design doc.
+### 6.3 Author selector – "Lumbergh Mode" (P0)
+- FR-8 – ⚠️ **Amended** — An author selector dropdown: `Peter Gibbons`, `Bill Lumbergh`, `Milton Waddams`, `The Bobs`. The selected author determines both the byline and the generation voice, eliminating the previous confusion where tone was decoupled from the author name.
+- FR-9 – ⚠️ **Amended** — Each author maps to a distinct backend **system-prompt persona** (Peter Gibbons, Bill Lumbergh, Milton Waddams, the Bobs) that is prepended to the generation call in AI mode, or to a distinct template/word-bank in local mode. The exact prompt strings and token limits are defined in the design doc.
 
 ### 6.4 AI provider settings (P0, desktop only)
 - FR-10 – Provider toggle: **OpenAI** or **Claude**.
@@ -127,6 +135,7 @@ Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2
 - FR-22 – In AI mode this is a second `LLMProvider` call with a Bobs persona. In local/web mode it returns a rotating set of canned zingers and a randomized-but-weighted verdict.
 - FR-22b – The Bobs will not review a report whose cover sheet is unchecked. Rather than disabling the action, they **deflect in-character** (_"We're gonna need to see a cover sheet before we can, uh, evaluate you here."_) via the same gate dialog and one-click "Attach cover sheet & continue" as FR-7a.
 - FR-22a – Verdict weighting is skewed negative, film-accurate: `Circle back` ~55%, `…move you down to the basement` ~35%, `Ship it` ~10%. "Circle back" is the noncommittal consultant hedge and should dominate; "Ship it" is the rare undeserved Peter-style win. (In AI mode, the prompt biases toward these proportions rather than enforcing them exactly.)
+- FR-22c – ⚠️ **New** — If the report's author is "The Bobs," the reviewer is not also the Bobs (they cannot review themselves). Instead, the reviewer is randomly selected from the other three characters: Peter Gibbons, Bill Lumbergh, or Milton Waddams.
 
 ### 6.6b "You can't just leave" – close/minimize nag (P1)
 - FR-6b – Attempting to close the app with an unfinished/unfiled report shows a Lumbergh dialog with a movie-flavored line (_"I'm gonna need you to go ahead and finish that TPS report before you head out. That'd be greeeat."_) offering `Finish it` or `Close anyway`—always with a real escape hatch. The app never forcibly traps the window.
@@ -203,12 +212,12 @@ One repo, one renderer, two deploys:
 ## 10. Primary user flows
 
 **Flow A – Generate a report (desktop, AI configured)**
-1. User opens New Report → types a one-line description → selects a tone.
+1. User opens New Report → types a one-line description → selects an author.
 2. Clicks Generate → main process calls the selected provider → body fills.
 3. Cover sheet is already ON (per the memo). User exports to PDF.
 
 **Flow B – Generate a report (web / no key)**
-1. User opens the Pages URL → New Report → one-line description → tone.
+1. User opens the Pages URL → New Report → one-line description → author.
 2. Clicks Generate → local Corporate Nonsense Engine fills the body.
 3. Exports to PDF. No key ever requested.
 

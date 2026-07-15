@@ -64,7 +64,7 @@ function App(): React.JSX.Element {
     setGenerating(true)
     setGenerateError(null)
     try {
-      const body = await reportEngine.generate(activeReport.seed, activeReport.tone)
+      const body = await reportEngine.generate(activeReport.seed, activeReport.author)
       setActiveReport((prev) => (prev ? { ...prev, body, updatedAt: Date.now() } : null))
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Generation failed.'
