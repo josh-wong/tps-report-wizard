@@ -31,7 +31,7 @@ function ReportEditorScreen({
   onSave,
   onBack,
   onReview,
-  reviewing,
+  reviewing
 }: ReportEditorScreenProps): React.JSX.Element {
   const [showGate, setShowGate] = useState(false)
   const [showPrintPreview, setShowPrintPreview] = useState(false)
@@ -167,8 +167,9 @@ function ReportEditorScreen({
         </div>
         {provider && report.seed.trim() && (
           <span className="note">
-            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.author, provider))}{' '}
-            (actual may vary)
+            Estimated cost:{' '}
+            {formatCost(estimateGenerationCost(report.seed, report.author, provider))} (actual may
+            vary)
           </span>
         )}
       </div>

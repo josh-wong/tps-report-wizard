@@ -96,7 +96,7 @@ describe('NagScheduler', () => {
   it('should return correct backoff times', () => {
     const scheduler = new NagScheduler({
       idleThresholdMs: 1000,
-      backoffSteps: [2000, 3000],
+      backoffSteps: [2000, 3000]
     })
 
     scheduler.onWindowBlurred()

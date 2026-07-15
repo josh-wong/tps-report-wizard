@@ -19,10 +19,10 @@ export class NagScheduler {
       quoteLadder: [
         "Yeah, I'm gonna need you to go ahead and finish that TPS report.",
         "Uh, we're still waiting for that TPS report. Could you get that to us as soon as possible?",
-        "So if you could just find the time to finish that report, that would be greeeat.",
+        'So if you could just find the time to finish that report, that would be greeeat.'
       ],
       quietMode: false,
-      ...config,
+      ...config
     }
   }
 

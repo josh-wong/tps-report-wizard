@@ -1,4 +1,4 @@
-import type { Author, Report, BobsResult } from '@shared/types'
+import type { Author, BobsResult } from '@shared/types'
 import type { ReportEngine } from './ReportEngine'
 import { generateBody } from './nonsense/generateBody'
 import { getBobsZinger } from './nonsense/bobsZingers'
@@ -9,7 +9,7 @@ export class LocalReportEngine implements ReportEngine {
     return generateBody(seed, author)
   }
 
-  async review(_report: Report): Promise<BobsResult> {
+  async review(): Promise<BobsResult> {
     return getBobsZinger()
   }
 }

@@ -17,7 +17,7 @@ function BobsReviewScreen({
   loading,
   error,
   onBack,
-  onClose,
+  onClose
 }: BobsReviewScreenProps): React.JSX.Element {
   if (loading) {
     return (
@@ -47,17 +47,34 @@ function BobsReviewScreen({
   return (
     <div className="window-body tps-body">
       <div style={{ padding: '1rem' }}>
-        <h2 style={{ margin: '0 0 1rem 0' }}>The Bobs' Review</h2>
+        <h2 style={{ margin: '0 0 1rem 0' }}>The Bobs&apos; Review</h2>
 
-        <div style={{ marginBottom: '1rem', padding: '0.5rem', backgroundColor: '#e8e8e8', border: '1px solid #dfdfdf' }}>
+        <div
+          style={{
+            marginBottom: '1rem',
+            padding: '0.5rem',
+            backgroundColor: '#e8e8e8',
+            border: '1px solid #dfdfdf'
+          }}
+        >
           <p style={{ margin: '0 0 0.25rem 0', fontWeight: 'bold' }}>Report: {report.id}</p>
           <p style={{ margin: 0, color: '#666' }}>Author: {AUTHOR_LABELS[report.author]}</p>
         </div>
 
         <fieldset style={{ marginBottom: '1rem' }}>
           <legend>Report Body</legend>
-          <div style={{ padding: '0.5rem', backgroundColor: '#fff', border: '1px solid #dfdfdf', maxHeight: '6rem', overflowY: 'auto' }}>
-            <p style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{report.body}</p>
+          <div
+            style={{
+              padding: '0.5rem',
+              backgroundColor: '#fff',
+              border: '1px solid #dfdfdf',
+              maxHeight: '6rem',
+              overflowY: 'auto'
+            }}
+          >
+            <p style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+              {report.body}
+            </p>
           </div>
         </fieldset>
 
@@ -75,7 +92,7 @@ function BobsReviewScreen({
               padding: '1rem',
               backgroundColor: '#fff',
               border: '1px solid #dfdfdf',
-              textAlign: 'center',
+              textAlign: 'center'
             }}
           >
             <div
@@ -85,7 +102,7 @@ function BobsReviewScreen({
                 backgroundColor: getVerdictColor(review.verdict),
                 color: '#fff',
                 fontWeight: 'bold',
-                borderRadius: '4px',
+                borderRadius: '4px'
               }}
             >
               {VERDICT_LABELS[review.verdict]}

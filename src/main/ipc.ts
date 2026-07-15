@@ -3,9 +3,17 @@ import { ipcMain, BrowserWindow, dialog } from 'electron'
 import { IPC_CHANNELS } from '@shared/ipc'
 import type { GenerateRequest, BobsRequest } from '@shared/ipc'
 import type { ReportStore } from '@shared/store'
-import type { Provider, ProviderConfig, Report, Author, ReportStatus, BobsResult, Verdict } from '@shared/types'
+import type {
+  Provider,
+  ProviderConfig,
+  Report,
+  Author,
+  ReportStatus,
+  BobsResult,
+  Verdict
+} from '@shared/types'
 import { AUTHORS, REPORT_STATUSES } from '@shared/types'
-import { buildSystemPrompt, BOBS_REVIEW_SYSTEM } from '@shared/authorPrompts'
+import { buildSystemPrompt, buildBobsReviewSystem } from '@shared/authorPrompts'
 import { pickReviewer } from '@shared/reviewer'
 import { rollVerdict } from '@shared/verdict'
 import { renderReportHtml } from './pdf/renderReportHtml'
@@ -23,18 +31,8 @@ export function isValidId(id: unknown): id is string {
 
 export function isValidReport(r: unknown): r is Report {
   if (!r || typeof r !== 'object') return false
-  const {
-    id,
-    author,
-    department,
-    date,
-    seed,
-    body,
-    coverSheet,
-    status,
-    createdAt,
-    updatedAt
-  } = r as Record<string, unknown>
+  const { id, author, department, date, seed, body, coverSheet, status, createdAt, updatedAt } =
+    r as Record<string, unknown>
   return (
     isValidId(id) &&
     VALID_AUTHORS.has(author as Author) &&
@@ -128,9 +126,12 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
       const reviewer = pickReviewer(report.author)
 
       const userPrompt = `Here is a TPS report to review:\n\n${report.body}`
-      const result = await provider.complete({ system: BOBS_REVIEW_SYSTEM, user: userPrompt })
+      const result = await provider.complete({
+        system: buildBobsReviewSystem(reviewer),
+        user: userPrompt
+      })
 
-      return parseBobsResponse(result, reviewer)
+      return parseBobsResponse(result)
     } catch (err) {
       throw new Error(humanizeError(err))
     }
@@ -213,8 +214,8 @@ function getBobsZingerResponse(): BobsResult {
     "Yeah, we're going to need to have a talk. There's been some concerns about your performance.",
     "Mmm, I'm not sure this aligns with our core competencies. Maybe we should circle back.",
     "You know, the numbers just aren't there. We're thinking maybe this needs some recalibration.",
-    "Have you considered a more synergistic approach? We might need to drill down on the ROI here.",
-    "The problem is, we're going to need you to really take this to the next level.",
+    'Have you considered a more synergistic approach? We might need to drill down on the ROI here.',
+    "The problem is, we're going to need you to really take this to the next level."
   ]
 
   const critique = critiques[Math.floor(Math.random() * critiques.length)]
@@ -223,15 +224,17 @@ function getBobsZingerResponse(): BobsResult {
   return {
     critique,
     question: 'So… what would you say ya do here?',
-    verdict,
+    verdict
   }
 }
 
-function parseBobsResponse(response: string, _reviewer: Author): BobsResult {
+function parseBobsResponse(response: string): BobsResult {
   const critiqueMatch = response.match(/CRITIQUE:\s*(.+?)(?=VERDICT:|$)/is)
   const verdictMatch = response.match(/VERDICT:\s*(\w+)/i)
 
-  const critique = critiqueMatch ? critiqueMatch[1].trim() : 'The report raises some important questions.'
+  const critique = critiqueMatch
+    ? critiqueMatch[1].trim()
+    : 'The report raises some important questions.'
   const verdictStr = verdictMatch ? verdictMatch[1].toLowerCase() : ''
 
   let verdict: Verdict
@@ -248,6 +251,6 @@ function parseBobsResponse(response: string, _reviewer: Author): BobsResult {
   return {
     critique,
     question: 'So… what would you say ya do here?',
-    verdict,
+    verdict
   }
 }

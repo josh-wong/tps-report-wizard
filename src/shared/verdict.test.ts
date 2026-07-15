@@ -13,7 +13,7 @@ describe('rollVerdict', () => {
   })
 
   it('should return ship_it for r >= 0.90', () => {
-    expect(rollVerdict(() => 0.90)).toBe('ship_it')
+    expect(rollVerdict(() => 0.9)).toBe('ship_it')
     expect(rollVerdict(() => 0.99)).toBe('ship_it')
   })
 
