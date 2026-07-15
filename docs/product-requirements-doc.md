@@ -13,6 +13,16 @@
 
 ---
 
+> ## ⚠️ Amendments since v0.2
+>
+> The following changes were made during the AI provider integration work (PR #12), after this document's initial draft. They are called out here, and inline with a ⚠️ **Amended** marker at each affected requirement, so reviewers can find what changed without diffing the whole file.
+>
+> 1. **FR-14 (§6.4)** — disabling the AI engine in Settings now persists across app restarts; it previously reverted to AI mode on relaunch because the toggle wasn't tracked separately from key presence.
+> 2. **FR-15 (§6.4)** — provider calls now retry with backoff on rate-limit (429) responses before surfacing an error, per the rate-limiting requirement in the project's contributor guidelines.
+> 3. **FR-12 (§6.4)** — a stored key that fails to decrypt (e.g. the OS keychain changed) now surfaces a distinct "please re-enter your key" message instead of silently behaving as if no key were configured.
+
+---
+
 ## 1. Summary
 
 A deliberately over-engineered app for producing **TPS reports**—the canonical piece of pointless corporate paperwork from _Office Space_—that "improves" the process through automation and optional AI. The comedic thesis is that if a report exists only to be filed and never read, then the logical endgame of automation is to let the machine both **write** it and **remember the cover sheet**, removing every human pain point the film mocks (the forgotten cover sheet, the eight redundant bosses, the soul-crushing prose).
@@ -100,10 +110,10 @@ Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2
 ### 6.4 AI provider settings (P0, desktop only)
 - FR-10 – Provider toggle: **OpenAI** or **Claude**.
 - FR-11 – A field to enter the API key for the selected provider.
-- FR-12 – Key stored encrypted via Electron `safeStorage`; never persisted in plaintext, never sent to the renderer, never logged.
+- FR-12 – Key stored encrypted via Electron `safeStorage`; never persisted in plaintext, never sent to the renderer, never logged. ⚠️ **Amended** — a key that fails to decrypt on read (e.g. the OS keychain changed) now produces a distinct, actionable error message rather than being treated as if no key were saved. See "Amendments since v0.2" above.
 - FR-13 – A **Test connection** button that validates the key and returns flavor text ("Great. Great, great, great.").
-- FR-14 – If no key is set, the app runs in local mode with no error state—a clear, non-nagging indicator only.
-- FR-15 – All provider calls originate from the Electron **main process** behind a single `LLMProvider` interface (see design doc).
+- FR-14 – If no key is set, the app runs in local mode with no error state—a clear, non-nagging indicator only. ⚠️ **Amended** — explicitly disabling AI mode via the Settings toggle is now a persisted user choice that survives app restart, independent of whether a key still exists in `safeStorage`. See "Amendments since v0.2" above.
+- FR-15 – All provider calls originate from the Electron **main process** behind a single `LLMProvider` interface (see design doc). ⚠️ **Amended** — generation calls now retry with backoff on rate-limit (429) responses before failing. See "Amendments since v0.2" above.
 
 ### 6.5 Corporate Nonsense Engine – local fallback (P0)
 - FR-16 – A fully offline generator that stitches buzzwords and boilerplate into grammatically valid, semantically empty corporate prose.
