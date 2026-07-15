@@ -2,6 +2,7 @@ import OpenAI from 'openai'
 import { MODEL_CONFIG } from '@shared/modelConfig'
 import type { LlmProvider } from './LlmProvider'
 import { humanizeError } from './errors'
+import { withRateLimitRetry } from './retry'
 
 export class OpenAiProvider implements LlmProvider {
   readonly id = 'openai' as const
@@ -22,14 +23,16 @@ export class OpenAiProvider implements LlmProvider {
     user: string
     maxTokens?: number
   }): Promise<string> {
-    const res = await this.client.chat.completions.create({
-      model: this.model,
-      max_tokens: maxTokens,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: user }
-      ]
-    })
+    const res = await withRateLimitRetry(() =>
+      this.client.chat.completions.create({
+        model: this.model,
+        max_tokens: maxTokens,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user }
+        ]
+      })
+    )
     return res.choices[0]?.message?.content ?? ''
   }
 

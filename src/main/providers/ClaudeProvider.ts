@@ -3,6 +3,7 @@ import type { TextBlock } from '@anthropic-ai/sdk/resources/messages'
 import { MODEL_CONFIG } from '@shared/modelConfig'
 import type { LlmProvider } from './LlmProvider'
 import { humanizeError } from './errors'
+import { withRateLimitRetry } from './retry'
 
 function isTextBlock(block: unknown): block is TextBlock {
   return (
@@ -31,12 +32,14 @@ export class ClaudeProvider implements LlmProvider {
     user: string
     maxTokens?: number
   }): Promise<string> {
-    const msg = await this.client.messages.create({
-      model: this.model,
-      max_tokens: maxTokens,
-      system,
-      messages: [{ role: 'user', content: user }]
-    })
+    const msg = await withRateLimitRetry(() =>
+      this.client.messages.create({
+        model: this.model,
+        max_tokens: maxTokens,
+        system,
+        messages: [{ role: 'user', content: user }]
+      })
+    )
     return msg.content
       .filter(isTextBlock)
       .map((b) => b.text)
