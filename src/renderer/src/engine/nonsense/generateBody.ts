@@ -1,5 +1,5 @@
-import type { Tone } from '@shared/types'
-import type { ToneWordBank } from './wordbanks'
+import type { Author } from '@shared/types'
+import type { AuthorWordBank } from './wordbanks'
 import { WORD_BANKS } from './wordbanks'
 
 function pick<T>(items: readonly T[]): T {
@@ -10,7 +10,7 @@ function randomInRange(min: number, max: number): number {
   return min + Math.floor(Math.random() * (max - min + 1))
 }
 
-function fillTemplate(template: string, seed: string, bank: ToneWordBank): string {
+function fillTemplate(template: string, seed: string, bank: AuthorWordBank): string {
   const capitalizedSeed = seed.charAt(0).toUpperCase() + seed.slice(1)
   return template
     .replace(/\{Seed\}/g, () => capitalizedSeed)
@@ -21,8 +21,8 @@ function fillTemplate(template: string, seed: string, bank: ToneWordBank): strin
     .replace(/\{phrase\}/g, () => pick(bank.phrases))
 }
 
-export function generateBody(seed: string, tone: Tone): string {
-  const bank = WORD_BANKS[tone]
+export function generateBody(seed: string, author: Author): string {
+  const bank = WORD_BANKS[author]
   const seedPhrase = seed.trim() || 'the matter at hand'
 
   const paragraphCount = randomInRange(2, 3)

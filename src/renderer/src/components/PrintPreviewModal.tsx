@@ -1,5 +1,5 @@
 import type { Report } from '@shared/types'
-import { TONE_LABELS } from '@shared/toneLabels'
+import { AUTHOR_LABELS } from '@shared/authorLabels'
 
 interface PrintPreviewModalProps {
   report: Report
@@ -38,7 +38,7 @@ function PrintPreviewModal({
                     <strong>TO:</strong> All Staff
                   </p>
                   <p>
-                    <strong>FROM:</strong> {report.author || '[Author]'}
+                    <strong>FROM:</strong> {AUTHOR_LABELS[report.author]}
                   </p>
                   <p>
                     <strong>DATE:</strong> {report.date || '[Date]'}
@@ -67,16 +67,13 @@ function PrintPreviewModal({
                   <strong>ID:</strong> {report.id}
                 </div>
                 <div>
-                  <strong>Author:</strong> {report.author}
+                  <strong>Author:</strong> {AUTHOR_LABELS[report.author]}
                 </div>
                 <div>
                   <strong>Department:</strong> {report.department}
                 </div>
                 <div>
                   <strong>Date:</strong> {report.date}
-                </div>
-                <div>
-                  <strong>Tone:</strong> {TONE_LABELS[report.tone]}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import type { Report, Tone, Provider } from '@shared/types'
-import { TONE_LABELS } from '../report/toneLabels'
+import type { Report, Author, Provider } from '@shared/types'
+import { AUTHOR_LABELS } from '../report/authorLabels'
 import { isDesktop } from '../platform/isDesktop'
 import { estimateGenerationCost, formatCost } from '@shared/costEstimator'
 import CoverSheetGateDialog from '../components/CoverSheetGateDialog'
@@ -104,12 +104,17 @@ function ReportEditorScreen({
         </div>
 
         <label htmlFor="author">Author</label>
-        <input
+        <select
           id="author"
-          type="text"
           value={report.author}
-          onChange={(e) => update({ author: e.target.value })}
-        />
+          onChange={(e) => update({ author: e.target.value as Author, body: '' })}
+        >
+          {(Object.entries(AUTHOR_LABELS) as [Author, string][]).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
 
         <label htmlFor="department">Department</label>
         <input
@@ -147,7 +152,7 @@ function ReportEditorScreen({
         </div>
         {provider && report.seed.trim() && (
           <span className="note">
-            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.tone, provider))}{' '}
+            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.author, provider))}{' '}
             (actual may vary)
           </span>
         )}
@@ -177,16 +182,6 @@ function ReportEditorScreen({
             Attach new cover sheet <span className="note">(you got the memo)</span>
           </label>
         </div>
-        <label className="field-row tone-select">
-          Tone
-          <select value={report.tone} onChange={(e) => update({ tone: e.target.value as Tone })}>
-            {(Object.entries(TONE_LABELS) as [Tone, string][]).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
       </div>
 
       {generateError && <p className="save-error note">Generate failed: {generateError}</p>}

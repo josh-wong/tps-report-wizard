@@ -1,7 +1,7 @@
 export type Provider = 'claude' | 'openai'
 
-export const TONES = ['corporate', 'lumbergh', 'milton', 'bobs'] as const
-export type Tone = (typeof TONES)[number]
+export const AUTHORS = ['peter', 'lumbergh', 'milton', 'bobs'] as const
+export type Author = (typeof AUTHORS)[number]
 
 export type Verdict = 'circle_back' | 'basement' | 'ship_it'
 
@@ -10,12 +10,11 @@ export type ReportStatus = (typeof REPORT_STATUSES)[number]
 
 export interface Report {
   id: string // "TPS-0042"
-  author: string
+  author: Author
   department: string
   date: string
   seed: string // user input — the generation seed
   body: string // generated (or edited) output
-  tone: Tone
   coverSheet: boolean // default true
   status: ReportStatus
   createdAt: number

@@ -16,12 +16,11 @@ const { isValidGenerateRequest, isValidId, isValidProviderConfig, isValidReport 
 function makeReport(overrides: Partial<Report> = {}): Report {
   return {
     id: 'TPS-0001',
-    author: 'Peter Gibbons',
+    author: 'peter',
     department: 'IT',
     date: '2026-07-15',
     seed: 'quarterly synergy update',
     body: 'Corporate report body.',
-    tone: 'corporate',
     coverSheet: true,
     status: 'draft',
     createdAt: 1,
@@ -48,8 +47,8 @@ describe('isValidReport', () => {
     expect(isValidReport(makeReport())).toBe(true)
   })
 
-  it('rejects a report with an invalid tone', () => {
-    expect(isValidReport(makeReport({ tone: 'sarcastic' as never }))).toBe(false)
+  it('rejects a report with an invalid author', () => {
+    expect(isValidReport(makeReport({ author: 'sarcastic' as never }))).toBe(false)
   })
 
   it('rejects a report with an invalid status', () => {
@@ -69,16 +68,16 @@ describe('isValidReport', () => {
 })
 
 describe('isValidGenerateRequest', () => {
-  it('accepts a valid seed and tone', () => {
-    expect(isValidGenerateRequest({ seed: 'seed text', tone: 'milton' })).toBe(true)
+  it('accepts a valid seed and author', () => {
+    expect(isValidGenerateRequest({ seed: 'seed text', author: 'milton' })).toBe(true)
   })
 
   it('rejects an empty seed', () => {
-    expect(isValidGenerateRequest({ seed: '', tone: 'milton' })).toBe(false)
+    expect(isValidGenerateRequest({ seed: '', author: 'milton' })).toBe(false)
   })
 
-  it('rejects an invalid tone', () => {
-    expect(isValidGenerateRequest({ seed: 'seed text', tone: 'sarcastic' })).toBe(false)
+  it('rejects an invalid author', () => {
+    expect(isValidGenerateRequest({ seed: 'seed text', author: 'sarcastic' })).toBe(false)
   })
 
   it('rejects non-object input', () => {

@@ -3,8 +3,8 @@ import { estimateGenerationCost, formatCost } from './costEstimator'
 
 describe('estimateGenerationCost', () => {
   it('increases with a longer seed', () => {
-    const shortCost = estimateGenerationCost('short seed', 'corporate', 'claude')
-    const longCost = estimateGenerationCost('a much longer seed '.repeat(20), 'corporate', 'claude')
+    const shortCost = estimateGenerationCost('short seed', 'peter', 'claude')
+    const longCost = estimateGenerationCost('a much longer seed '.repeat(20), 'peter', 'claude')
     expect(longCost).toBeGreaterThan(shortCost)
   })
 

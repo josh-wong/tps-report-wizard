@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| **Companion to** | `product-requirements-doc.md` (v0.2) |
+| **Companion to** | `product-requirements-doc.md` (v0.3) |
 | **Status** | Draft for review |
-| **Version** | 0.1 |
+| **Version** | 0.2 |
 | **Owner** | Josh |
 | **Scope** | v1 architecture. References PRD requirement IDs (FR-*, SEC-*, TC-*) throughout. |
 
@@ -19,6 +19,14 @@
 > 1. **IPC contract (§3)** — added `deleteKeys` and `setEngineEnabled` channels; `testConnection` now accepts an optional unsaved `candidateKey` so users can test a key before saving it.
 > 2. **Key storage (§10)** — `KeyStore` now persists a separate `enabled` flag alongside key presence, so disabling the AI engine in Settings survives an app restart instead of reactivating because a key still exists in `safeStorage`.
 > 3. **Key storage (§10)** — a stored key that fails to decrypt now throws a distinct `KEY_DECRYPT_FAILED` error (humanized to "your saved key could not be read") instead of silently behaving as if no key were configured.
+
+> ## ⚠️ Amendments since v0.2
+>
+> The following changes were made during the author-selector refactor (issue #13), after v0.1. They are called out here, and inline with a ⚠️ **Amended** marker at each affected passage.
+>
+> 1. **Tone → Author system (§5, §6, §8)** — the `Tone` type was replaced with an `Author` enum; tone-driven prompts/wordbanks are now author-driven, and the free-text `Report.author` field was merged into an `Author` enum field, eliminating the confusing model where voice and author were decoupled.
+> 2. **Reviewer selection (§7)** — added `pickReviewer` utility for Bobs Review edge case: if the report's author is "the Bobs," the reviewer is randomly selected from the other three characters since the Bobs can't review themselves.
+> 3. **Project structure (§13)** — file renames: `tone-prompts.ts` → `authorPrompts.ts`, `toneLabels.ts` → `authorLabels.ts` (also corrects a pre-existing hyphen/camelCase naming drift).
 
 ---
 
@@ -173,18 +181,21 @@ A `providerFactory(config, key)` returns the right implementation; callers only 
 
 ---
 
-## 5. Tone system → system-prompt personas (FR-8, FR-9)
+## 5. Author system → system-prompt personas (FR-8, FR-9)
 
-Tone is the single knob that changes generation voice. Each tone maps to a system prompt (AI mode) *and* a word-bank/template set (local mode), keyed identically so the two engines stay interchangeable.
+⚠️ **Amended** — Author is the single knob that changes generation voice. Each author maps to a system prompt (AI mode) *and* a word-bank/template set (local mode), keyed identically so the two engines stay interchangeable.
 
 ```ts
-export type Tone = "corporate" | "lumbergh" | "milton" | "bobs";
+export type Author = "peter" | "lumbergh" | "milton" | "bobs";
 
-export const TONE_PROMPTS: Record<Tone, string> = {
-  corporate:
-    "You are an enterprise middle-manager writing a TPS report body. Use maximal " +
-    "corporate jargon (synergy, circle back, socialize, action items, move the needle). " +
-    "Sound authoritative while saying nothing of substance. 2–3 short paragraphs. No preamble.",
+export const AUTHOR_PROMPTS: Record<Author, string> = {
+  peter:
+    "You are Peter Gibbons writing a TPS report body. You know the corporate-jargon " +
+    "playbook cold (synergy, circle back, socialize, action items, move the needle) and " +
+    "deploy it fluently and correctly — but you have completely checked out and no " +
+    "longer care whether any of it matters. Flat, low-effort, faintly dry; the jargon is " +
+    "on autopilot, not enthusiasm. Sound like the minimum viable report that still " +
+    "technically satisfies the form. 2–3 short paragraphs. No preamble.",
   lumbergh:
     "You are Bill Lumbergh writing a TPS report body. Mild, drawn-out, passive-aggressive. " +
     "Frame everything as a gentle imposition ('if you could go ahead and…'). Work in a " +
@@ -199,7 +210,7 @@ export const TONE_PROMPTS: Record<Tone, string> = {
 };
 ```
 
-The generation call composes: `system = BASE_REPORT_SYSTEM + "\n\n" + TONE_PROMPTS[tone]`, `user = userSeed`. `BASE_REPORT_SYSTEM` pins format constraints (length, no markdown headers, plain prose) so every tone yields a fileable-looking body. Prompt strings live in one module and are treated as product copy, versioned with the app.
+The generation call composes: `system = BASE_REPORT_SYSTEM + "\n\n" + AUTHOR_PROMPTS[author]`, `user = userSeed`. `BASE_REPORT_SYSTEM` pins format constraints (length, no markdown headers, plain prose) so every author yields a fileable-looking body. Prompt strings live in one module and are treated as product copy, versioned with the app.
 
 Generation flow (FR-2, FR-3): the **seed** (user's one-liner) is the `user` message; only the **body** is produced (FR-2b). The description field is never generated.
 
@@ -211,18 +222,18 @@ A fully offline generator that produces grammatically valid, semantically empty 
 
 ```ts
 interface NonsenseEngine {
-  generateBody(seed: string, tone: Tone): string;   // mirrors LlmProvider output shape
+  generateBody(seed: string, author: Author): string;   // mirrors LlmProvider output shape
   bobsZinger(): { critique: string; verdict: Verdict };
 }
 ```
 
-Approach: a small grammar of sentence templates per tone, each with slots filled from tone-specific word-banks (verbs, nouns, buzz-phrases). The `seed` is woven in as a subject noun-phrase so the output nods at the user's input without meaning anything. Output length is normalized to the same 2–3 paragraph target as AI mode (FR-19). No network, no dependencies.
+Approach: a small grammar of sentence templates per author, each with slots filled from author-specific word-banks (verbs, nouns, buzz-phrases). The `seed` is woven in as a subject noun-phrase so the output nods at the user's input without meaning anything. Output length is normalized to the same 2–3 paragraph target as AI mode (FR-19). No network, no dependencies.
 
 The two engines sit behind a common `ReportEngine` facade the renderer calls, so screen code never branches on "AI vs local":
 
 ```ts
 interface ReportEngine {
-  generate(seed: string, tone: Tone): Promise<string>;
+  generate(seed: string, author: Author): Promise<string>;
   review(report: Report): Promise<BobsResult>;
 }
 // AiReportEngine → IPC → LlmProvider ;  LocalReportEngine → NonsenseEngine (in-renderer)
@@ -257,6 +268,17 @@ function rollVerdict(r = Math.random()): Verdict {
 }
 ```
 
+**Reviewer selection (FR-22c, ⚠️ **New**):** The Bobs review every report — except their own (issue #13). If the report's author is `"bobs"`, the reviewer is instead randomly selected from the other three characters via `pickReviewer(author, rng)` in `src/shared/reviewer.ts`:
+
+```ts
+export function pickReviewer(author: Author, rng: () => number = Math.random): Author {
+  if (author !== "bobs") return "bobs"
+  return NON_BOBS_AUTHORS[Math.floor(rng() * NON_BOBS_AUTHORS.length)]
+}
+```
+
+This is a pure function with an injectable RNG for testability. It encodes the rule for future use when Bobs Review is fully implemented; it is not currently wired into the stub `reviewWithBobs` handler.
+
 ---
 
 ## 8. Storage abstraction and data model (FR-26..FR-28)
@@ -278,12 +300,11 @@ Data model:
 ```ts
 export interface Report {
   id: string;                 // "TPS-0042"
-  author: string;
+  author: Author;             // ⚠️ **Amended** — merged from separate author: string + tone: Tone fields
   department: string;
   date: string;               // display string; the joke allows "Friday (feels like Monday)"
   seed: string;               // user input
   body: string;               // generated output
-  tone: Tone;
   coverSheet: boolean;        // default true (FR-5)
   status: "draft" | "filed";  // drives the close/idle nag (FR-6b, FR-6c)
   createdAt: number;
@@ -399,11 +420,11 @@ src/
     engine/        # ReportEngine facade, LocalReportEngine, nonsense/
     platform/      # isDesktop shim
     ui/            # 98.css overrides, retro components
-  shared/          # ipc.ts, types.ts, tone-prompts.ts, model-config.ts, verdict.ts
+  shared/          # ipc.ts, types.ts, authorPrompts.ts, authorLabels.ts, reviewer.ts, model-config.ts, verdict.ts
 samples/           # seeded sample reports (FR-4a)
 ```
 
-Shared modules (types, tone prompts, verdict roll, model config) are imported by both main and renderer so the two engines can't drift.
+Shared modules (types, author prompts, verdict roll, reviewer selection, model config) are imported by both main and renderer so the two engines can't drift. ⚠️ **Amended** — `tone-prompts.ts` is now `authorPrompts.ts`, and `toneLabels.ts` is now `authorLabels.ts` (fixes pre-existing hyphen/camelCase naming inconsistency).
 
 ---
 

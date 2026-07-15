@@ -1,9 +1,9 @@
 // No channel ever returns a decrypted key (SEC-2).
-import type { BobsResult, Provider, ProviderConfig, Report, Tone } from './types'
+import type { BobsResult, Provider, ProviderConfig, Report, Author } from './types'
 
 export interface GenerateRequest {
   seed: string
-  tone: Tone
+  author: Author
 }
 
 export interface GenerateResult {

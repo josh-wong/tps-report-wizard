@@ -1,5 +1,5 @@
 import type { Report } from '@shared/types'
-import { TONE_LABELS } from '@shared/toneLabels'
+import { AUTHOR_LABELS } from '@shared/authorLabels'
 
 export function renderReportHtml(report: Report): string {
   const coverSheetHtml = report.coverSheet
@@ -10,7 +10,7 @@ export function renderReportHtml(report: Report): string {
         <div class="cover-sheet-title">T P S   R E P O R T</div>
         <div class="cover-sheet-memo">
           <p><strong>TO:</strong> All Staff</p>
-          <p><strong>FROM:</strong> ${escapeHtml(report.author)}</p>
+          <p><strong>FROM:</strong> ${escapeHtml(AUTHOR_LABELS[report.author])}</p>
           <p><strong>DATE:</strong> ${escapeHtml(report.date)}</p>
           <p><strong>RE:</strong> TPS Report #${escapeHtml(report.id)}</p>
         </div>
@@ -22,7 +22,7 @@ export function renderReportHtml(report: Report): string {
   `
     : ''
 
-  const toneLabel = TONE_LABELS[report.tone]
+  const authorLabel = AUTHOR_LABELS[report.author]
 
   return `
 <!DOCTYPE html>
@@ -142,10 +142,9 @@ export function renderReportHtml(report: Report): string {
       <div class="report-title">TPS Report</div>
       <div class="report-meta">
         <div><strong>ID:</strong> ${escapeHtml(report.id)}</div>
-        <div><strong>Author:</strong> ${escapeHtml(report.author)}</div>
+        <div><strong>Author:</strong> ${escapeHtml(authorLabel)}</div>
         <div><strong>Department:</strong> ${escapeHtml(report.department)}</div>
         <div><strong>Date:</strong> ${escapeHtml(report.date)}</div>
-        <div><strong>Tone:</strong> ${escapeHtml(toneLabel)}</div>
       </div>
     </div>
     <div class="report-body">${escapeHtml(report.body)}</div>
