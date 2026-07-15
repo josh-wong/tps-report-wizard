@@ -12,6 +12,16 @@
 
 ---
 
+> ## ⚠️ Amendments since v0.1
+>
+> The following changes were made during the AI provider integration work (PR #12), after this document's initial draft. They are called out here, and inline with a ⚠️ **Amended** marker at each affected passage, so reviewers can find what changed without diffing the whole file.
+>
+> 1. **IPC contract (§3)** — added `deleteKeys` and `setEngineEnabled` channels; `testConnection` now accepts an optional unsaved `candidateKey` so users can test a key before saving it.
+> 2. **Key storage (§10)** — `KeyStore` now persists a separate `enabled` flag alongside key presence, so disabling the AI engine in Settings survives an app restart instead of reactivating because a key still exists in `safeStorage`.
+> 3. **Key storage (§10)** — a stored key that fails to decrypt now throws a distinct `KEY_DECRYPT_FAILED` error (humanized to "your saved key could not be read") instead of silently behaving as if no key were configured.
+
+---
+
 ## 1. Architecture at a glance
 
 One TypeScript codebase, one React renderer, two deploy targets:
@@ -76,21 +86,25 @@ Three contexts, strict separation:
 
 Typed IPC contract (illustrative):
 
+> ⚠️ **Amended** — `deleteKeys` and `setEngineEnabled` were added, and `testConnection` gained the optional `candidateKey` parameter, after the initial draft of this document. See "Amendments since v0.1" above.
+
 ```ts
 // shared/ipc.ts – single source of truth for channel names + payloads
 export interface IpcApi {
   generate(req: GenerateRequest): Promise<GenerateResult>;
   reviewWithBobs(req: BobsRequest): Promise<BobsResult>;
-  testConnection(p: ProviderConfig): Promise<{ ok: boolean; message: string }>;
+  testConnection(p: ProviderConfig, candidateKey?: string): Promise<{ ok: boolean; message: string }>;
   saveKey(p: ProviderConfig, key: string): Promise<void>;   // key crosses IN, never OUT
   getProviderStatus(): Promise<{ provider: Provider | null; hasKey: boolean }>;
+  deleteKeys(p: ProviderConfig): Promise<boolean>;
+  setEngineEnabled(enabled: boolean): Promise<void>;
   listReports(): Promise<Report[]>;
   saveReport(r: Report): Promise<void>;
   exportPdf(r: Report): Promise<{ path: string }>;
 }
 ```
 
-Rule: `saveKey` accepts a key from the renderer once (the settings field) and immediately hands it to `safeStorage`; no channel ever returns a decrypted key to the renderer (SEC-2). `getProviderStatus` returns only a boolean `hasKey`.
+Rule: `saveKey` accepts a key from the renderer once (the settings field) and immediately hands it to `safeStorage`; no channel ever returns a decrypted key to the renderer (SEC-2). `getProviderStatus` returns only a boolean `hasKey`, which factors in both key presence and the persisted `enabled` flag (see §10).
 
 ---
 
@@ -317,6 +331,11 @@ electron-vite emits two bundles from the same source: the full app and a `web`-m
 - Web build cannot handle a key at all (SEC-4).
 - No telemetry transmits report content or keys in v1 (SEC-5).
 - Report content leaves the machine only on an explicit Generate/Review in AI mode, and only to the selected provider (SEC-6).
+
+> ⚠️ **Amended** — the two points below were added after the initial draft of this document. See "Amendments since v0.1" above.
+
+- `KeyStore` persists an `enabled` boolean separate from key presence. Unchecking "Use my AI key" in Settings calls `setEngineEnabled(false)`, which `getStatus()` honors on every subsequent read — including after an app restart — so AI mode does not silently reactivate just because a key is still sitting encrypted in `safeStorage`.
+- If a stored key fails to decrypt (e.g. the OS keychain backing `safeStorage` changed), `getKey()` throws `KEY_DECRYPT_FAILED` rather than returning `null`. `humanizeError()` maps this to a distinct message ("your saved key could not be read") so the user knows to re-enter the key in Settings, instead of seeing the generic "no key configured" message.
 
 ---
 

@@ -18,6 +18,24 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
 }
 
+/* 98.css explicitly sets "Pixelated MS Sans Serif" on all of these selectors
+   in one grouped rule. Match and override every target so Segoe UI applies
+   consistently across all windows, dialogs, form controls, and text. */
+.window,
+.title-bar,
+button,
+input,
+label,
+legend,
+li[role='tab'],
+option,
+select,
+table,
+textarea,
+ul.tree-view {
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
 #root {
   display: flex;
   justify-content: center;
@@ -184,6 +202,16 @@ body {
 .save-error {
   color: #c00;
   margin-top: 4px;
+}
+
+.settings-ok {
+  color: #006400;
+  font-size: 12px;
+}
+
+.settings-err {
+  color: #c00;
+  font-size: 12px;
 }
 
 .modal-overlay {

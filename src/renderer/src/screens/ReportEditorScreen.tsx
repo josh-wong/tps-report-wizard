@@ -1,13 +1,16 @@
 import { useState } from 'react'
-import type { Report, Tone } from '@shared/types'
+import type { Report, Tone, Provider } from '@shared/types'
 import { TONE_LABELS } from '../report/toneLabels'
 import { isDesktop } from '../platform/isDesktop'
+import { estimateGenerationCost, formatCost } from '@shared/costEstimator'
 import CoverSheetGateDialog from '../components/CoverSheetGateDialog'
 import PrintPreviewModal from '../components/PrintPreviewModal'
 
 interface ReportEditorScreenProps {
   report: Report
+  provider: Provider | null
   generating: boolean
+  generateError: string | null
   saveError: string | null
   onChange: (report: Report) => void
   onGenerate: () => void
@@ -17,7 +20,9 @@ interface ReportEditorScreenProps {
 
 function ReportEditorScreen({
   report,
+  provider,
   generating,
+  generateError,
   saveError,
   onChange,
   onGenerate,
@@ -140,6 +145,12 @@ function ReportEditorScreen({
             {generating ? 'Generating…' : '✨ Generate'}
           </button>
         </div>
+        {provider && report.seed.trim() && (
+          <span className="note">
+            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.tone, provider))}{' '}
+            (actual may vary)
+          </span>
+        )}
       </div>
 
       <div className="field-row-stacked">
@@ -178,6 +189,7 @@ function ReportEditorScreen({
         </label>
       </div>
 
+      {generateError && <p className="save-error note">Generate failed: {generateError}</p>}
       {saveError && <p className="save-error note">{saveError}</p>}
 
       <div className="editor-actions">
@@ -188,7 +200,13 @@ function ReportEditorScreen({
           <u>P</u>rint
         </button>
         <button type="button" accessKey="e" onClick={handleExportPdf} disabled={exporting}>
-          {exporting ? 'Exporting...' : <><u>E</u>xport PDF</>}
+          {exporting ? (
+            'Exporting...'
+          ) : (
+            <>
+              <u>E</u>xport PDF
+            </>
+          )}
         </button>
         <button type="button" accessKey="s" onClick={onSave}>
           <u>S</u>ave
