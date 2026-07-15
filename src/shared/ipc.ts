@@ -21,6 +21,7 @@ export const IPC_CHANNELS = {
   saveKey: 'provider:saveKey',
   getProviderStatus: 'provider:getStatus',
   deleteKeys: 'provider:deleteKeys',
+  setEngineEnabled: 'provider:setEngineEnabled',
   listReports: 'report:list',
   getReport: 'report:get',
   saveReport: 'report:save',
@@ -38,6 +39,7 @@ export interface IpcApi {
   saveKey(p: ProviderConfig, key: string): Promise<void> // key crosses IN, never OUT
   getProviderStatus(): Promise<{ provider: Provider | null; hasKey: boolean }>
   deleteKeys(p: ProviderConfig): Promise<boolean>
+  setEngineEnabled(enabled: boolean): Promise<void>
   listReports(): Promise<Report[]>
   getReport(id: string): Promise<Report | null>
   saveReport(r: Report): Promise<void>

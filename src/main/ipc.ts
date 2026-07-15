@@ -114,11 +114,17 @@ export function registerReportIpcHandlers(store: ReportStore, keyStore: KeyStore
     if (typeof key !== 'string' || key.trim().length === 0) throw new Error('Invalid key')
     keyStore.saveKey(p.provider, key.trim())
     keyStore.setProvider(p.provider)
+    keyStore.setEnabled(true)
   })
 
   ipcMain.handle(IPC_CHANNELS.deleteKeys, (_event, p: unknown) => {
     if (!isValidProviderConfig(p)) throw new Error('Invalid provider config')
     return keyStore.deleteKey(p.provider)
+  })
+
+  ipcMain.handle(IPC_CHANNELS.setEngineEnabled, (_event, enabled: unknown) => {
+    if (typeof enabled !== 'boolean') throw new Error('Invalid enabled flag')
+    keyStore.setEnabled(enabled)
   })
 
   ipcMain.handle(IPC_CHANNELS.getProviderStatus, () => keyStore.getStatus())

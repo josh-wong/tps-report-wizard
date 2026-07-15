@@ -6,17 +6,22 @@ interface KeyStoreData {
   provider: Provider | null
   // Encrypted key bytes stored as base64 strings, one per provider.
   encryptedKeys: Partial<Record<Provider, string>>
+  // Whether the user wants the AI engine active. Tracked separately from key
+  // presence so unchecking "Use my AI key" persists across restarts instead
+  // of reverting to AI mode just because a key still exists in safeStorage.
+  enabled: boolean
 }
 
 const store = new Store<KeyStoreData>({
   name: 'provider-keys',
-  defaults: { provider: null, encryptedKeys: {} }
+  defaults: { provider: null, encryptedKeys: {}, enabled: false }
 })
 
 export interface KeyStore {
   saveKey(provider: Provider, key: string): void
   getKey(provider: Provider): string | null
   setProvider(provider: Provider): void
+  setEnabled(enabled: boolean): void
   getStatus(): { provider: Provider | null; hasKey: boolean }
   deleteKey(provider: Provider): boolean
 }
@@ -49,6 +54,10 @@ export function createKeyStore(): KeyStore {
       store.set('provider', provider)
     },
 
+    setEnabled(enabled: boolean): void {
+      store.set('enabled', enabled)
+    },
+
     deleteKey(provider: Provider): boolean {
       const encryptedKeys = store.get('encryptedKeys')
       if (!encryptedKeys || !encryptedKeys[provider]) return false
@@ -65,7 +74,7 @@ export function createKeyStore(): KeyStore {
 
     getStatus(): { provider: Provider | null; hasKey: boolean } {
       const provider = store.get('provider')
-      if (!provider) return { provider: null, hasKey: false }
+      if (!provider || !store.get('enabled')) return { provider: null, hasKey: false }
       const encryptedKeys = store.get('encryptedKeys')
       const hasKey = !!encryptedKeys[provider]
       return { provider: provider as Provider | null, hasKey }

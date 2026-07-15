@@ -64,6 +64,7 @@ function SettingsScreen({
 
   const handleUseAiChange = (checked: boolean): void => {
     setUseAi(checked)
+    void window.electronAPI.setEngineEnabled(checked)
     if (!checked) {
       onStatusChange(null, false)
     }
