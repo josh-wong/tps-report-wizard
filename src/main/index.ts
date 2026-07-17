@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, session, dialog } from 'electron'
+import { app, shell, BrowserWindow, session, dialog, ipcMain, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -8,6 +8,9 @@ import { ElectronStoreBackend } from './store/electronStoreBackend'
 import { createKeyStore } from './keyStore'
 import { createNagSettingsStore } from './nag/nagSettingsStore'
 import { TrayNagController } from './nag/trayNagController'
+import { createAppMenu, updateMenuState } from './menu'
+import type { MenuState } from './menu'
+import { IPC_CHANNELS } from '@shared/ipc'
 
 const CONTENT_SECURITY_POLICY =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
@@ -134,6 +137,33 @@ app.whenReady().then(() => {
   }
 
   registerReportIpcHandlers(reportStore, createKeyStore(), nagHooks)
+
+  let currentMenuState: MenuState = {
+    hasActiveReport: false,
+    isEditing: false,
+    hasReports: false
+  }
+
+  const currentAppMenu = createAppMenu(mainWindow, currentMenuState)
+  Menu.setApplicationMenu(currentAppMenu)
+
+  const setMenuState = (updates: Partial<MenuState>): void => {
+    currentMenuState = { ...currentMenuState, ...updates }
+    updateMenuState(currentAppMenu, currentMenuState)
+  }
+
+  ipcMain.handle(IPC_CHANNELS.menuUpdateReportState, (_event, updates: unknown) => {
+    if (typeof updates !== 'object' || updates === null) return
+    const allowedKeys = ['hasActiveReport', 'isEditing', 'hasReports'] as const
+    const validated: Partial<MenuState> = {}
+    for (const key of allowedKeys) {
+      const value = (updates as Record<string, unknown>)[key]
+      if (typeof value === 'boolean') {
+        validated[key] = value
+      }
+    }
+    setMenuState(validated)
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
