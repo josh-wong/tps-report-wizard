@@ -1,4 +1,4 @@
-import type { Author } from '@shared/types'
+import type { Author, Report, BobsResult } from '@shared/types'
 import type { ReportEngine } from './ReportEngine'
 
 // Delegates generation to the main process via IPC. The main process owns the
@@ -7,5 +7,9 @@ export class AiReportEngine implements ReportEngine {
   async generate(seed: string, author: Author): Promise<string> {
     const result = await window.electronAPI.generate({ seed, author })
     return result.body
+  }
+
+  async review(report: Report): Promise<BobsResult> {
+    return window.electronAPI.reviewWithBobs({ report })
   }
 }

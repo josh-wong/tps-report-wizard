@@ -16,6 +16,8 @@ interface ReportEditorScreenProps {
   onGenerate: () => void
   onSave: () => void
   onBack: () => void
+  onReview?: () => void
+  reviewing?: boolean
 }
 
 function ReportEditorScreen({
@@ -27,13 +29,15 @@ function ReportEditorScreen({
   onChange,
   onGenerate,
   onSave,
-  onBack
+  onBack,
+  onReview,
+  reviewing
 }: ReportEditorScreenProps): React.JSX.Element {
   const [showGate, setShowGate] = useState(false)
   const [showPrintPreview, setShowPrintPreview] = useState(false)
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState<string | null>(null)
-  const [pendingAction, setPendingAction] = useState<'print' | 'export' | null>(null)
+  const [pendingAction, setPendingAction] = useState<'print' | 'export' | 'review' | null>(null)
 
   const update = (patch: Partial<Report>): void => {
     onChange({ ...report, ...patch, updatedAt: Date.now() })
@@ -42,12 +46,14 @@ function ReportEditorScreen({
   const handleAttachCoverSheet = (): void => {
     update({ coverSheet: true })
     setShowGate(false)
-    setPendingAction(null)
     if (pendingAction === 'print') {
       setShowPrintPreview(true)
     } else if (pendingAction === 'export') {
       doExportPdf({ ...report, coverSheet: true })
+    } else if (pendingAction === 'review' && onReview) {
+      onReview()
     }
+    setPendingAction(null)
   }
 
   const handlePrint = (): void => {
@@ -86,6 +92,15 @@ function ReportEditorScreen({
       return
     }
     doExportPdf(report)
+  }
+
+  const handleSendToBobs = (): void => {
+    if (!report.coverSheet) {
+      setShowGate(true)
+      setPendingAction('review')
+      return
+    }
+    onReview?.()
   }
 
   return (
@@ -152,8 +167,9 @@ function ReportEditorScreen({
         </div>
         {provider && report.seed.trim() && (
           <span className="note">
-            Estimated cost: {formatCost(estimateGenerationCost(report.seed, report.author, provider))}{' '}
-            (actual may vary)
+            Estimated cost:{' '}
+            {formatCost(estimateGenerationCost(report.seed, report.author, provider))} (actual may
+            vary)
           </span>
         )}
       </div>
@@ -203,6 +219,11 @@ function ReportEditorScreen({
             </>
           )}
         </button>
+        {onReview && (
+          <button type="button" onClick={handleSendToBobs} disabled={reviewing || !report.body}>
+            {reviewing ? 'Reviewing...' : 'Send to Bobs'}
+          </button>
+        )}
         <button type="button" accessKey="s" onClick={onSave}>
           <u>S</u>ave
         </button>

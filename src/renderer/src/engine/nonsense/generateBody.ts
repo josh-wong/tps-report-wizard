@@ -30,8 +30,14 @@ export function generateBody(seed: string, author: Author): string {
   for (let p = 0; p < paragraphCount; p++) {
     const sentenceCount = randomInRange(2, 3)
     const sentences: string[] = []
+    let lastTemplate = ''
     for (let s = 0; s < sentenceCount; s++) {
-      const template = pick(bank.sentenceTemplates)
+      let template = pick(bank.sentenceTemplates)
+      // Avoid picking the same template twice in a row within a paragraph
+      while (template === lastTemplate && bank.sentenceTemplates.length > 1) {
+        template = pick(bank.sentenceTemplates)
+      }
+      lastTemplate = template
       sentences.push(fillTemplate(template, seedPhrase, bank))
     }
     paragraphs.push(sentences.join(' '))

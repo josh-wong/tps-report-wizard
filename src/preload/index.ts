@@ -16,7 +16,11 @@ const electronAPI: IpcApi = {
   getReport: (id) => ipcRenderer.invoke(IPC_CHANNELS.getReport, id),
   saveReport: (r) => ipcRenderer.invoke(IPC_CHANNELS.saveReport, r),
   removeReport: (id) => ipcRenderer.invoke(IPC_CHANNELS.removeReport, id),
-  exportPdf: (r) => ipcRenderer.invoke(IPC_CHANNELS.exportPdf, r)
+  exportPdf: (r) => ipcRenderer.invoke(IPC_CHANNELS.exportPdf, r),
+  getQuietMode: () => ipcRenderer.invoke(IPC_CHANNELS.getQuietMode),
+  setQuietMode: (enabled) => ipcRenderer.invoke(IPC_CHANNELS.setQuietMode, enabled),
+  activityPing: () => ipcRenderer.send(IPC_CHANNELS.activityPing),
+  setDraftPresent: (present) => ipcRenderer.send(IPC_CHANNELS.setDraftPresent, present)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to the renderer only if

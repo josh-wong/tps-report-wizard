@@ -1,15 +1,18 @@
-import { app, shell, BrowserWindow, session } from 'electron'
+import { app, shell, BrowserWindow, session, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { registerReportIpcHandlers } from './ipc'
+import type { NagIpcHooks } from './ipc'
 import { ElectronStoreBackend } from './store/electronStoreBackend'
 import { createKeyStore } from './keyStore'
+import { createNagSettingsStore } from './nag/nagSettingsStore'
+import { TrayNagController } from './nag/trayNagController'
 
 const CONTENT_SECURITY_POLICY =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
 
-function createWindow(): void {
+function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 960,
@@ -47,6 +50,34 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
+  // "You can't just leave" close-attempt guard (FR-6b, FR-6d). Intercept the
+  // native close (X button, Cmd+Q, etc.); if a draft report exists, offer a
+  // Lumbergh-flavored choice. "Close anyway" always works — the guardrail is
+  // a gag, not a trap.
+  let forceClose = false
+  mainWindow.on('close', (event) => {
+    if (forceClose) return
+    if (!hasDraftPresent()) return
+
+    event.preventDefault()
+    void (async () => {
+      const { response } = await dialog.showMessageBox(mainWindow, {
+        type: 'none',
+        buttons: ['Close anyway', 'Finish it'],
+        defaultId: 1,
+        cancelId: 1,
+        title: "Initech TPS Report Wizard '99",
+        message: "I'm gonna need you to go ahead and finish that TPS report before you head out.",
+        detail: "That'd be greeeat."
+      })
+
+      if (response === 0) {
+        forceClose = true
+        mainWindow.close()
+      }
+    })()
+  })
+
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -54,6 +85,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return mainWindow
 }
 
 // This method will be called when Electron has finished
@@ -80,21 +113,41 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  registerReportIpcHandlers(new ElectronStoreBackend(), createKeyStore())
+  const reportStore = new ElectronStoreBackend()
+  const nagSettings = createNagSettingsStore()
 
-  createWindow()
+  const nagControllerRef: { current: TrayNagController | null } = { current: null }
+  const mainWindow = createWindow(() => nagControllerRef.current?.hasDraftPresent() ?? false)
+
+  const nagController = new TrayNagController(mainWindow, nagSettings)
+  nagControllerRef.current = nagController
+  nagController.attach()
+
+  const nagHooks: NagIpcHooks = {
+    getQuietMode: () => nagController.getQuietMode(),
+    setQuietMode: (enabled) => nagController.setQuietMode(enabled),
+    onActivityPing: () => nagController.onActivityPing(),
+    onDraftPresentChanged: (present) => nagController.setDraftPresent(present),
+    onReportSaved: (report) => {
+      if (report.status === 'filed') nagController.onReportFiled()
+    }
+  }
+
+  registerReportIpcHandlers(reportStore, createKeyStore(), nagHooks)
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow(() => nagController.hasDraftPresent())
+    }
   })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q. (The nag subsystem later overrides this default
-// close behavior — see docs/design-doc.md §11.)
+// explicitly with Cmd + Q, consistent with the per-OS tray behavior in
+// TrayNagController (design doc §11.4).
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()

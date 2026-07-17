@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import '98.css'
 import './styles/initech.css'
-import type { Provider, Report } from '@shared/types'
+import type { Provider, Report, BobsResult } from '@shared/types'
 import { isDesktop } from './platform/isDesktop'
 import { makeReportStore } from './store'
 import { makeReportEngine } from './engine/makeReportEngine'
@@ -9,8 +9,9 @@ import { createDraftReport } from './report/createDraftReport'
 import ReportListScreen from './screens/ReportListScreen'
 import ReportEditorScreen from './screens/ReportEditorScreen'
 import SettingsScreen from './screens/SettingsScreen'
+import BobsReviewScreen from './screens/BobsReviewScreen'
 
-type Screen = 'list' | 'editor' | 'settings'
+type Screen = 'list' | 'editor' | 'settings' | 'bobs-review'
 
 const reportStore = makeReportStore()
 
@@ -28,6 +29,10 @@ function App(): React.JSX.Element {
     hasKey: boolean
   }>({ provider: null, hasKey: false })
 
+  const [bobsReview, setBobsReview] = useState<BobsResult | null>(null)
+  const [reviewing, setReviewing] = useState(false)
+  const [reviewError, setReviewError] = useState<string | null>(null)
+
   useEffect(() => {
     reportStore
       .list()
@@ -42,6 +47,24 @@ function App(): React.JSX.Element {
       .getProviderStatus()
       .then(setProviderStatus)
       .catch((err) => console.error('Failed to get provider status:', err))
+  }, [])
+
+  useEffect(() => {
+    if (!isDesktop) return
+    window.electronAPI.setDraftPresent(activeReport?.status === 'draft')
+  }, [activeReport])
+
+  useEffect(() => {
+    if (!isDesktop) return
+    const ping = (): void => window.electronAPI.activityPing()
+    window.addEventListener('mousemove', ping)
+    window.addEventListener('keydown', ping)
+    window.addEventListener('click', ping)
+    return () => {
+      window.removeEventListener('mousemove', ping)
+      window.removeEventListener('keydown', ping)
+      window.removeEventListener('click', ping)
+    }
   }, [])
 
   const reportEngine = useMemo(
@@ -95,6 +118,22 @@ function App(): React.JSX.Element {
   const handleBack = (): void => {
     setActiveReport(null)
     setScreen('list')
+  }
+
+  const handleReview = async (): Promise<void> => {
+    if (!activeReport) return
+    setReviewing(true)
+    setReviewError(null)
+    try {
+      const review = await reportEngine.review(activeReport)
+      setBobsReview(review)
+      setScreen('bobs-review')
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Review failed.'
+      setReviewError(msg)
+    } finally {
+      setReviewing(false)
+    }
   }
 
   const handleSettingsStatusChange = (provider: Provider | null, hasKey: boolean): void => {
@@ -159,6 +198,18 @@ function App(): React.JSX.Element {
           onClose={() => setScreen(activeReport ? 'editor' : 'list')}
           onStatusChange={handleSettingsStatusChange}
         />
+      ) : screen === 'bobs-review' && activeReport && bobsReview ? (
+        <BobsReviewScreen
+          report={activeReport}
+          review={bobsReview}
+          loading={reviewing}
+          error={reviewError}
+          onBack={() => setScreen('editor')}
+          onClose={() => {
+            setBobsReview(null)
+            setScreen('list')
+          }}
+        />
       ) : screen === 'editor' && activeReport ? (
         <ReportEditorScreen
           report={activeReport}
@@ -170,6 +221,8 @@ function App(): React.JSX.Element {
           onGenerate={handleGenerate}
           onSave={handleSave}
           onBack={handleBack}
+          onReview={handleReview}
+          reviewing={reviewing}
         />
       ) : (
         <ReportListScreen
