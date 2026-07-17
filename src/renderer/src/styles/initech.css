@@ -51,6 +51,10 @@ ul.tree-view {
   background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
 }
 
+.title-bar-text {
+  line-height: 1.2;
+}
+
 .menu-bar {
   display: flex;
   gap: 2px;
@@ -60,14 +64,101 @@ ul.tree-view {
   font-size: 12px;
 }
 
+.menu-item-container {
+  position: relative;
+  display: inline-block;
+}
+
 .menu-bar span {
   padding: 2px 7px;
   cursor: pointer;
 }
 
-.menu-bar span:hover {
+.menu-bar span:hover,
+.menu-bar span.active {
   background: var(--initech-navy-1);
   color: #fff;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: silver;
+  border: 2px outset #dfdfdf;
+  min-width: 200px;
+  z-index: 1000;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.menu-item:hover {
+  background: var(--initech-navy-1);
+  color: #fff;
+}
+
+.menu-item.disabled {
+  color: #808080;
+  cursor: default;
+  pointer-events: none;
+}
+
+.menu-item.disabled:hover {
+  background: transparent;
+  color: #808080;
+}
+
+.menu-label {
+  flex: 1;
+  padding: 0 8px;
+  font-size: 11px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.menu-accelerator {
+  color: #808080;
+  padding: 0 8px;
+  text-align: right;
+  font-size: 11px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.menu-item:hover:not(.disabled) .menu-accelerator {
+  color: #fff;
+}
+
+.menu-separator {
+  height: 1px;
+  background: #808080;
+  margin: 2px 0;
+  border-top: 1px solid #ffffff;
+}
+
+.menu-item-with-submenu {
+  position: relative;
+}
+
+.menu-item-with-submenu .menu-dropdown {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 0;
+}
+
+.menu-submenu-arrow {
+  display: inline-block;
+  margin-left: 8px;
+  color: #808080;
+  font-size: 10px;
 }
 
 .memo-banner {
@@ -231,6 +322,66 @@ ul.tree-view {
   width: 90%;
   max-width: 480px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: #dfdfdf;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+}
+
+.shortcuts-dialog {
+  max-width: 320px;
+}
+
+.shortcuts-body {
+  padding: 0;
+}
+
+.shortcuts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  border: 2px inset #dfdfdf;
+}
+
+.shortcuts-table thead {
+  background: #c0c0c0;
+  color: #000;
+}
+
+.shortcuts-table th {
+  padding: 4px 6px;
+  text-align: left;
+  font-weight: bold;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.shortcuts-table th:last-child {
+  border-right: none;
+}
+
+.shortcuts-table td {
+  padding: 4px 6px;
+  border-right: 1px solid #dfdfdf;
+  border-bottom: 1px solid #dfdfdf;
+}
+
+.shortcuts-table td:last-child {
+  border-right: none;
+}
+
+.shortcuts-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.shortcuts-keys {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  width: 70px;
+  background: #f0f0f0;
+}
+
+.shortcuts-action {
+  text-align: left;
 }
 
 .dialog-window .title-bar {

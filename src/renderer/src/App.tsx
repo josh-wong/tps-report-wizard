@@ -10,6 +10,9 @@ import ReportListScreen from './screens/ReportListScreen'
 import ReportEditorScreen from './screens/ReportEditorScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import BobsReviewScreen from './screens/BobsReviewScreen'
+import { MenuBar } from './components/MenuBar'
+import { AboutDialog } from './components/AboutDialog'
+import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog'
 
 type Screen = 'list' | 'editor' | 'settings' | 'bobs-review'
 
@@ -32,6 +35,8 @@ function App(): React.JSX.Element {
   const [bobsReview, setBobsReview] = useState<BobsResult | null>(null)
   const [reviewing, setReviewing] = useState(false)
   const [reviewError, setReviewError] = useState<string | null>(null)
+  const [showAbout, setShowAbout] = useState(false)
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false)
 
   useEffect(() => {
     reportStore
@@ -52,7 +57,12 @@ function App(): React.JSX.Element {
   useEffect(() => {
     if (!isDesktop) return
     window.electronAPI.setDraftPresent(activeReport?.status === 'draft')
-  }, [activeReport])
+    void window.menuAPI.updateMenuState({
+      hasActiveReport: !!activeReport,
+      isEditing: screen === 'editor',
+      hasReports: reports.length > 0
+    })
+  }, [activeReport, screen, reports.length])
 
   useEffect(() => {
     if (!isDesktop) return
@@ -148,6 +158,66 @@ function App(): React.JSX.Element {
     return 'AI: off — using the Nonsense Engine'
   }
 
+  useEffect(() => {
+    if (!isDesktop) return
+    const unsubscribe: (() => void)[] = []
+
+    unsubscribe.push(window.menuAPI.onNewReport(handleNew))
+    unsubscribe.push(
+      window.menuAPI.onOpenReport(() => {
+        setScreen('list')
+      })
+    )
+    unsubscribe.push(window.menuAPI.onSaveReport(handleSave))
+    unsubscribe.push(
+      window.menuAPI.onExportPdf(async () => {
+        if (!activeReport) return
+        try {
+          await window.electronAPI.exportPdf(activeReport)
+        } catch (err) {
+          console.error('Export failed:', err)
+        }
+      })
+    )
+    unsubscribe.push(
+      window.menuAPI.onPrint(() => {
+        window.print()
+      })
+    )
+    unsubscribe.push(
+      window.menuAPI.onSettings(() => {
+        setScreen(screen === 'settings' ? (activeReport ? 'editor' : 'list') : 'settings')
+      })
+    )
+    unsubscribe.push(
+      window.menuAPI.onAbout(() => {
+        alert("Initech TPS Report Wizard '99\n\nA retro-styled report generator inspired by Office Space.")
+      })
+    )
+    unsubscribe.push(
+      window.menuAPI.onKeyboardShortcuts(() => {
+        const shortcuts = `Keyboard Shortcuts:
+Ctrl+N (Cmd+N)    - New Report
+Ctrl+O (Cmd+O)    - Open Report
+Ctrl+S (Cmd+S)    - Save Report
+Ctrl+E (Cmd+E)    - Export as PDF
+Ctrl+P (Cmd+P)    - Print
+Ctrl+, (Cmd+,)    - Settings
+Ctrl+Q (Cmd+Q)    - Quit`
+        alert(shortcuts)
+      })
+    )
+    unsubscribe.push(
+      window.menuAPI.onRecentReports(() => {
+        setScreen('list')
+      })
+    )
+
+    return () => {
+      unsubscribe.forEach((fn) => fn())
+    }
+  }, [activeReport, screen, handleNew, handleSave])
+
   return (
     <div className="window tps-window">
       <div className="title-bar">
@@ -164,32 +234,35 @@ function App(): React.JSX.Element {
           <button aria-label="Close"></button>
         </div>
       </div>
-      <div className="menu-bar">
-        <span>
-          <u>F</u>ile
-        </span>
-        <span>
-          <u>E</u>dit
-        </span>
-        <span>
-          <u>R</u>eports
-        </span>
-        <span>
-          <u>F</u>lair
-        </span>
-        {isDesktop && (
-          <span
-            onClick={() =>
-              setScreen(screen === 'settings' ? (activeReport ? 'editor' : 'list') : 'settings')
-            }
-          >
-            <u>T</u>ools
-          </span>
-        )}
-        <span>
-          <u>H</u>elp
-        </span>
-      </div>
+      <MenuBar
+        onNewReport={handleNew}
+        onOpenReport={() => setScreen('list')}
+        onOpenReportById={(id) => {
+          const report = reports.find((r) => r.id === id)
+          if (report) {
+            handleOpen(report)
+          }
+        }}
+        onSaveReport={handleSave}
+        onExportPdf={async () => {
+          if (!activeReport) return
+          try {
+            await window.electronAPI.exportPdf(activeReport)
+          } catch (err) {
+            console.error('Export failed:', err)
+          }
+        }}
+        onPrint={() => window.print()}
+        onSettings={() =>
+          setScreen(screen === 'settings' ? (activeReport ? 'editor' : 'list') : 'settings')
+        }
+        onAbout={() => setShowAbout(true)}
+        onKeyboardShortcuts={() => setShowKeyboardShortcuts(true)}
+        activeReport={activeReport}
+        isEditing={screen === 'editor'}
+        hasReports={reports.length > 0}
+        reports={reports}
+      />
 
       {screen === 'settings' && isDesktop ? (
         <SettingsScreen
@@ -232,6 +305,9 @@ function App(): React.JSX.Element {
           onOpen={handleOpen}
         />
       )}
+
+      {showAbout && <AboutDialog onClose={() => setShowAbout(false)} />}
+      {showKeyboardShortcuts && <KeyboardShortcutsDialog onClose={() => setShowKeyboardShortcuts(false)} />}
 
       <div className="status-bar">
         <p className="status-bar-field">{aiStatusLabel()}</p>

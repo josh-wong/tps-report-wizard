@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, session, dialog } from 'electron'
+import { app, shell, BrowserWindow, session, dialog, ipcMain, Menu, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -8,6 +8,9 @@ import { ElectronStoreBackend } from './store/electronStoreBackend'
 import { createKeyStore } from './keyStore'
 import { createNagSettingsStore } from './nag/nagSettingsStore'
 import { TrayNagController } from './nag/trayNagController'
+import { createAppMenu, updateMenuState } from './menu'
+import type { MenuState } from './menu'
+import { IPC_CHANNELS } from '@shared/ipc'
 
 const CONTENT_SECURITY_POLICY =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
@@ -20,7 +23,6 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
     minWidth: 720,
     minHeight: 560,
     show: false,
-    autoHideMenuBar: true,
     title: "Initech TPS Report Wizard '99",
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -134,6 +136,54 @@ app.whenReady().then(() => {
   }
 
   registerReportIpcHandlers(reportStore, createKeyStore(), nagHooks)
+
+  let currentMenuState: MenuState = {
+    hasActiveReport: false,
+    isEditing: false,
+    hasReports: false
+  }
+
+  let currentAppMenu = createAppMenu(mainWindow, currentMenuState)
+  Menu.setApplicationMenu(currentAppMenu)
+
+  const setMenuState = (updates: Partial<MenuState>): void => {
+    currentMenuState = { ...currentMenuState, ...updates }
+    updateMenuState(currentAppMenu, currentMenuState)
+  }
+
+  ipcMain.handle(IPC_CHANNELS.menuUpdateReportState, (_event, updates: unknown) => {
+    if (typeof updates !== 'object' || updates === null) return
+    setMenuState(updates as Partial<MenuState>)
+  })
+
+  // Register global keyboard shortcuts
+  const registerShortcuts = (): void => {
+    globalShortcut.register('CmdOrCtrl+N', () => {
+      mainWindow.webContents.send(IPC_CHANNELS.menuNewReport)
+    })
+    globalShortcut.register('CmdOrCtrl+O', () => {
+      mainWindow.webContents.send(IPC_CHANNELS.menuOpenReport)
+    })
+    globalShortcut.register('CmdOrCtrl+S', () => {
+      mainWindow.webContents.send(IPC_CHANNELS.menuSaveReport)
+    })
+    globalShortcut.register('CmdOrCtrl+E', () => {
+      mainWindow.webContents.send(IPC_CHANNELS.menuExportPdf)
+    })
+    globalShortcut.register('CmdOrCtrl+P', () => {
+      mainWindow.webContents.send(IPC_CHANNELS.menuPrint)
+    })
+    globalShortcut.register('CmdOrCtrl+,', () => {
+      mainWindow.webContents.send(IPC_CHANNELS.menuSettings)
+    })
+    if (process.platform !== 'darwin') {
+      globalShortcut.register('CmdOrCtrl+Q', () => {
+        app.quit()
+      })
+    }
+  }
+
+  registerShortcuts()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

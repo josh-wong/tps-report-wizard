@@ -30,7 +30,17 @@ export const IPC_CHANNELS = {
   getQuietMode: 'nag:getQuietMode',
   setQuietMode: 'nag:setQuietMode',
   activityPing: 'nag:activityPing',
-  setDraftPresent: 'nag:setDraftPresent'
+  setDraftPresent: 'nag:setDraftPresent',
+  menuNewReport: 'menu:newReport',
+  menuOpenReport: 'menu:openReport',
+  menuSaveReport: 'menu:saveReport',
+  menuExportPdf: 'menu:exportPdf',
+  menuPrint: 'menu:print',
+  menuSettings: 'menu:settings',
+  menuAbout: 'menu:about',
+  menuKeyboardShortcuts: 'menu:keyboardShortcuts',
+  menuRecentReports: 'menu:recentReports',
+  menuUpdateReportState: 'menu:updateReportState'
 } as const
 
 export interface IpcApi {
