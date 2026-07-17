@@ -12,6 +12,9 @@ export const AUTHORS = [
 ] as const
 export type Author = (typeof AUTHORS)[number]
 
+// Manually specify to maintain 'as const' for type safety. Cannot use .filter() with
+// 'as const' since const assertions require literals. Must remain in sync with AUTHORS
+// (excludes 'bobs' to prevent Bobs from being selectable as report authors).
 export const SELECTABLE_AUTHORS = [
   'peter',
   'lumbergh',
