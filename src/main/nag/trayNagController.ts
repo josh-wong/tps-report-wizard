@@ -70,7 +70,6 @@ export class TrayNagController {
       this.clearTimer()
       this.updateBadge()
     }
-    this.updateTrayMenu()
   }
 
   getQuietMode(): boolean {
@@ -162,20 +161,23 @@ export class TrayNagController {
       app.dock?.setBadge(showBadge ? '•' : '')
     }
     app.badgeCount = showBadge ? 1 : 0
-    this.updateTrayMenu()
   }
 
   private createTray(): void {
     const trayIcon = nativeImage.createFromPath(icon).resize({ width: 16, height: 16 })
     this.tray = new Tray(trayIcon)
     this.tray.setToolTip("Initech TPS Report Wizard '99")
+    // Deliberately don't use setContextMenu — on macOS that makes every
+    // click (not just right-click) pop the menu instead of firing 'click',
+    // so a single tap to restore the window opens the menu too. Building
+    // the menu on demand and showing it only on right-click keeps
+    // left-click = restore/focus and right-click = menu on every platform.
     this.tray.on('click', () => this.finishIt())
-    this.updateTrayMenu()
+    this.tray.on('right-click', () => this.tray?.popUpContextMenu(this.buildTrayMenu()))
   }
 
-  private updateTrayMenu(): void {
-    if (!this.tray) return
-    const menu = Menu.buildFromTemplate([
+  private buildTrayMenu(): Menu {
+    return Menu.buildFromTemplate([
       { label: 'Finish report', click: () => this.finishIt() },
       {
         label: 'Quiet mode',
@@ -186,6 +188,5 @@ export class TrayNagController {
       { type: 'separator' },
       { label: 'Quit', role: 'quit' }
     ])
-    this.tray.setContextMenu(menu)
   }
 }

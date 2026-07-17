@@ -7,7 +7,7 @@ const trayInstances: FakeTray[] = []
 
 class FakeTray {
   toolTip = ''
-  contextMenu: unknown = null
+  poppedUpMenu: unknown = null
   handlers: Record<string, () => void> = {}
   constructor() {
     trayInstances.push(this)
@@ -15,8 +15,8 @@ class FakeTray {
   setToolTip(text: string): void {
     this.toolTip = text
   }
-  setContextMenu(menu: unknown): void {
-    this.contextMenu = menu
+  popUpContextMenu(menu: unknown): void {
+    this.poppedUpMenu = menu
   }
   on(event: string, handler: () => void): void {
     this.handlers[event] = handler
@@ -140,5 +140,19 @@ describe('TrayNagController', () => {
   it('creates a tray icon on attach', () => {
     setup(true)
     expect(trayInstances.length).toBe(1)
+  })
+
+  it('left-clicking the tray icon restores/focuses the window without popping the menu', () => {
+    const { window } = setup(true)
+    trayInstances[0].handlers.click()
+    expect(window.shown).toBe(true)
+    expect(window.focused).toBe(true)
+    expect(trayInstances[0].poppedUpMenu).toBeNull()
+  })
+
+  it('right-clicking the tray icon pops up the context menu', () => {
+    setup(true)
+    trayInstances[0].handlers['right-click']()
+    expect(trayInstances[0].poppedUpMenu).not.toBeNull()
   })
 })
