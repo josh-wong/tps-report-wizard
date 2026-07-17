@@ -17,6 +17,8 @@ export interface MenuApi {
     isEditing?: boolean
     hasReports?: boolean
   }): Promise<void>
+  onConfirmCloseRequest(callback: () => void): () => void
+  sendConfirmCloseResponse(closeAnyway: boolean): void
 }
 
 // No channel ever returns a decrypted API key (SEC-2).
@@ -77,7 +79,13 @@ const menuApi: MenuApi = {
     ipcRenderer.on(IPC_CHANNELS.menuRecentReports, callback)
     return () => ipcRenderer.off(IPC_CHANNELS.menuRecentReports, callback)
   },
-  updateMenuState: (state) => ipcRenderer.invoke(IPC_CHANNELS.menuUpdateReportState, state)
+  updateMenuState: (state) => ipcRenderer.invoke(IPC_CHANNELS.menuUpdateReportState, state),
+  onConfirmCloseRequest: (callback) => {
+    ipcRenderer.on(IPC_CHANNELS.confirmCloseRequest, callback)
+    return () => ipcRenderer.off(IPC_CHANNELS.confirmCloseRequest, callback)
+  },
+  sendConfirmCloseResponse: (closeAnyway) =>
+    ipcRenderer.send(IPC_CHANNELS.confirmCloseResponse, closeAnyway)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to the renderer only if

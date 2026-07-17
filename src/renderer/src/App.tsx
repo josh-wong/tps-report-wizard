@@ -13,6 +13,7 @@ import BobsReviewScreen from './screens/BobsReviewScreen'
 import { MenuBar } from './components/MenuBar'
 import { AboutDialog } from './components/AboutDialog'
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog'
+import { CloseConfirmDialog } from './components/CloseConfirmDialog'
 
 type Screen = 'list' | 'editor' | 'settings' | 'bobs-review'
 
@@ -37,6 +38,7 @@ function App(): React.JSX.Element {
   const [reviewError, setReviewError] = useState<string | null>(null)
   const [showAbout, setShowAbout] = useState(false)
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false)
+  const [showCloseConfirm, setShowCloseConfirm] = useState(false)
 
   useEffect(() => {
     reportStore
@@ -214,6 +216,11 @@ Ctrl+Q (Cmd+Q)    - Quit`
         setScreen('list')
       })
     )
+    unsubscribe.push(
+      window.menuAPI.onConfirmCloseRequest(() => {
+        setShowCloseConfirm(true)
+      })
+    )
 
     return () => {
       unsubscribe.forEach((fn) => fn())
@@ -312,6 +319,18 @@ Ctrl+Q (Cmd+Q)    - Quit`
       {showAbout && <AboutDialog onClose={() => setShowAbout(false)} />}
       {showKeyboardShortcuts && (
         <KeyboardShortcutsDialog onClose={() => setShowKeyboardShortcuts(false)} />
+      )}
+      {showCloseConfirm && (
+        <CloseConfirmDialog
+          onCloseAnyway={() => {
+            setShowCloseConfirm(false)
+            window.menuAPI.sendConfirmCloseResponse(true)
+          }}
+          onFinishIt={() => {
+            setShowCloseConfirm(false)
+            window.menuAPI.sendConfirmCloseResponse(false)
+          }}
+        />
       )}
 
       <div className="status-bar">

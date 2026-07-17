@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, session, dialog, ipcMain, Menu } from 'electron'
+import { app, shell, BrowserWindow, session, ipcMain, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -63,22 +63,13 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
     if (!hasDraftPresent()) return
 
     event.preventDefault()
-    void (async () => {
-      const { response } = await dialog.showMessageBox(mainWindow, {
-        type: 'none',
-        buttons: ['Close anyway', 'Finish it'],
-        defaultId: 1,
-        cancelId: 1,
-        title: "Initech TPS Report Wizard '99",
-        message: "I'm gonna need you to go ahead and finish that TPS report before you head out.",
-        detail: "That'd be greeeat."
-      })
-
-      if (response === 0) {
+    ipcMain.once(IPC_CHANNELS.confirmCloseResponse, (_event, closeAnyway: unknown) => {
+      if (closeAnyway === true) {
         forceClose = true
         mainWindow.close()
       }
-    })()
+    })
+    mainWindow.webContents.send(IPC_CHANNELS.confirmCloseRequest)
   })
 
   // HMR for renderer base on electron-vite cli.
