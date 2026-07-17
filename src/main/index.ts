@@ -12,7 +12,7 @@ import { TrayNagController } from './nag/trayNagController'
 const CONTENT_SECURITY_POLICY =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
 
-function createWindow(store: ElectronStoreBackend): BrowserWindow {
+function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 960,
@@ -57,16 +57,10 @@ function createWindow(store: ElectronStoreBackend): BrowserWindow {
   let forceClose = false
   mainWindow.on('close', (event) => {
     if (forceClose) return
+    if (!hasDraftPresent()) return
+
     event.preventDefault()
     void (async () => {
-      const reports = await store.list()
-      const hasDraft = reports.some((r) => r.status === 'draft')
-      if (!hasDraft) {
-        forceClose = true
-        mainWindow.close()
-        return
-      }
-
       const { response } = await dialog.showMessageBox(mainWindow, {
         type: 'none',
         buttons: ['Close anyway', 'Finish it'],
@@ -121,15 +115,19 @@ app.whenReady().then(() => {
 
   const reportStore = new ElectronStoreBackend()
   const nagSettings = createNagSettingsStore()
-  const mainWindow = createWindow(reportStore)
 
-  const nagController = new TrayNagController(mainWindow, reportStore, nagSettings)
+  const nagControllerRef: { current: TrayNagController | null } = { current: null }
+  const mainWindow = createWindow(() => nagControllerRef.current?.hasDraftPresent() ?? false)
+
+  const nagController = new TrayNagController(mainWindow, nagSettings)
+  nagControllerRef.current = nagController
   nagController.attach()
 
   const nagHooks: NagIpcHooks = {
     getQuietMode: () => nagController.getQuietMode(),
     setQuietMode: (enabled) => nagController.setQuietMode(enabled),
     onActivityPing: () => nagController.onActivityPing(),
+    onDraftPresentChanged: (present) => nagController.setDraftPresent(present),
     onReportSaved: (report) => {
       if (report.status === 'filed') nagController.onReportFiled()
     }
@@ -140,7 +138,9 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow(reportStore)
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow(() => nagController.hasDraftPresent())
+    }
   })
 })
 

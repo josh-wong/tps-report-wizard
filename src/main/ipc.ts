@@ -69,6 +69,7 @@ export interface NagIpcHooks {
   getQuietMode(): boolean
   setQuietMode(enabled: boolean): void
   onActivityPing(): void
+  onDraftPresentChanged(present: boolean): void
   onReportSaved(report: Report): void
 }
 
@@ -192,6 +193,10 @@ export function registerReportIpcHandlers(
     nag.setQuietMode(enabled)
   })
   ipcMain.on(IPC_CHANNELS.activityPing, () => nag.onActivityPing())
+  ipcMain.on(IPC_CHANNELS.setDraftPresent, (_event, present: unknown) => {
+    if (typeof present !== 'boolean') return
+    nag.onDraftPresentChanged(present)
+  })
 }
 
 async function exportReportPdf(report: Report): Promise<{ path: string } | null> {

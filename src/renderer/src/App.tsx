@@ -51,6 +51,11 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     if (!isDesktop) return
+    window.electronAPI.setDraftPresent(activeReport?.status === 'draft')
+  }, [activeReport])
+
+  useEffect(() => {
+    if (!isDesktop) return
     const ping = (): void => window.electronAPI.activityPing()
     window.addEventListener('mousemove', ping)
     window.addEventListener('keydown', ping)

@@ -1,5 +1,4 @@
 import { app, BrowserWindow, Notification, Tray, Menu, nativeImage } from 'electron'
-import type { ReportStore } from '@shared/store'
 import { NagScheduler } from './NagScheduler'
 import type { NagSettingsStore } from './nagSettingsStore'
 import icon from '../../../resources/icon.png?asset'
@@ -10,16 +9,20 @@ const ACTIVITY_DEBOUNCE_MS = 5000
  * Wires the pure NagScheduler state machine to real Electron timers, tray,
  * notifications, and window focus/blur — active only while the window is
  * away (blurred) and a draft report exists (design doc §11.3).
+ *
+ * "Draft present" is reported by the renderer (setDraftPresent), not read
+ * from the ReportStore: an in-progress draft only lives in renderer state
+ * until it's filed, so the store never contains an unsaved draft to find.
  */
 export class TrayNagController {
   private readonly scheduler: NagScheduler
   private tray: Tray | null = null
   private timer: NodeJS.Timeout | null = null
   private lastActivityPing = 0
+  private draftPresent = false
 
   constructor(
     private readonly mainWindow: BrowserWindow,
-    private readonly store: ReportStore,
     private readonly settings: NagSettingsStore
   ) {
     this.scheduler = new NagScheduler({ quietMode: settings.getQuietMode() })
@@ -28,7 +31,7 @@ export class TrayNagController {
   attach(): void {
     this.createTray()
 
-    this.mainWindow.on('blur', () => void this.handleBlur())
+    this.mainWindow.on('blur', () => this.handleBlur())
     this.mainWindow.on('focus', () => this.handleFocus())
     this.mainWindow.on('show', () => this.handleFocus())
   }
@@ -47,6 +50,19 @@ export class TrayNagController {
     this.updateBadge()
   }
 
+  setDraftPresent(present: boolean): void {
+    this.draftPresent = present
+    if (!present) {
+      this.scheduler.onDraftFiled()
+      this.clearTimer()
+      this.updateBadge()
+    }
+  }
+
+  hasDraftPresent(): boolean {
+    return this.draftPresent
+  }
+
   setQuietMode(enabled: boolean): void {
     this.settings.setQuietMode(enabled)
     this.scheduler.setQuietMode(enabled)
@@ -61,13 +77,8 @@ export class TrayNagController {
     return this.settings.getQuietMode()
   }
 
-  private async hasDraft(): Promise<boolean> {
-    const reports = await this.store.list()
-    return reports.some((r) => r.status === 'draft')
-  }
-
-  private async handleBlur(): Promise<void> {
-    if (!(await this.hasDraft())) return
+  private handleBlur(): void {
+    if (!this.draftPresent) return
     this.scheduler.onWindowBlurred()
     this.rearm()
   }
@@ -84,13 +95,13 @@ export class TrayNagController {
       return
     }
     this.timer = setTimeout(
-      () => void this.handleIdleThresholdExceeded(),
+      () => this.handleIdleThresholdExceeded(),
       this.scheduler.getNextBackoffMs()
     )
   }
 
-  private async handleIdleThresholdExceeded(): Promise<void> {
-    if (!(await this.hasDraft())) {
+  private handleIdleThresholdExceeded(): void {
+    if (!this.draftPresent) {
       this.scheduler.onDraftFiled()
       return
     }
@@ -135,7 +146,7 @@ export class TrayNagController {
 
   private snooze(): void {
     this.clearTimer()
-    this.timer = setTimeout(() => void this.handleIdleThresholdExceeded(), 15 * 60 * 1000)
+    this.timer = setTimeout(() => this.handleIdleThresholdExceeded(), 15 * 60 * 1000)
   }
 
   private clearTimer(): void {

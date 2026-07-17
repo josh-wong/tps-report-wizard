@@ -29,7 +29,8 @@ export const IPC_CHANNELS = {
   exportPdf: 'report:exportPdf',
   getQuietMode: 'nag:getQuietMode',
   setQuietMode: 'nag:setQuietMode',
-  activityPing: 'nag:activityPing'
+  activityPing: 'nag:activityPing',
+  setDraftPresent: 'nag:setDraftPresent'
 } as const
 
 export interface IpcApi {
@@ -51,4 +52,5 @@ export interface IpcApi {
   getQuietMode(): Promise<boolean>
   setQuietMode(enabled: boolean): Promise<void>
   activityPing(): void
+  setDraftPresent(present: boolean): void
 }
