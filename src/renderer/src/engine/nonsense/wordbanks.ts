@@ -132,5 +132,123 @@ export const WORD_BANKS: Record<Author, AuthorWordBank> = {
       "So, uh, we're gonna go ahead and move forward with the recommendation.",
       "That's, uh, that's a great question. We'll circle back on that."
     ]
+  },
+  joanna: {
+    sentenceTemplates: [
+      "Look, here's the thing about {seed}: people are gonna do what they're gonna do, and no amount of reporting changes that.",
+      'I deal with all types in here, and {seed} is basically the same nonsense you see in any crowd.',
+      'The core issue with {seed} is that nobody really wants to admit what the problem actually is.',
+      "If I had a dollar for every time someone tried to spin {seed} into something it isn't, I could retire.",
+      '{seed} is simple if you strip away all the corporate BS and just look at what people actually need.',
+      'Been mixing drinks and listening to people for years, and {seed} is just the usual confusion.'
+    ],
+    buzzPhrases: [
+      'here is the thing',
+      'nobody wants to admit',
+      'strip away the BS',
+      'people are gonna do'
+    ],
+    nounPhrases: [
+      'the real issue',
+      'the bottom line',
+      'human nature',
+      'simple truth',
+      'the bar crowd'
+    ],
+    verbPhrases: ['cut through', 'strip away', 'get to the heart of', 'see through'],
+    phrases: ['all types of people', 'corporate nonsense', 'what people actually need'],
+    closingLines: [
+      'At the end of the day, it is what it is.',
+      'So that is my report. Now, what can I get you to drink?'
+    ]
+  },
+  michael: {
+    sentenceTemplates: [
+      'Now, regarding {seed}, and I want to be very clear on this point, {seed} requires technical acumen.',
+      'Not to brag, but I have specific expertise in {seed}, unlike some consultants I could mention.',
+      'The issue with {seed}, for those who might not have my background, is actually quite nuanced and technically sophisticated.',
+      'Let me be perfectly clear: {seed} is not, I repeat, not something a layperson can just grasp without consulting someone like myself.',
+      "To address {seed}, one must understand that it's more complex than the name might suggest, much like my own situation.",
+      'I have been asked countless times to explain {seed} — and no, that is not a reference to the musician Michael Bolton.'
+    ],
+    buzzPhrases: [
+      'let me be clear',
+      'technical expertise',
+      'not to brag',
+      'for those of us who understand'
+    ],
+    nounPhrases: [
+      'technical acumen',
+      'sophisticated analysis',
+      'my consulting background',
+      'the Michael Bolton confusion'
+    ],
+    verbPhrases: [
+      'to clarify',
+      'require detailed analysis',
+      'demand expertise',
+      'must be understood'
+    ],
+    phrases: ['unlike other consultants', 'nuanced and sophisticated', 'for those who understand'],
+    closingLines: [
+      'So, as I have hopefully made clear, {seed} is a matter for professionals.',
+      'And to be clear, I am not the singer.'
+    ]
+  },
+  samir: {
+    sentenceTemplates: [
+      'So {seed} is yet another example of corporate bureaucracy that consumes massive resources for minimal output.',
+      'I have spent considerable time debugging the {seed} situation, and the root cause is organizational structure, not technical failure.',
+      'The redundant layers of approval for {seed} make it physically impossible to work efficiently.',
+      '{seed} has evolved into a perfect metaphor for everything wrong with corporate software development.',
+      'Someone, somewhere decided that {seed} was critical, and now we are all stuck implementing solutions for invented problems.',
+      'The tragic irony of {seed} is that it takes two weeks to ship something that was supposed to take two hours.'
+    ],
+    buzzPhrases: ['corporate bureaucracy', 'redundant layers', 'invented problems', 'tragic irony'],
+    nounPhrases: [
+      'code review process',
+      'approval layers',
+      'resource waste',
+      'organizational overhead'
+    ],
+    verbPhrases: ['debug', 'refactor to accommodate', 'work around', 'compensate for'],
+    phrases: [
+      'corporate inefficiency',
+      'layers of bureaucracy',
+      'shipping delays caused by nonsense'
+    ],
+    closingLines: [
+      'That is the report on {seed}. I will now return to implementing workarounds.',
+      'In conclusion, this is all a waste of engineering talent.'
+    ]
+  },
+  tom: {
+    sentenceTemplates: [
+      'I have been very busy managing the {seed} initiative, and without my leadership, it would have collapsed entirely.',
+      'My unique role requires me to oversee {seed} from a strategic vantage point that only I can occupy.',
+      'The team came to me with {seed}, and I immediately saw the bigger picture that others had missed.',
+      'In my experience, {seed} is the kind of thing that requires a middle manager with vision, which is why I took point on it.',
+      "I coordinate across so many departments that only I understand the full scope of {seed}'s implications.",
+      'There was a time before I took charge of {seed}, and frankly, things were a mess until I stepped in.'
+    ],
+    buzzPhrases: [
+      'only I can see',
+      'my unique role',
+      'strategic vantage point',
+      'without my leadership',
+      'took point on it'
+    ],
+    nounPhrases: [
+      'the big picture',
+      'my oversight',
+      'strategic vision',
+      'cross-department coordination'
+    ],
+    verbPhrases: ['took charge of', 'coordinate', 'oversee at the strategic level', 'manage'],
+    phrases: ['before I stepped in', 'unique position to understand', 'strategic implications'],
+    closingLines: [
+      'That is why {seed} would not function without my involvement.',
+      'And that is the value that I bring to this organization.'
+    ]
   }
 }

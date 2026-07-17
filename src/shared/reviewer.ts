@@ -1,10 +1,11 @@
+import { AUTHORS } from './types'
 import type { Author } from './types'
 
-const NON_BOBS_AUTHORS: readonly Author[] = ['peter', 'lumbergh', 'milton']
+const NON_BOBS_AUTHORS = AUTHORS.filter((a) => a !== 'bobs')
 
 /**
  * The Bobs review every report — except their own. If the report's author
- * IS the Bobs, a reviewer is instead randomly picked from the other three
+ * IS the Bobs, a reviewer is instead randomly picked from the other
  * characters, since the Bobs can't review themselves.
  */
 export function pickReviewer(author: Author, rng: () => number = Math.random): Author {

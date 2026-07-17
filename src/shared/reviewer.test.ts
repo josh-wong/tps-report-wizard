@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { pickReviewer } from './reviewer'
+import { AUTHORS } from './types'
 import type { Author } from './types'
 
 describe('pickReviewer', () => {
@@ -15,12 +16,13 @@ describe('pickReviewer', () => {
     expect(pickReviewer('milton')).toBe('bobs')
   })
 
-  it('returns one of the three non-bobs authors when author is bobs', () => {
+  it('returns one of the non-bobs authors when author is bobs', () => {
+    const nonBobsAuthors = AUTHORS.filter((a) => a !== 'bobs')
     const results = new Set<Author>()
     for (let i = 0; i < 100; i++) {
       const result = pickReviewer('bobs', Math.random)
       results.add(result)
-      expect(['peter', 'lumbergh', 'milton']).toContain(result)
+      expect(nonBobsAuthors).toContain(result)
     }
     expect(results.size).toBeGreaterThan(1)
   })
@@ -33,7 +35,7 @@ describe('pickReviewer', () => {
 
   it('returns deterministic results with injected rng', () => {
     expect(pickReviewer('bobs', () => 0)).toBe('peter')
-    expect(pickReviewer('bobs', () => 0.4)).toBe('lumbergh')
-    expect(pickReviewer('bobs', () => 0.8)).toBe('milton')
+    expect(pickReviewer('bobs', () => 0.4)).toBe('milton')
+    expect(pickReviewer('bobs', () => 0.8)).toBe('joanna')
   })
 })

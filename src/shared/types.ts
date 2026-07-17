@@ -1,6 +1,15 @@
 export type Provider = 'claude' | 'openai'
 
-export const AUTHORS = ['peter', 'lumbergh', 'milton', 'bobs'] as const
+export const AUTHORS = [
+  'peter',
+  'lumbergh',
+  'bobs',
+  'milton',
+  'michael',
+  'samir',
+  'joanna',
+  'tom'
+] as const
 export type Author = (typeof AUTHORS)[number]
 
 export type Verdict = 'circle_back' | 'basement' | 'ship_it'
