@@ -12,6 +12,17 @@ export const AUTHORS = [
 ] as const
 export type Author = (typeof AUTHORS)[number]
 
+export const SELECTABLE_AUTHORS = [
+  'peter',
+  'lumbergh',
+  'milton',
+  'michael',
+  'samir',
+  'joanna',
+  'tom'
+] as const
+export type SelectableAuthor = (typeof SELECTABLE_AUTHORS)[number]
+
 export type Verdict = 'circle_back' | 'basement' | 'ship_it'
 
 export const REPORT_STATUSES = ['draft', 'filed'] as const

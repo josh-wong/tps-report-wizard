@@ -25,7 +25,7 @@
 >
 > The following changes were made during the author-selector refactor (issue #13), after v0.2. They are called out here, and inline with a ⚠️ **Amended** marker at each affected requirement.
 >
-> 1. **FR-1 (§6.1)** — ⚠️ **Amended** — the "Author" field is now a selector with eight Office Space characters (Peter Gibbons, Bill Lumbergh, The Bobs, Milton Waddams, Michael Bolton, Samir Nagheenanajar, Joanna, and Tom Smykowski) instead of a free-text input, so the author and the generation voice are unified and can never diverge.
+> 1. **FR-1 (§6.1)** — ⚠️ **Amended** — the "Author" field is now a selector with seven Office Space characters (Peter Gibbons, Bill Lumbergh, Milton Waddams, Michael Bolton, Samir Nagheenanajar, Joanna, and Tom Smykowski) instead of a free-text input, so the author and the generation voice are unified and can never diverge. The Bobs appear exclusively as reviewers in Bobs Review mode.
 > 2. **FR-8, FR-9 (§6.3)** — the "Tone selector" dropdown was replaced by the Author selector; each option now represents a character from *Office Space* whose distinct voice drives both the byline and the generation style, eliminating the confusing model where Peter could be "written as" someone else.
 > 3. **FR-22c (§6.6)** — ⚠️ **Amended** — added a reviewer-selection rule for Bobs Review: the Bobs cannot review a report whose author is itself "the Bobs"; in that case, a reviewer is randomly selected from the other seven characters.
 
@@ -98,7 +98,7 @@ In _Office Space_, Peter Gibbons is ambushed by roughly eight managers—Lumberg
 Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2.
 
 ### 6.1 New TPS Report (P0)
-- FR-1 – ⚠️ **Amended** — A form with: auto-generated Report ID (`TPS-NNNN`), **Author selector** (eight Office Space characters: Peter Gibbons, Bill Lumbergh, The Bobs, Milton Waddams, Michael Bolton, Samir Nagheenanajar, Joanna, and Tom Smykowski), Department, Date, and a report body.
+- FR-1 – ⚠️ **Amended** — A form with: auto-generated Report ID (`TPS-NNNN`), **Author selector** (seven Office Space characters: Peter Gibbons, Bill Lumbergh, Milton Waddams, Michael Bolton, Samir Nagheenanajar, Joanna, and Tom Smykowski), Department, Date, and a report body. The Bobs appear exclusively as reviewers in Bobs Review mode.
 - FR-2 – A one-line "Describe what happened (we'll write the rest)" input that the user types; it is the **input seed** for generation and is never itself AI-generated.
 - FR-2b – Only the report **body** is generated from the seed. The description field and the body are distinct: seed in, body out.
 - FR-3 – A **Generate** action that fills the body using the active engine (AI if configured, local otherwise).
@@ -112,8 +112,8 @@ Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2
 - FR-7a – Print and Export are **gated** on the cover sheet: attempting either with the box unchecked surfaces a Lumbergh gate dialog whose primary action is "Attach cover sheet & continue" (one click re-checks the box and proceeds). No cover-sheet-less export path ships in v1. The gate is near-absolute because it is trivially satisfiable—a gag, not a trap (consistent with FR-6d).
 
 ### 6.3 Author selector – "Lumbergh Mode" (P0)
-- FR-8 – ⚠️ **Amended** — An author selector dropdown with eight Office Space characters: `Peter Gibbons`, `Bill Lumbergh`, `The Bobs`, `Milton Waddams`, `Michael Bolton`, `Samir Nagheenanajar`, `Joanna`, and `Tom Smykowski`. The selected author determines both the byline and the generation voice, eliminating the previous confusion where tone was decoupled from the author name.
-- FR-9 – ⚠️ **Amended** — Each of the eight authors maps to a distinct backend **system-prompt persona** that is prepended to the generation call in AI mode, or to a distinct template/word-bank in local mode. The exact prompt strings and token limits are defined in the design doc.
+- FR-8 – ⚠️ **Amended** — An author selector dropdown with seven Office Space characters: `Peter Gibbons`, `Bill Lumbergh`, `Milton Waddams`, `Michael Bolton`, `Samir Nagheenanajar`, `Joanna`, and `Tom Smykowski`. The selected author determines both the byline and the generation voice, eliminating the previous confusion where tone was decoupled from the author name. The Bobs appear as reviewers only (FR-20).
+- FR-9 – ⚠️ **Amended** — Seven selectable authors plus The Bobs (reviewers only) each map to a distinct backend **system-prompt persona** that is prepended to the generation call in AI mode, or to a distinct template/word-bank in local mode. The exact prompt strings and token limits are defined in the design doc.
 
 ### 6.4 AI provider settings (P0, desktop only)
 - FR-10 – Provider toggle: **OpenAI** or **Claude**.

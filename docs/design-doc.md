@@ -25,7 +25,7 @@
 > The following changes were made during the author-selector refactor (issue #13), after v0.1. They are called out here, and inline with a ⚠️ **Amended** marker at each affected passage.
 >
 > 1. **Tone → Author system (§5, §6, §8)** — the `Tone` type was replaced with an `Author` enum; tone-driven prompts/wordbanks are now author-driven, and the free-text `Report.author` field was merged into an `Author` enum field, eliminating the confusing model where voice and author were decoupled.
-> 2. **Reviewer selection (§7)** — added `pickReviewer` utility for Bobs Review edge case: if the report's author is "the Bobs," the reviewer is randomly selected from the other three characters since the Bobs can't review themselves.
+> 2. **Reviewer selection (§7)** — added `pickReviewer` utility for Bobs Review edge case: if the report's author is "the Bobs," the reviewer is randomly selected from the other seven characters since the Bobs can't review themselves.
 > 3. **Project structure (§13)** — file renames: `tone-prompts.ts` → `authorPrompts.ts`, `toneLabels.ts` → `authorLabels.ts` (also corrects a pre-existing hyphen/camelCase naming drift).
 
 ---
@@ -183,30 +183,27 @@ A `providerFactory(config, key)` returns the right implementation; callers only 
 
 ## 5. Author system → system-prompt personas (FR-8, FR-9)
 
-⚠️ **Amended** — Author is the single knob that changes generation voice. Each author maps to a system prompt (AI mode) *and* a word-bank/template set (local mode), keyed identically so the two engines stay interchangeable.
+⚠️ **Amended** — Author is the single knob that changes generation voice. Seven selectable authors (Peter, Lumbergh, Milton, Michael, Samir, Joanna, Tom) map to system prompts (AI mode) *and* word-bank/template sets (local mode). The Bobs appear exclusively as reviewers in Bobs Review mode and do not produce authored reports.
 
 ```ts
-export type Author = "peter" | "lumbergh" | "milton" | "bobs";
+export type Author = 
+  | "peter"      // protagonist, disengaged — selectable
+  | "lumbergh"   // manager, passive-aggressive — selectable
+  | "bobs"       // consultants, questioning — reviewers only
+  | "milton"     // basement guy, resentful — selectable
+  | "michael"    // programmer, defensive/pedantic — selectable
+  | "samir"      // programmer, cynical — selectable
+  | "joanna"     // bartender, pragmatic — selectable
+  | "tom";       // middle manager, delusional — selectable
+
+export const SELECTABLE_AUTHORS = [
+  "peter", "lumbergh", "milton", "michael", "samir", "joanna", "tom"
+] as const;
 
 export const AUTHOR_PROMPTS: Record<Author, string> = {
-  peter:
-    "You are Peter Gibbons writing a TPS report body. You know the corporate-jargon " +
-    "playbook cold (synergy, circle back, socialize, action items, move the needle) and " +
-    "deploy it fluently and correctly — but you have completely checked out and no " +
-    "longer care whether any of it matters. Flat, low-effort, faintly dry; the jargon is " +
-    "on autopilot, not enthusiasm. Sound like the minimum viable report that still " +
-    "technically satisfies the form. 2–3 short paragraphs. No preamble.",
-  lumbergh:
-    "You are Bill Lumbergh writing a TPS report body. Mild, drawn-out, passive-aggressive. " +
-    "Frame everything as a gentle imposition ('if you could go ahead and…'). Work in a " +
-    "reference to cover sheets and coming in on Saturday. 2–3 short paragraphs. No preamble.",
-  milton:
-    "You are Milton Waddams writing a TPS report body. Low, mumbling, quietly resentful, " +
-    "trailing off. Fixate on your red stapler and being moved to the basement. Mention you " +
-    "were told you could listen to the radio at a reasonable volume. 2–3 short paragraphs.",
-  bobs:
-    "You are two management consultants (both named Bob) drafting a report body that mostly " +
-    "questions whether the work justifies the author's existence. 2–3 short paragraphs.",
+  // Eight distinct system-prompt personas, one per character.
+  // Each prompt is tuned to generate voice-specific TPS report prose.
+  // Prompts live in src/shared/authorPrompts.ts.
 };
 ```
 
@@ -268,7 +265,7 @@ function rollVerdict(r = Math.random()): Verdict {
 }
 ```
 
-**Reviewer selection (FR-22c, ⚠️ **New**):** The Bobs review every report — except their own (issue #13). If the report's author is `"bobs"`, the reviewer is instead randomly selected from the other three characters via `pickReviewer(author, rng)` in `src/shared/reviewer.ts`:
+**Reviewer selection (FR-22c, ⚠️ **Amended**):** The Bobs review every report — except their own (issue #13). If the report's author is `"bobs"`, the reviewer is instead randomly selected from the other seven characters via `pickReviewer(author, rng)` in `src/shared/reviewer.ts`:
 
 ```ts
 export function pickReviewer(author: Author, rng: () => number = Math.random): Author {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Report, Author, Provider } from '@shared/types'
+import { SELECTABLE_AUTHORS } from '@shared/types'
 import { AUTHOR_LABELS } from '../report/authorLabels'
 import { isDesktop } from '../platform/isDesktop'
 import { estimateGenerationCost, formatCost } from '@shared/costEstimator'
@@ -124,9 +125,9 @@ function ReportEditorScreen({
           value={report.author}
           onChange={(e) => update({ author: e.target.value as Author, body: '' })}
         >
-          {(Object.entries(AUTHOR_LABELS) as [Author, string][]).map(([value, label]) => (
+          {SELECTABLE_AUTHORS.map((value) => (
             <option key={value} value={value}>
-              {label}
+              {AUTHOR_LABELS[value]}
             </option>
           ))}
         </select>
