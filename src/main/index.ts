@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, session, dialog, ipcMain, Menu, globalShortcut } from 'electron'
+import { app, shell, BrowserWindow, session, dialog, ipcMain, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -164,35 +164,6 @@ app.whenReady().then(() => {
     }
     setMenuState(validated)
   })
-
-  // Register global keyboard shortcuts
-  const registerShortcuts = (): void => {
-    globalShortcut.register('CmdOrCtrl+N', () => {
-      mainWindow.webContents.send(IPC_CHANNELS.menuNewReport)
-    })
-    globalShortcut.register('CmdOrCtrl+O', () => {
-      mainWindow.webContents.send(IPC_CHANNELS.menuOpenReport)
-    })
-    globalShortcut.register('CmdOrCtrl+S', () => {
-      mainWindow.webContents.send(IPC_CHANNELS.menuSaveReport)
-    })
-    globalShortcut.register('CmdOrCtrl+E', () => {
-      mainWindow.webContents.send(IPC_CHANNELS.menuExportPdf)
-    })
-    globalShortcut.register('CmdOrCtrl+P', () => {
-      mainWindow.webContents.send(IPC_CHANNELS.menuPrint)
-    })
-    globalShortcut.register('CmdOrCtrl+,', () => {
-      mainWindow.webContents.send(IPC_CHANNELS.menuSettings)
-    })
-    if (process.platform !== 'darwin') {
-      globalShortcut.register('CmdOrCtrl+Q', () => {
-        app.quit()
-      })
-    }
-  }
-
-  registerShortcuts()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
