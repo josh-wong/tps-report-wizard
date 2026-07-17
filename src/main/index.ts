@@ -63,6 +63,7 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
     if (!hasDraftPresent()) return
 
     event.preventDefault()
+    ipcMain.removeAllListeners(IPC_CHANNELS.confirmCloseResponse)
     ipcMain.once(IPC_CHANNELS.confirmCloseResponse, (_event, closeAnyway: unknown) => {
       if (closeAnyway === true) {
         forceClose = true
