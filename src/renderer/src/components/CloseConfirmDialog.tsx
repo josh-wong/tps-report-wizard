@@ -20,7 +20,7 @@ export function CloseConfirmDialog({
           <p>I&apos;m gonna need you to go ahead and finish that TPS report before you head out.</p>
           <p>That&apos;d be greeeat.</p>
         </div>
-        <div className="dialog-actions">
+        <div className="dialog-actions close-confirm-actions">
           <button onClick={onCloseAnyway}>Close anyway</button>
           <button onClick={onFinishIt} className="primary-button">
             Finish it

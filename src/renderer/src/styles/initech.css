@@ -399,6 +399,10 @@ ul.tree-view {
   min-width: 140px;
 }
 
+.close-confirm-actions button {
+  min-width: 140px;
+}
+
 .print-preview-window {
   width: 90%;
   max-width: 720px;
