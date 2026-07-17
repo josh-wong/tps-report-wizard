@@ -177,13 +177,16 @@ export class TrayNagController {
   }
 
   private buildTrayMenu(): Menu {
+    // Deliberately a plain item (not type: 'checkbox') rather than a toggle —
+    // on Windows, mixing a checkbox item into a menu reserves a checkmark
+    // gutter for every item, indenting the whole menu. A plain item whose
+    // label reflects state avoids that gutter and keeps native menus flush.
+    const quietMode = this.settings.getQuietMode()
     return Menu.buildFromTemplate([
       { label: 'Finish report', click: () => this.finishIt() },
       {
-        label: 'Quiet mode',
-        type: 'checkbox',
-        checked: this.settings.getQuietMode(),
-        click: (item) => this.setQuietMode(item.checked)
+        label: `Quiet mode: ${quietMode ? 'On' : 'Off'}`,
+        click: () => this.setQuietMode(!quietMode)
       },
       { type: 'separator' },
       { label: 'Quit', role: 'quit' }
