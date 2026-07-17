@@ -1,7 +1,30 @@
 export type Provider = 'claude' | 'openai'
 
-export const AUTHORS = ['peter', 'lumbergh', 'milton', 'bobs'] as const
+export const AUTHORS = [
+  'peter',
+  'lumbergh',
+  'bobs',
+  'milton',
+  'michael',
+  'samir',
+  'joanna',
+  'tom'
+] as const
 export type Author = (typeof AUTHORS)[number]
+
+// Manually specify to maintain 'as const' for type safety. Cannot use .filter() with
+// 'as const' since const assertions require literals. Must remain in sync with AUTHORS
+// (excludes 'bobs' to prevent Bobs from being selectable as report authors).
+export const SELECTABLE_AUTHORS = [
+  'peter',
+  'lumbergh',
+  'milton',
+  'michael',
+  'samir',
+  'joanna',
+  'tom'
+] as const
+export type SelectableAuthor = (typeof SELECTABLE_AUTHORS)[number]
 
 export type Verdict = 'circle_back' | 'basement' | 'ship_it'
 
