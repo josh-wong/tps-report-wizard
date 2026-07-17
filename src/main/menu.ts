@@ -1,4 +1,4 @@
-import { Menu, BrowserWindow, app } from 'electron'
+import { Menu, BrowserWindow, app, type MenuItemConstructorOptions } from 'electron'
 import { IPC_CHANNELS } from '@shared/ipc'
 
 export interface MenuState {
@@ -10,7 +10,7 @@ export interface MenuState {
 export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu {
   const isMac = process.platform === 'darwin'
 
-  const fileMenu = {
+  const fileMenu: MenuItemConstructorOptions = {
     label: '&File',
     submenu: [
       {
@@ -64,50 +64,7 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
     ]
   }
 
-  const editMenu = {
-    label: '&Edit',
-    submenu: [
-      { role: 'undo' as const },
-      { role: 'redo' as const },
-      { type: 'separator' as const },
-      { role: 'cut' as const },
-      { role: 'copy' as const },
-      { role: 'paste' as const },
-      ...(isMac
-        ? [
-            { type: 'separator' as const },
-            {
-              label: 'Speech',
-              submenu: [{ role: 'startSpeaking' as const }, { role: 'stopSpeaking' as const }]
-            }
-          ]
-        : [])
-    ]
-  }
-
-  const reportsMenu = {
-    label: '&Reports',
-    submenu: [
-      {
-        id: 'recentReports',
-        label: '&Recent Reports',
-        enabled: state.hasReports,
-        click: () => mainWindow.webContents.send(IPC_CHANNELS.menuRecentReports)
-      }
-    ]
-  }
-
-  const flairMenu = {
-    label: 'F&lair',
-    submenu: [
-      {
-        label: 'Flair Coming Soon',
-        enabled: false
-      }
-    ]
-  }
-
-  const helpMenu = {
+  const helpMenu: MenuItemConstructorOptions = {
     label: '&Help',
     submenu: [
       {
@@ -122,9 +79,9 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
     ]
   }
 
-  const template = [fileMenu, editMenu, reportsMenu, flairMenu, helpMenu]
+  const template: MenuItemConstructorOptions[] = [fileMenu, helpMenu]
 
-  return Menu.buildFromTemplate(template as any)
+  return Menu.buildFromTemplate(template)
 }
 
 export function updateMenuState(menu: Menu, state: MenuState): void {
@@ -140,5 +97,4 @@ export function updateMenuState(menu: Menu, state: MenuState): void {
   updateItem('saveReport', state.hasActiveReport && state.isEditing)
   updateItem('exportPdf', state.hasActiveReport && state.isEditing)
   updateItem('print', state.hasActiveReport)
-  updateItem('recentReports', state.hasReports)
 }

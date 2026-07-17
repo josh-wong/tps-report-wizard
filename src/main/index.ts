@@ -23,6 +23,7 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
     minWidth: 720,
     minHeight: 560,
     show: false,
+    autoHideMenuBar: true,
     title: "Initech TPS Report Wizard '99",
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -143,7 +144,7 @@ app.whenReady().then(() => {
     hasReports: false
   }
 
-  let currentAppMenu = createAppMenu(mainWindow, currentMenuState)
+  const currentAppMenu = createAppMenu(mainWindow, currentMenuState)
   Menu.setApplicationMenu(currentAppMenu)
 
   const setMenuState = (updates: Partial<MenuState>): void => {
@@ -153,7 +154,15 @@ app.whenReady().then(() => {
 
   ipcMain.handle(IPC_CHANNELS.menuUpdateReportState, (_event, updates: unknown) => {
     if (typeof updates !== 'object' || updates === null) return
-    setMenuState(updates as Partial<MenuState>)
+    const allowedKeys = ['hasActiveReport', 'isEditing', 'hasReports'] as const
+    const validated: Partial<MenuState> = {}
+    for (const key of allowedKeys) {
+      const value = (updates as Record<string, unknown>)[key]
+      if (typeof value === 'boolean') {
+        validated[key] = value
+      }
+    }
+    setMenuState(validated)
   })
 
   // Register global keyboard shortcuts

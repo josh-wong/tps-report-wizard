@@ -2,9 +2,30 @@ import { useState, useRef, useEffect } from 'react'
 import type { Report } from '@shared/types'
 
 type MenuItem =
-  | { label: string; accelerator?: string; onClick?: () => void; enabled?: boolean; separator?: never; submenu?: never }
-  | { separator: true; label?: never; accelerator?: never; onClick?: never; enabled?: never; submenu?: never }
-  | { label: string; submenu: MenuItem[]; onClick?: never; accelerator?: string; enabled?: boolean; separator?: never }
+  | {
+      label: string
+      accelerator?: string
+      onClick?: () => void
+      enabled?: boolean
+      separator?: never
+      submenu?: never
+    }
+  | {
+      separator: true
+      label?: never
+      accelerator?: never
+      onClick?: never
+      enabled?: never
+      submenu?: never
+    }
+  | {
+      label: string
+      submenu: MenuItem[]
+      onClick?: never
+      accelerator?: string
+      enabled?: boolean
+      separator?: never
+    }
 
 interface MenuBarProps {
   onNewReport: () => void
@@ -20,6 +41,7 @@ interface MenuBarProps {
   isEditing: boolean
   hasReports: boolean
   reports: Report[]
+  isDesktop: boolean
 }
 
 function parseMenuLabel(label: string): React.JSX.Element {
@@ -50,7 +72,7 @@ function MenuDropdown({
   const [openSubmenu, setOpenSubmenu] = useState<number | null>(null)
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent): void {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         onClose()
       }
@@ -74,9 +96,7 @@ function MenuDropdown({
               <span className="menu-label">{parseMenuLabel(item.label)}</span>
               <span className="menu-submenu-arrow">▶</span>
             </div>
-            {openSubmenu === i && (
-              <MenuDropdown items={item.submenu} onClose={onClose} />
-            )}
+            {openSubmenu === i && <MenuDropdown items={item.submenu} onClose={onClose} />}
           </div>
         ) : (
           <div
@@ -111,16 +131,20 @@ export function MenuBar({
   activeReport,
   isEditing,
   hasReports,
-  reports
+  reports,
+  isDesktop
 }: MenuBarProps): React.JSX.Element {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
 
   const recentReportItems: MenuItem[] = hasReports
     ? [
-        ...reports.slice(-5).reverse().map((report) => ({
-          label: `${report.seed.substring(0, 40)}${report.seed.length > 40 ? '…' : ''} (${report.id})`,
-          onClick: () => onOpenReportById(report.id)
-        })),
+        ...reports
+          .slice(-5)
+          .reverse()
+          .map((report) => ({
+            label: `${report.seed.substring(0, 40)}${report.seed.length > 40 ? '…' : ''} (${report.id})`,
+            onClick: () => onOpenReportById(report.id)
+          })),
         { separator: true as const },
         { label: '&Browse All Reports', onClick: onOpenReport }
       ]
@@ -128,14 +152,37 @@ export function MenuBar({
 
   const fileItems: MenuItem[] = [
     { label: '&New Report', accelerator: 'Ctrl+N', onClick: onNewReport },
-    { label: '&Open Report', accelerator: 'Ctrl+O', submenu: recentReportItems, enabled: hasReports },
+    {
+      label: '&Open Report',
+      accelerator: 'Ctrl+O',
+      submenu: recentReportItems,
+      enabled: hasReports
+    },
     { separator: true },
-    { label: '&Save Report', accelerator: 'Ctrl+S', onClick: onSaveReport, enabled: !!activeReport && isEditing },
-    { label: '&Export as PDF', accelerator: 'Ctrl+E', onClick: onExportPdf, enabled: !!activeReport && isEditing },
+    {
+      label: '&Save Report',
+      accelerator: 'Ctrl+S',
+      onClick: onSaveReport,
+      enabled: !!activeReport && isEditing
+    },
+    ...(isDesktop
+      ? ([
+          {
+            label: '&Export as PDF',
+            accelerator: 'Ctrl+E',
+            onClick: onExportPdf,
+            enabled: !!activeReport && isEditing
+          }
+        ] as MenuItem[])
+      : []),
     { label: '&Print', accelerator: 'Ctrl+P', onClick: onPrint, enabled: !!activeReport },
     { separator: true },
-    { label: 'Se&ttings', accelerator: 'Ctrl+,', onClick: onSettings },
-    { separator: true },
+    ...(isDesktop
+      ? ([
+          { label: 'Se&ttings', accelerator: 'Ctrl+,', onClick: onSettings },
+          { separator: true }
+        ] as MenuItem[])
+      : []),
     { label: 'E&xit', accelerator: 'Ctrl+Q', onClick: () => window.close() }
   ]
 
@@ -154,7 +201,9 @@ export function MenuBar({
         >
           <u>F</u>ile
         </span>
-        {openMenu === 'file' && <MenuDropdown items={fileItems} onClose={() => setOpenMenu(null)} />}
+        {openMenu === 'file' && (
+          <MenuDropdown items={fileItems} onClose={() => setOpenMenu(null)} />
+        )}
       </div>
 
       <div className="menu-item-container">
@@ -164,7 +213,9 @@ export function MenuBar({
         >
           <u>H</u>elp
         </span>
-        {openMenu === 'help' && <MenuDropdown items={helpItems} onClose={() => setOpenMenu(null)} />}
+        {openMenu === 'help' && (
+          <MenuDropdown items={helpItems} onClose={() => setOpenMenu(null)} />
+        )}
       </div>
     </div>
   )

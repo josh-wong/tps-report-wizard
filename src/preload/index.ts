@@ -12,7 +12,11 @@ export interface MenuApi {
   onAbout(callback: () => void): () => void
   onKeyboardShortcuts(callback: () => void): () => void
   onRecentReports(callback: () => void): () => void
-  updateMenuState(state: { hasActiveReport?: boolean; isEditing?: boolean; hasReports?: boolean }): Promise<void>
+  updateMenuState(state: {
+    hasActiveReport?: boolean
+    isEditing?: boolean
+    hasReports?: boolean
+  }): Promise<void>
 }
 
 // No channel ever returns a decrypted API key (SEC-2).

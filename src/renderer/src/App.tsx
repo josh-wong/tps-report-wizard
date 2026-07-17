@@ -191,7 +191,9 @@ function App(): React.JSX.Element {
     )
     unsubscribe.push(
       window.menuAPI.onAbout(() => {
-        alert("Initech TPS Report Wizard '99\n\nA retro-styled report generator inspired by Office Space.")
+        alert(
+          "Initech TPS Report Wizard '99\n\nA retro-styled report generator inspired by Office Space."
+        )
       })
     )
     unsubscribe.push(
@@ -262,6 +264,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
         isEditing={screen === 'editor'}
         hasReports={reports.length > 0}
         reports={reports}
+        isDesktop={isDesktop}
       />
 
       {screen === 'settings' && isDesktop ? (
@@ -307,7 +310,9 @@ Ctrl+Q (Cmd+Q)    - Quit`
       )}
 
       {showAbout && <AboutDialog onClose={() => setShowAbout(false)} />}
-      {showKeyboardShortcuts && <KeyboardShortcutsDialog onClose={() => setShowKeyboardShortcuts(false)} />}
+      {showKeyboardShortcuts && (
+        <KeyboardShortcutsDialog onClose={() => setShowKeyboardShortcuts(false)} />
+      )}
 
       <div className="status-bar">
         <p className="status-bar-field">{aiStatusLabel()}</p>

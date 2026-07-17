@@ -12,7 +12,9 @@ const shortcuts = [
   { keys: 'Ctrl+Q', action: 'Quit' }
 ]
 
-export function KeyboardShortcutsDialog({ onClose }: KeyboardShortcutsDialogProps): React.JSX.Element {
+export function KeyboardShortcutsDialog({
+  onClose
+}: KeyboardShortcutsDialogProps): React.JSX.Element {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="dialog-window shortcuts-dialog" onClick={(e) => e.stopPropagation()}>
