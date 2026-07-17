@@ -1,6 +1,8 @@
 import { AUTHORS } from './types'
 import type { Author } from './types'
 
+// Dynamic filter (not hardcoded array) maintains consistency as authors scale.
+// If new authors are added to AUTHORS, NON_BOBS_AUTHORS automatically includes them.
 const NON_BOBS_AUTHORS = AUTHORS.filter((a) => a !== 'bobs')
 
 /**
