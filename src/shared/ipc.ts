@@ -40,7 +40,9 @@ export const IPC_CHANNELS = {
   menuAbout: 'menu:about',
   menuKeyboardShortcuts: 'menu:keyboardShortcuts',
   menuRecentReports: 'menu:recentReports',
-  menuUpdateReportState: 'menu:updateReportState'
+  menuUpdateReportState: 'menu:updateReportState',
+  confirmCloseRequest: 'app:confirmCloseRequest',
+  confirmCloseResponse: 'app:confirmCloseResponse'
 } as const
 
 export interface IpcApi {
