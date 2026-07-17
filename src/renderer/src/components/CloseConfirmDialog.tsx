@@ -21,10 +21,10 @@ export function CloseConfirmDialog({
           <p>That&apos;d be greeeat.</p>
         </div>
         <div className="dialog-actions">
+          <button onClick={onCloseAnyway}>Close anyway</button>
           <button onClick={onFinishIt} className="primary-button">
             Finish it
           </button>
-          <button onClick={onCloseAnyway}>Close anyway</button>
         </div>
       </div>
     </div>
