@@ -398,10 +398,6 @@ ul.tree-view {
   text-align: left;
 }
 
-textarea {
-  resize: none;
-}
-
 .dialog-window .title-bar {
   background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
 }

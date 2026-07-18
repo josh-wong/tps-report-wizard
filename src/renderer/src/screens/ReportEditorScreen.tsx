@@ -180,7 +180,7 @@ function ReportEditorScreen({
         </label>
         <textarea
           id="body"
-          rows={12}
+          rows={7}
           value={report.body}
           onChange={(e) => update({ body: e.target.value })}
         />
