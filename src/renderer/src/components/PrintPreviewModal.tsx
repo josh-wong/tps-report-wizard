@@ -22,7 +22,7 @@ function PrintPreviewModal({
     <div className="modal-overlay">
       <div className="window print-preview-window">
         <div className="title-bar">
-          <div className="title-bar-text">Print Preview — {report.id}</div>
+          <div className="title-bar-text">Print Preview – {report.id}</div>
           <div className="title-bar-controls">
             <button aria-label="Close" onClick={onClose}></button>
           </div>

@@ -39,7 +39,7 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    // Only ever hand off http(s) links to the OS browser — never file://,
+    // Only ever hand off http(s) links to the OS browser—never file://,
     // javascript:, or other schemes that could be smuggled in via
     // AI-generated report content in a later phase (SEC-3).
     try {
@@ -48,14 +48,14 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
         shell.openExternal(details.url)
       }
     } catch {
-      // Malformed URL — ignore rather than risk passing it to the shell.
+      // Malformed URL—ignore rather than risk passing it to the shell.
     }
     return { action: 'deny' }
   })
 
   // "You can't just leave" close-attempt guard (FR-6b, FR-6d). Intercept the
   // native close (X button, Cmd+Q, etc.); if a draft report exists, offer a
-  // Lumbergh-flavored choice. "Close anyway" always works — the guardrail is
+  // Lumbergh-flavored choice. "Close anyway" always works—the guardrail is
   // a gag, not a trap.
   let forceClose = false
   mainWindow.on('close', (event) => {

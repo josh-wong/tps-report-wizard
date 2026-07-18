@@ -11,7 +11,7 @@ function CoverSheetGateDialog({
     <div className="modal-overlay">
       <div className="window dialog-window">
         <div className="title-bar">
-          <div className="title-bar-text">Cover Sheet Required</div>
+          <div className="title-bar-text">Cover sheet required</div>
           <div className="title-bar-controls">
             <button aria-label="Close" onClick={onCancel}></button>
           </div>

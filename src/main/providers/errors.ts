@@ -25,7 +25,7 @@ export function humanizeError(err: unknown): string {
     return "Yeaaah… that key doesn't seem to be working. If you could go ahead and check it."
   }
   if (status === 429 || errorType === 'rate_limit_error') {
-    return 'The Bobs are in a meeting. Rate limit hit — try again in a moment.'
+    return 'The Bobs are in a meeting. Rate limit hit—try again in a moment.'
   }
   if (status === 402 || status === 400 || errorType === 'billing_error') {
     return 'Your account appears to be out of quota. Check your billing details.'
@@ -36,7 +36,7 @@ export function humanizeError(err: unknown): string {
     return "Yeaaah… that key doesn't seem to be working. If you could go ahead and check it."
   }
   if (msg.includes('429') || msg.includes('rate limit')) {
-    return 'The Bobs are in a meeting. Rate limit hit — try again in a moment.'
+    return 'The Bobs are in a meeting. Rate limit hit—try again in a moment.'
   }
   if (msg.includes('network') || msg.includes('fetch') || msg.includes('econnrefused')) {
     return "Can't reach the server right now. Check your connection and try again."

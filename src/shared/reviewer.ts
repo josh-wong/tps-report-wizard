@@ -6,7 +6,7 @@ import type { Author } from './types'
 const NON_BOBS_AUTHORS = AUTHORS.filter((a) => a !== 'bobs')
 
 /**
- * The Bobs review every report — except their own. If the report's author
+ * The Bobs review every report—except their own. If the report's author
  * IS the Bobs, a reviewer is instead randomly picked from the other
  * characters, since the Bobs can't review themselves.
  */

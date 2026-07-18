@@ -54,7 +54,7 @@ export class NagScheduler {
   }
 
   onActivityDetected(): void {
-    // Activity detected while potentially nagging — reset to armed
+    // Activity detected while potentially nagging—reset to armed
     if (this.state !== 'idle' && !this.config.quietMode) {
       this.setState('armed')
       this.nagCount = 0
@@ -62,7 +62,7 @@ export class NagScheduler {
   }
 
   onDraftFiled(): void {
-    // Report was filed — stop all nagging
+    // Report was filed—stop all nagging
     this.setState('idle')
     this.nagCount = 0
   }

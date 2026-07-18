@@ -154,11 +154,11 @@ function App(): React.JSX.Element {
   }
 
   const aiStatusLabel = (): string => {
-    if (!isDesktop) return 'Web lite — Nonsense Engine only'
+    if (!isDesktop) return 'Web lite – Nonsense Engine only'
     if (providerStatus.hasKey && providerStatus.provider) {
-      return `AI: ${providerStatus.provider === 'claude' ? 'Claude' : 'OpenAI'} — ready`
+      return `AI: ${providerStatus.provider === 'claude' ? 'Claude' : 'OpenAI'} – Ready`
     }
-    return 'AI: off — using the Nonsense Engine'
+    return 'AI: Off – Using the Nonsense Engine'
   }
 
   useEffect(() => {
@@ -195,16 +195,16 @@ function App(): React.JSX.Element {
     unsubscribe.push(
       window.menuAPI.onAbout(() => {
         alert(
-          "Initech TPS Report Wizard '99\n\nA retro-styled report generator inspired by Office Space."
+          "Initech TPS Report Wizard '99\n\nA retro-styled report generator. Fan project inspired by Office Space."
         )
       })
     )
     unsubscribe.push(
       window.menuAPI.onKeyboardShortcuts(() => {
-        const shortcuts = `Keyboard Shortcuts:
-Ctrl+N (Cmd+N)    - New Report
-Ctrl+O (Cmd+O)    - Open Report
-Ctrl+S (Cmd+S)    - Save Report
+        const shortcuts = `Keyboard shortcuts:
+Ctrl+N (Cmd+N)    - New report
+Ctrl+O (Cmd+O)    - Open report
+Ctrl+S (Cmd+S)    - Save report
 Ctrl+E (Cmd+E)    - Export as PDF
 Ctrl+P (Cmd+P)    - Print
 Ctrl+, (Cmd+,)    - Settings
@@ -235,9 +235,9 @@ Ctrl+Q (Cmd+Q)    - Quit`
           <TitleBarIcon />
           <div className="title-bar-text">
             {screen === 'settings'
-              ? 'Settings — AI Provider'
+              ? 'Settings – AI Provider'
               : activeReport
-                ? `${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
+                ? `${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} – ${activeReport.id}`
                 : "Initech TPS Report Wizard '99"}
           </div>
         </div>

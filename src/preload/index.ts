@@ -89,7 +89,7 @@ const menuApi: MenuApi = {
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to the renderer only if
-// context isolation is enabled — it always is (see src/main/index.ts).
+// context isolation is enabled—it always is (see src/main/index.ts).
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electronAPI', electronAPI)

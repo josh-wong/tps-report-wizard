@@ -29,7 +29,7 @@ export function AboutDialog({ onClose }: AboutDialogProps): React.JSX.Element {
                 <strong>Initech TPS Report Wizard &apos;99</strong>
               </p>
               <p className="about-description">
-                A retro-styled TPS report generator inspired by the 1999 film Office Space.
+                A retro-styled TPS report generator. Fan project inspired by the 1999 film Office Space.
               </p>
             </div>
           </div>

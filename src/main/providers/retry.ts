@@ -1,7 +1,7 @@
 // Retries a provider call on rate-limit responses only (CLAUDE.md: "treat
 // provider rate limits as a first-class concern... implement reasonable
 // concurrency, backoff, and error handling"). All other errors (auth,
-// billing, network) are rethrown immediately — retrying those just delays
+// billing, network) are rethrown immediately—retrying those just delays
 // a failure the user needs to see.
 function isRateLimitError(err: unknown): boolean {
   const errorObj = err as Record<string, unknown>

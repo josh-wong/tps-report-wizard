@@ -109,7 +109,7 @@ function ReportEditorScreen({
       {!report.coverSheet && (
         <div className="memo-banner">
           💬 Yeeeah&hellip; if you could go ahead and re-attach that new cover sheet, that&apos;d be
-          greeeat. — B. Lumbergh
+          greeeat. – B. Lumbergh
         </div>
       )}
 
@@ -151,8 +151,7 @@ function ReportEditorScreen({
 
       <div className="field-row-stacked">
         <label htmlFor="seed">
-          Describe what happened (we&apos;ll write the rest) —{' '}
-          <span className="note">your input</span>
+          Describe what happened (we&apos;ll write the rest) – <span className="note">Your input</span>
         </label>
         <div className="seed-row">
           <input
@@ -177,7 +176,7 @@ function ReportEditorScreen({
 
       <div className="field-row-stacked">
         <label htmlFor="body">
-          Report body — <span className="note">generated output, editable</span>
+          Report body – <span className="note">Generated output, editable</span>
         </label>
         <textarea
           id="body"

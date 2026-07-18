@@ -46,7 +46,7 @@ export const SAMPLE_REPORTS: Report[] = [
     department: 'Consulting (external)',
     date: 'Day one',
     seed: 'a flair compliance audit is required',
-    body: "So we looked over the numbers here, and, uh, it looks like your flair count is at the minimum. Which is fine. That's — that's exactly what the minimum's there for.\n\nWe just have to ask: what would you say... you do here? Because it doesn't look like anything's been circled back on this in a while.",
+    body: "So we looked over the numbers here, and, uh, it looks like your flair count is at the minimum. Which is fine. That's – that's exactly what the minimum's there for.\n\nWe just have to ask: what would you say... you do here? Because it doesn't look like anything's been circled back on this in a while.",
     coverSheet: true,
     status: 'filed',
     createdAt: SAMPLE_TIMESTAMP,

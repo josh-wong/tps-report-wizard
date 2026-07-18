@@ -62,7 +62,7 @@ function BobsReviewScreen({
         </div>
 
         <fieldset style={{ marginBottom: '1rem' }}>
-          <legend>Report Body</legend>
+          <legend>Report body</legend>
           <div
             style={{
               padding: '0.5rem',

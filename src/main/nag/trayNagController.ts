@@ -7,7 +7,7 @@ const ACTIVITY_DEBOUNCE_MS = 5000
 
 /**
  * Wires the pure NagScheduler state machine to real Electron timers, tray,
- * notifications, and window focus/blur — active only while the window is
+ * notifications, and window focus/blur—active only while the window is
  * away (blurred) and a draft report exists (design doc §11.3).
  *
  * "Draft present" is reported by the renderer (setDraftPresent), not read
@@ -167,7 +167,7 @@ export class TrayNagController {
     const trayIcon = nativeImage.createFromPath(trayIconSource).resize({ width: 16, height: 16 })
     this.tray = new Tray(trayIcon)
     this.tray.setToolTip("Initech TPS Report Wizard '99")
-    // Deliberately don't use setContextMenu — on macOS that makes every
+    // Deliberately don't use setContextMenu—on macOS that makes every
     // click (not just right-click) pop the menu instead of firing 'click',
     // so a single tap to restore the window opens the menu too. Building
     // the menu on demand and showing it only on right-click keeps
@@ -177,7 +177,7 @@ export class TrayNagController {
   }
 
   private buildTrayMenu(): Menu {
-    // Deliberately a plain item (not type: 'checkbox') rather than a toggle —
+    // Deliberately a plain item (not type: 'checkbox') rather than a toggle—
     // on Windows, mixing a checkbox item into a menu reserves a checkmark
     // gutter for every item, indenting the whole menu. A plain item whose
     // label reflects state avoids that gutter and keeps native menus flush.
