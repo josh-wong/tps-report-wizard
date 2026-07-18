@@ -12,6 +12,7 @@ import SettingsScreen from './screens/SettingsScreen'
 import BobsReviewScreen from './screens/BobsReviewScreen'
 import { MenuBar } from './components/MenuBar'
 import { AboutDialog } from './components/AboutDialog'
+import { TitleBarIcon } from './components/TitleBarIcon'
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog'
 import { CloseConfirmDialog } from './components/CloseConfirmDialog'
 
@@ -231,11 +232,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
     <div className="window tps-window">
       <div className="title-bar">
         <div className="title-bar-heading">
-          <img
-            className="title-bar-icon"
-            src={`${import.meta.env.BASE_URL}favicon-16.png`}
-            alt=""
-          />
+          <TitleBarIcon />
           <div className="title-bar-text">
             {screen === 'settings'
               ? 'Settings — AI Provider'

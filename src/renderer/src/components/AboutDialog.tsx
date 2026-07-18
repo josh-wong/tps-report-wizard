@@ -1,3 +1,5 @@
+import { TitleBarIcon } from './TitleBarIcon'
+
 interface AboutDialogProps {
   onClose: () => void
 }
@@ -12,11 +14,7 @@ export function AboutDialog({ onClose }: AboutDialogProps): React.JSX.Element {
       <div className="dialog-window" onClick={(e) => e.stopPropagation()}>
         <div className="title-bar">
           <div className="title-bar-heading">
-            <img
-              className="title-bar-icon"
-              src={`${import.meta.env.BASE_URL}favicon-16.png`}
-              alt=""
-            />
+            <TitleBarIcon />
             <div className="title-bar-text">About Initech TPS Report Wizard &apos;99</div>
           </div>
           <div className="title-bar-controls">
