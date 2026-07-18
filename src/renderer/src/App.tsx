@@ -230,12 +230,19 @@ Ctrl+Q (Cmd+Q)    - Quit`
   return (
     <div className="window tps-window">
       <div className="title-bar">
-        <div className="title-bar-text">
-          {screen === 'settings'
-            ? '⚙ Settings — AI Provider'
-            : activeReport
-              ? `📋 ${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
-              : "📋 Initech TPS Report Wizard '99"}
+        <div className="title-bar-heading">
+          <img
+            className="title-bar-icon"
+            src={`${import.meta.env.BASE_URL}favicon-16.png`}
+            alt=""
+          />
+          <div className="title-bar-text">
+            {screen === 'settings'
+              ? 'Settings — AI Provider'
+              : activeReport
+                ? `${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
+                : "Initech TPS Report Wizard '99"}
+          </div>
         </div>
         <div className="title-bar-controls">
           <button aria-label="Minimize"></button>
