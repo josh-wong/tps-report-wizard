@@ -68,7 +68,7 @@ function BobsReviewScreen({
               padding: '0.5rem',
               backgroundColor: '#fff',
               border: '1px solid #dfdfdf',
-              maxHeight: '6rem',
+              maxHeight: '12rem',
               overflowY: 'auto'
             }}
           >
