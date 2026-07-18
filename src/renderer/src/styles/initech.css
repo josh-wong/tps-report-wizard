@@ -407,7 +407,7 @@ textarea {
 }
 
 .about-header {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   gap: 12px;
   margin-bottom: 8px;
@@ -417,14 +417,15 @@ textarea {
   width: 64px;
   height: 64px;
   image-rendering: pixelated;
+  flex-shrink: 0;
 }
 
-.about-header p {
+.about-text p {
   margin: 0;
 }
 
 .about-description {
-  margin-left: 76px;
+  margin-top: 6px;
 }
 
 .dialog-actions {
@@ -439,6 +440,10 @@ textarea {
 }
 
 .close-confirm-actions button {
+  min-width: 140px;
+}
+
+.about-actions button {
   min-width: 140px;
 }
 
