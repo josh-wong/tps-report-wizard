@@ -1,0 +1,18 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stack of papers - flat, beveled Win95/98 icon style -->
+  <g transform="translate(256, 249.85) scale(2.1)">
+    <!-- Paper 1 (farthest back) - darker gray, offset right by the same step as the front sheet's offset left -->
+    <rect x="-49" y="-99" width="150" height="185" fill="#a0a0a0" stroke="#000000" stroke-width="3"/>
+
+    <!-- Paper 2 (back) - gray, sharp-cornered rect (paper has square edges) -->
+    <rect x="-75" y="-90" width="150" height="185" fill="#c0c0c0" stroke="#000000" stroke-width="3"/>
+
+    <!-- Paper 2 (front) - white, offset. Same size as the other two sheets. -->
+    <g transform="translate(-26, 10)">
+      <rect x="-75" y="-90" width="150" height="185" fill="#ffffff" stroke="#000000" stroke-width="3"/>
+
+      <!-- Large "TPS" text - centered on front paper, navy -->
+      <text x="0" y="2.5" font-family="'Courier New', monospace" font-size="70" font-weight="bold" fill="#000080" text-anchor="middle" dominant-baseline="middle" letter-spacing="1">TPS</text>
+    </g>
+  </g>
+</svg>

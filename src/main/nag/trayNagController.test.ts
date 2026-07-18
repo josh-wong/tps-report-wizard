@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../../resources/icon.png?asset', () => ({ default: '/fake/icon.png' }))
+vi.mock('../../../resources/icon-small.png?asset', () => ({ default: '/fake/icon-small.png' }))
 
 const trayInstances: FakeTray[] = []
 
