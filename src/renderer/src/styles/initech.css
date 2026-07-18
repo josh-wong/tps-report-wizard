@@ -406,6 +406,23 @@ textarea {
   background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
 }
 
+.about-header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.about-icon {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+
+.about-header p {
+  margin: 0;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
