@@ -423,6 +423,10 @@ textarea {
   margin: 0;
 }
 
+.about-description {
+  margin-left: 76px;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
