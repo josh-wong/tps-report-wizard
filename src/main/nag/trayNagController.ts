@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Notification, Tray, Menu, nativeImage } from 'electron'
 import { NagScheduler } from './NagScheduler'
 import type { NagSettingsStore } from './nagSettingsStore'
-import icon from '../../../resources/icon.png?asset'
+import trayIconSource from '../../../resources/icon-small.png?asset'
 
 const ACTIVITY_DEBOUNCE_MS = 5000
 
@@ -164,7 +164,7 @@ export class TrayNagController {
   }
 
   private createTray(): void {
-    const trayIcon = nativeImage.createFromPath(icon).resize({ width: 16, height: 16 })
+    const trayIcon = nativeImage.createFromPath(trayIconSource).resize({ width: 16, height: 16 })
     this.tray = new Tray(trayIcon)
     this.tray.setToolTip("Initech TPS Report Wizard '99")
     // Deliberately don't use setContextMenu — on macOS that makes every

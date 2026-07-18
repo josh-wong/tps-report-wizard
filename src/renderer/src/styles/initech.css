@@ -55,6 +55,20 @@ ul.tree-view {
   line-height: 1.2;
 }
 
+.title-bar-heading {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+}
+
+.title-bar-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  image-rendering: pixelated;
+}
+
 .menu-bar {
   display: flex;
   gap: 2px;
@@ -388,6 +402,28 @@ ul.tree-view {
   background: linear-gradient(90deg, var(--initech-navy-1), var(--initech-navy-2));
 }
 
+.about-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.about-icon {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.about-text p {
+  margin: 0;
+}
+
+.about-text p.about-description {
+  margin-top: 12px;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
@@ -400,6 +436,10 @@ ul.tree-view {
 }
 
 .close-confirm-actions button {
+  min-width: 140px;
+}
+
+.about-actions button {
   min-width: 140px;
 }
 

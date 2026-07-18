@@ -12,6 +12,7 @@ import SettingsScreen from './screens/SettingsScreen'
 import BobsReviewScreen from './screens/BobsReviewScreen'
 import { MenuBar } from './components/MenuBar'
 import { AboutDialog } from './components/AboutDialog'
+import { TitleBarIcon } from './components/TitleBarIcon'
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog'
 import { CloseConfirmDialog } from './components/CloseConfirmDialog'
 
@@ -230,12 +231,15 @@ Ctrl+Q (Cmd+Q)    - Quit`
   return (
     <div className="window tps-window">
       <div className="title-bar">
-        <div className="title-bar-text">
-          {screen === 'settings'
-            ? '⚙ Settings — AI Provider'
-            : activeReport
-              ? `📋 ${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
-              : "📋 Initech TPS Report Wizard '99"}
+        <div className="title-bar-heading">
+          <TitleBarIcon />
+          <div className="title-bar-text">
+            {screen === 'settings'
+              ? 'Settings — AI Provider'
+              : activeReport
+                ? `${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} — ${activeReport.id}`
+                : "Initech TPS Report Wizard '99"}
+          </div>
         </div>
         <div className="title-bar-controls">
           <button aria-label="Minimize"></button>
