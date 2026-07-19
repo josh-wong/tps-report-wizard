@@ -15,6 +15,7 @@ import { AboutDialog } from './components/AboutDialog'
 import { TitleBarIcon } from './components/TitleBarIcon'
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog'
 import { CloseConfirmDialog } from './components/CloseConfirmDialog'
+import { ExitBlockedDialog } from './components/ExitBlockedDialog'
 
 type Screen = 'list' | 'editor' | 'settings' | 'bobs-review'
 
@@ -40,6 +41,7 @@ function App(): React.JSX.Element {
   const [showAbout, setShowAbout] = useState(false)
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false)
   const [showCloseConfirm, setShowCloseConfirm] = useState(false)
+  const [showExitBlocked, setShowExitBlocked] = useState(false)
 
   useEffect(() => {
     reportStore
@@ -149,6 +151,13 @@ function App(): React.JSX.Element {
     }
   }
 
+  const handleExit = (): void => {
+    window.close()
+    if (!isDesktop) {
+      window.setTimeout(() => setShowExitBlocked(true), 150)
+    }
+  }
+
   const handleSettingsStatusChange = (provider: Provider | null, hasKey: boolean): void => {
     setProviderStatus({ provider, hasKey })
   }
@@ -195,7 +204,7 @@ function App(): React.JSX.Element {
     unsubscribe.push(
       window.menuAPI.onAbout(() => {
         alert(
-          "Initech TPS Report Wizard 99\n\nA retro-styled report generator. Fan project inspired by Office Space."
+          'Initech TPS Report Wizard 99\n\nA retro-styled report generator. Fan project inspired by Office Space.'
         )
       })
     )
@@ -238,7 +247,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
               ? 'Settings – AI Provider'
               : activeReport
                 ? `${activeReport.status === 'draft' ? 'New TPS report' : 'TPS report'} – ${activeReport.id}`
-                : "Initech TPS Report Wizard 99"}
+                : 'Initech TPS Report Wizard 99'}
           </div>
         </div>
         <div className="title-bar-controls">
@@ -271,6 +280,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
         }
         onAbout={() => setShowAbout(true)}
         onKeyboardShortcuts={() => setShowKeyboardShortcuts(true)}
+        onExit={handleExit}
         activeReport={activeReport}
         isEditing={screen === 'editor'}
         hasReports={reports.length > 0}
@@ -336,6 +346,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
           }}
         />
       )}
+      {showExitBlocked && <ExitBlockedDialog onClose={() => setShowExitBlocked(false)} />}
 
       <div className="status-bar">
         <p className="status-bar-field">{aiStatusLabel()}</p>
