@@ -24,7 +24,7 @@ function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
     minHeight: 560,
     show: false,
     autoHideMenuBar: true,
-    title: "Initech TPS Report Wizard '99",
+    title: "Initech TPS Report Wizard 99",
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

@@ -195,7 +195,7 @@ function App(): React.JSX.Element {
     unsubscribe.push(
       window.menuAPI.onAbout(() => {
         alert(
-          "Initech TPS Report Wizard '99\n\nA retro-styled report generator. Fan project inspired by Office Space."
+          "Initech TPS Report Wizard 99\n\nA retro-styled report generator. Fan project inspired by Office Space."
         )
       })
     )
@@ -238,7 +238,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
               ? 'Settings – AI Provider'
               : activeReport
                 ? `${activeReport.status === 'draft' ? 'New TPS report' : 'TPS report'} – ${activeReport.id}`
-                : "Initech TPS Report Wizard '99"}
+                : "Initech TPS Report Wizard 99"}
           </div>
         </div>
         <div className="title-bar-controls">
