@@ -258,6 +258,7 @@ ul.tree-view {
 
 .editor-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
 }
@@ -426,6 +427,7 @@ ul.tree-view {
 
 .dialog-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 6px;
   margin-top: 12px;
@@ -550,6 +552,7 @@ ul.tree-view {
 
 .print-preview-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 6px;
   padding: 8px 12px;
