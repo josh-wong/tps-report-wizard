@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import '98.css'
 import './styles/initech.css'
 import type { Provider, Report, BobsResult } from '@shared/types'
@@ -42,6 +42,13 @@ function App(): React.JSX.Element {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false)
   const [showCloseConfirm, setShowCloseConfirm] = useState(false)
   const [showExitBlocked, setShowExitBlocked] = useState(false)
+  const exitBlockedTimeoutRef = useRef<number | undefined>(undefined)
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(exitBlockedTimeoutRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     reportStore
@@ -152,9 +159,11 @@ function App(): React.JSX.Element {
   }
 
   const handleExit = (): void => {
+    // window.close() is a no-op when the browser blocks it (tab wasn't opened via script),
+    // so on web we always surface the fallback dialog rather than trying to detect success.
     window.close()
     if (!isDesktop) {
-      window.setTimeout(() => setShowExitBlocked(true), 150)
+      exitBlockedTimeoutRef.current = window.setTimeout(() => setShowExitBlocked(true), 150)
     }
   }
 
