@@ -50,7 +50,9 @@ function PrintPreviewModal({
                 <div className="cover-sheet-memo-text">
                   <p>
                     <em>
-                      Did you get the memo? This is to confirm you have received and attached the new cover sheet for your TPS report. Please ensure this cover sheet is included with all future submissions.
+                      Did you get the memo? This is to confirm you have received and attached the
+                      new cover sheet for your TPS report. Please ensure this cover sheet is
+                      included with all future submissions.
                     </em>
                   </p>
                 </div>

@@ -151,7 +151,8 @@ function ReportEditorScreen({
 
       <div className="field-row-stacked">
         <label htmlFor="seed">
-          Describe what happened (we&apos;ll write the rest) – <span className="note">Your input</span>
+          Describe what happened (we&apos;ll write the rest) –{' '}
+          <span className="note">Your input</span>
         </label>
         <div className="seed-row">
           <input
