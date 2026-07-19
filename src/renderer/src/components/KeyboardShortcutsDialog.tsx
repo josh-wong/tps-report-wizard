@@ -1,8 +1,9 @@
 interface KeyboardShortcutsDialogProps {
   onClose: () => void
+  isDesktop: boolean
 }
 
-const shortcuts = [
+const allShortcuts = [
   { keys: 'Ctrl+N', action: 'New report' },
   { keys: 'Ctrl+O', action: 'Open report' },
   { keys: 'Ctrl+S', action: 'Save report' },
@@ -13,8 +14,13 @@ const shortcuts = [
 ]
 
 export function KeyboardShortcutsDialog({
-  onClose
+  onClose,
+  isDesktop
 }: KeyboardShortcutsDialogProps): React.JSX.Element {
+  // Ctrl+Q quits the desktop app; on web it only opens the exit-blocked dialog, so hide it there.
+  const shortcuts = isDesktop
+    ? allShortcuts
+    : allShortcuts.filter((shortcut) => shortcut.action !== 'Quit')
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="dialog-window shortcuts-dialog" onClick={(e) => e.stopPropagation()}>

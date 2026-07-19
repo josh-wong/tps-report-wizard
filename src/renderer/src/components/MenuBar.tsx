@@ -37,6 +37,7 @@ interface MenuBarProps {
   onSettings: () => void
   onAbout: () => void
   onKeyboardShortcuts: () => void
+  onExit: () => void
   activeReport: Report | null
   isEditing: boolean
   hasReports: boolean
@@ -128,6 +129,7 @@ export function MenuBar({
   onSettings,
   onAbout,
   onKeyboardShortcuts,
+  onExit,
   activeReport,
   isEditing,
   hasReports,
@@ -183,7 +185,7 @@ export function MenuBar({
           { separator: true }
         ] as MenuItem[])
       : []),
-    { label: 'E&xit', accelerator: 'Ctrl+Q', onClick: () => window.close() }
+    { label: 'E&xit', accelerator: 'Ctrl+Q', onClick: onExit }
   ]
 
   const helpItems: MenuItem[] = [
