@@ -1,10 +1,10 @@
-# Product Requirements Document – Initech TPS Report Wizard '99
+# Product Requirements Document – Initech TPS Report Wizard 99
 
 > _"Did you get the memo?"_ – Everyone, repeatedly.
 
 | | |
 |---|---|
-| **Name** | Initech TPS Report Wizard '99 (final) |
+| **Name** | Initech TPS Report Wizard 99 (final) |
 | **Status** | Reviewed – open questions resolved |
 | **Version** | 0.3 |
 | **Owner** | Josh |
@@ -253,7 +253,7 @@ One repo, one renderer, two deploys:
 
 ## 13. Resolved decisions
 
-- RD-1 – **Name:** Initech TPS Report Wizard '99 (final).
+- RD-1 – **Name:** Initech TPS Report Wizard 99 (final).
 - RD-2 – **Sample reports:** ship a small prewritten library on the empty state (FR-4a).
 - RD-3 – **Web persistence:** `localStorage` so a refresh keeps drafts (FR-27).
 - RD-4 – **Bobs weighting:** film-accurate skew – Circle back ~55%, basement ~35%, Ship it ~10% (FR-22a).

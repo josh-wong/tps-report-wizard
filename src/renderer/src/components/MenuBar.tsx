@@ -146,21 +146,21 @@ export function MenuBar({
             onClick: () => onOpenReportById(report.id)
           })),
         { separator: true as const },
-        { label: '&Browse All Reports', onClick: onOpenReport }
+        { label: '&Browse all reports', onClick: onOpenReport }
       ]
     : [{ label: '(No reports)', enabled: false }]
 
   const fileItems: MenuItem[] = [
-    { label: '&New Report', accelerator: 'Ctrl+N', onClick: onNewReport },
+    { label: '&New report', accelerator: 'Ctrl+N', onClick: onNewReport },
     {
-      label: '&Open Report',
+      label: '&Open report',
       accelerator: 'Ctrl+O',
       submenu: recentReportItems,
       enabled: hasReports
     },
     { separator: true },
     {
-      label: '&Save Report',
+      label: '&Save report',
       accelerator: 'Ctrl+S',
       onClick: onSaveReport,
       enabled: !!activeReport && isEditing
@@ -187,7 +187,7 @@ export function MenuBar({
   ]
 
   const helpItems: MenuItem[] = [
-    { label: '&Keyboard Shortcuts', onClick: onKeyboardShortcuts },
+    { label: '&Keyboard shortcuts', onClick: onKeyboardShortcuts },
     { separator: true },
     { label: '&About', onClick: onAbout }
   ]

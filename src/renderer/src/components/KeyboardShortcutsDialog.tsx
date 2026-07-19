@@ -3,9 +3,9 @@ interface KeyboardShortcutsDialogProps {
 }
 
 const shortcuts = [
-  { keys: 'Ctrl+N', action: 'New Report' },
-  { keys: 'Ctrl+O', action: 'Open Report' },
-  { keys: 'Ctrl+S', action: 'Save Report' },
+  { keys: 'Ctrl+N', action: 'New report' },
+  { keys: 'Ctrl+O', action: 'Open report' },
+  { keys: 'Ctrl+S', action: 'Save report' },
   { keys: 'Ctrl+E', action: 'Export as PDF' },
   { keys: 'Ctrl+P', action: 'Print' },
   { keys: 'Ctrl+,', action: 'Settings' },
@@ -19,7 +19,7 @@ export function KeyboardShortcutsDialog({
     <div className="modal-overlay" onClick={onClose}>
       <div className="dialog-window shortcuts-dialog" onClick={(e) => e.stopPropagation()}>
         <div className="title-bar">
-          <div className="title-bar-text">Keyboard Shortcuts</div>
+          <div className="title-bar-text">Keyboard shortcuts</div>
           <div className="title-bar-controls">
             <button onClick={onClose} aria-label="Close"></button>
           </div>

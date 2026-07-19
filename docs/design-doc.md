@@ -1,4 +1,4 @@
-# Design Document – Initech TPS Report Wizard '99
+# Design Document – Initech TPS Report Wizard 99
 
 | | |
 |---|---|

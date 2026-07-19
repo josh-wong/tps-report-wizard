@@ -31,7 +31,7 @@ function ReportListScreen({
           </p>
         )}
         <button type="button" onClick={onNew}>
-          + New TPS Report
+          + New TPS report
         </button>
       </div>
 

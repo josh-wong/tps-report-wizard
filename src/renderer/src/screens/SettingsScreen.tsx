@@ -166,7 +166,7 @@ function SettingsScreen({
               onChange={() => handleProviderChange('claude')}
             />
             <label htmlFor="provider-claude">
-              Anthropic (Claude Haiku 4.5) — $1/$5 per 1M tokens
+              Anthropic (Claude Haiku 4.5) – $1/$5 per 1M tokens
             </label>
             <input
               id="provider-openai"
@@ -175,14 +175,14 @@ function SettingsScreen({
               checked={provider === 'openai'}
               onChange={() => handleProviderChange('openai')}
             />
-            <label htmlFor="provider-openai">OpenAI (GPT-5.6 Luna) — $1/$6 per 1M tokens</label>
+            <label htmlFor="provider-openai">OpenAI (GPT-5.6 Luna) – $1/$6 per 1M tokens</label>
           </div>
 
           <div className="field-row-stacked" style={{ marginBottom: 10 }}>
             <label htmlFor="api-key">
               API key{' '}
               <span className="note">
-                {initialHasKey ? '— a key is already saved; enter a new one to replace it' : ''}
+                {initialHasKey ? '– A key is already saved; enter a new one to replace it' : ''}
               </span>
             </label>
             <input
@@ -226,7 +226,7 @@ function SettingsScreen({
         style={{ background: '#eef', borderColor: '#88a', marginTop: 12 }}
       >
         🔒 Your key is encrypted locally (safeStorage) and never leaves this machine. Calls go out
-        from the main process — the app never puts your key in the browser or a URL.
+        from the main process; the app never puts your key in the browser or a URL.
       </div>
 
       <fieldset style={{ marginTop: 12 }}>
@@ -238,7 +238,7 @@ function SettingsScreen({
             checked={quietMode}
             onChange={(e) => handleQuietModeChange(e.target.checked)}
           />
-          <label htmlFor="quiet-mode">Quiet mode — don&apos;t nag me about unfiled reports</label>
+          <label htmlFor="quiet-mode">Quiet mode – Don&apos;t nag me about unfiled reports</label>
         </div>
       </fieldset>
 

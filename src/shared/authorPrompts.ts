@@ -1,7 +1,7 @@
 import type { Author } from './types'
 
 export const BASE_REPORT_SYSTEM =
-  'Write a TPS report body. Plain prose only — no markdown headers, no bullet lists, ' +
+  'Write a TPS report body. Plain prose only—no markdown headers, no bullet lists, ' +
   'no bold or italic formatting. Two to three short paragraphs. Do not include a subject ' +
   'line, greeting, or sign-off. Begin with the body text directly.'
 
@@ -9,7 +9,7 @@ export const AUTHOR_PROMPTS: Record<Author, string> = {
   peter:
     'You are Peter Gibbons writing a TPS report body. You know the corporate-jargon ' +
     'playbook cold (synergy, circle back, socialize, action items, move the needle) and ' +
-    'deploy it fluently and correctly — but you have completely checked out and no ' +
+    'deploy it fluently and correctly—but you have completely checked out and no ' +
     'longer care whether any of it matters. Flat, low-effort, faintly dry; the jargon is ' +
     'on autopilot, not enthusiasm. Sound like the minimum viable report that still ' +
     'technically satisfies the form. 2–3 short paragraphs. No preamble.',

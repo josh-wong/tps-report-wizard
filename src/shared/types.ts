@@ -36,7 +36,7 @@ export interface Report {
   author: Author
   department: string
   date: string
-  seed: string // user input — the generation seed
+  seed: string // user input—the generation seed
   body: string // generated (or edited) output
   coverSheet: boolean // default true
   status: ReportStatus

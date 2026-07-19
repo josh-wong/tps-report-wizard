@@ -14,13 +14,13 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
     label: '&File',
     submenu: [
       {
-        label: '&New Report',
+        label: '&New report',
         accelerator: 'CmdOrCtrl+N',
         click: () => mainWindow.webContents.send(IPC_CHANNELS.menuNewReport)
       },
       {
         id: 'openReport',
-        label: '&Open Report',
+        label: '&Open report',
         accelerator: 'CmdOrCtrl+O',
         enabled: state.hasReports && !state.isEditing,
         click: () => mainWindow.webContents.send(IPC_CHANNELS.menuOpenReport)
@@ -28,7 +28,7 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
       { type: 'separator' },
       {
         id: 'saveReport',
-        label: '&Save Report',
+        label: '&Save report',
         accelerator: 'CmdOrCtrl+S',
         enabled: state.hasActiveReport && state.isEditing,
         click: () => mainWindow.webContents.send(IPC_CHANNELS.menuSaveReport)
@@ -68,7 +68,7 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
     label: '&Help',
     submenu: [
       {
-        label: '&Keyboard Shortcuts',
+        label: '&Keyboard shortcuts',
         click: () => mainWindow.webContents.send(IPC_CHANNELS.menuKeyboardShortcuts)
       },
       { type: 'separator' },

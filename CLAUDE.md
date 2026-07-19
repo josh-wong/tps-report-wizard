@@ -23,7 +23,7 @@ For detailed information about this project, refer to the following internal doc
 
 ## Repository overview
 
-This is **Initech TPS Report Wizard '99**, a tongue-in-cheek, retro-styled app for generating TPS reports (inspired by the 1999 film _Office Space_). It ships as a cross-platform desktop Electron app and a static web "lite" version that runs entirely without API keys.
+This is **Initech TPS Report Wizard 99**, a tongue-in-cheek, retro-styled app for generating TPS reports (inspired by the 1999 film _Office Space_). It ships as a cross-platform desktop Electron app and a static web "lite" version that runs entirely without API keys.
 
 ### Key components
 

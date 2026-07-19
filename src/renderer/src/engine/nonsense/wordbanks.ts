@@ -65,7 +65,7 @@ export const WORD_BANKS: Record<Author, AuthorWordBank> = {
       "Yeah, I'm also gonna need you to go ahead and, uh, put a new cover sheet on the report about {seed}.",
       'Did you get the memo about {seed}? Yeah. Hmm-kay. If you could just go ahead and read that, that would be greeeat.',
       "We're, uh, going to need to go ahead and move forward on {seed}, if that's not a problem.",
-      "Yeah, so, about {seed} — if you could just go ahead and have that done by, uh, tomorrow, that'd be terrific."
+      "Yeah, so, about {seed}, if you could just go ahead and have that done by, uh, tomorrow, that'd be terrific."
     ],
     buzzPhrases: ['that would be greeeat', 'thaaanks', 'if that is not a problem', 'mm-kay'],
     nounPhrases: ['cover sheet', 'memo', 'TPS report', 'flair requirement', 'Saturday shift'],
@@ -110,7 +110,7 @@ export const WORD_BANKS: Record<Author, AuthorWordBank> = {
       'What would you say... you do here, in relation to {seed}?',
       'It looks like {seed} is something that, uh, could be handled in about fifteen minutes a week.',
       "We're gonna need to go ahead and flag {seed} for the, uh, upcoming restructuring review.",
-      "So, on the topic of {seed} — that's, uh, that's a great question for you to answer for us.",
+      "So, on the topic of {seed}, that's, uh, that's a great question for you to answer for us.",
       'We just have to ask ourselves, is {seed} really moving the needle, or is it, uh, more of a redundancy?'
     ],
     buzzPhrases: ['what would you say you do here', "that's a great question", 'a bit redundant'],
@@ -169,7 +169,7 @@ export const WORD_BANKS: Record<Author, AuthorWordBank> = {
       'The issue with {seed}, for those who might not have my background, is actually quite nuanced and technically sophisticated.',
       'Let me be perfectly clear: {seed} is not, I repeat, not something a layperson can just grasp without consulting someone like myself.',
       "To address {seed}, one must understand that it's more complex than the name might suggest, much like my own situation.",
-      'I have been asked countless times to explain {seed} — and no, that is not a reference to the musician Michael Bolton.'
+      'I have been asked countless times to explain {seed}, and no, that is not a reference to the musician Michael Bolton.'
     ],
     buzzPhrases: [
       'let me be clear',
