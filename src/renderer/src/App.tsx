@@ -341,7 +341,10 @@ Ctrl+Q (Cmd+Q)    - Quit`
 
       {showAbout && <AboutDialog onClose={() => setShowAbout(false)} />}
       {showKeyboardShortcuts && (
-        <KeyboardShortcutsDialog onClose={() => setShowKeyboardShortcuts(false)} />
+        <KeyboardShortcutsDialog
+          onClose={() => setShowKeyboardShortcuts(false)}
+          isDesktop={isDesktop}
+        />
       )}
       {showCloseConfirm && (
         <CloseConfirmDialog
