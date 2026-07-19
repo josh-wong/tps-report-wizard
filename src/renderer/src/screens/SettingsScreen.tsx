@@ -182,7 +182,7 @@ function SettingsScreen({
             <label htmlFor="api-key">
               API key{' '}
               <span className="note">
-                {initialHasKey ? '– a key is already saved; enter a new one to replace it' : ''}
+                {initialHasKey ? '– A key is already saved; enter a new one to replace it' : ''}
               </span>
             </label>
             <input

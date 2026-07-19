@@ -237,7 +237,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
             {screen === 'settings'
               ? 'Settings – AI Provider'
               : activeReport
-                ? `${activeReport.status === 'draft' ? 'New TPS Report' : 'TPS Report'} – ${activeReport.id}`
+                ? `${activeReport.status === 'draft' ? 'New TPS report' : 'TPS report'} – ${activeReport.id}`
                 : "Initech TPS Report Wizard '99"}
           </div>
         </div>
@@ -339,7 +339,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
 
       <div className="status-bar">
         <p className="status-bar-field">{aiStatusLabel()}</p>
-        <p className="status-bar-field">Y2K Compliant ✓</p>
+        <p className="status-bar-field">Y2K compliant ✓</p>
       </div>
     </div>
   )

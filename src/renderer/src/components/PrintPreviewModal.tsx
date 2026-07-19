@@ -22,7 +22,7 @@ function PrintPreviewModal({
     <div className="modal-overlay">
       <div className="window print-preview-window">
         <div className="title-bar">
-          <div className="title-bar-text">Print Preview – {report.id}</div>
+          <div className="title-bar-text">Print preview – {report.id}</div>
           <div className="title-bar-controls">
             <button aria-label="Close" onClick={onClose}></button>
           </div>
@@ -35,7 +35,7 @@ function PrintPreviewModal({
                 <div className="cover-sheet-title">T P S &nbsp; R E P O R T</div>
                 <div className="cover-sheet-memo">
                   <p>
-                    <strong>TO:</strong> All Staff
+                    <strong>TO:</strong> All staff
                   </p>
                   <p>
                     <strong>FROM:</strong> {AUTHOR_LABELS[report.author]}
@@ -44,15 +44,13 @@ function PrintPreviewModal({
                     <strong>DATE:</strong> {report.date || '[Date]'}
                   </p>
                   <p>
-                    <strong>RE:</strong> TPS Report #{report.id}
+                    <strong>RE:</strong> TPS report #{report.id}
                   </p>
                 </div>
                 <div className="cover-sheet-memo-text">
                   <p>
                     <em>
-                      Did you get the memo? This is to confirm you have received and attached the
-                      new cover sheet for your TPS report. Please ensure this cover sheet is
-                      included with all future submissions.
+                      Did you get the memo? This is to confirm you have received and attached the new cover sheet for your TPS report. Please ensure this cover sheet is included with all future submissions.
                     </em>
                   </p>
                 </div>
@@ -61,7 +59,7 @@ function PrintPreviewModal({
           )}
           <div className="print-page report-page">
             <div className="report-header">
-              <div className="report-title">TPS Report</div>
+              <div className="report-title">TPS report</div>
               <div className="report-meta">
                 <div>
                   <strong>ID:</strong> {report.id}
