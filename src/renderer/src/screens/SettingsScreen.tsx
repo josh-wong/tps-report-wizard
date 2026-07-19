@@ -226,7 +226,7 @@ function SettingsScreen({
         style={{ background: '#eef', borderColor: '#88a', marginTop: 12 }}
       >
         🔒 Your key is encrypted locally (safeStorage) and never leaves this machine. Calls go out
-        from the main process – The app never puts your key in the browser or a URL.
+        from the main process; the app never puts your key in the browser or a URL.
       </div>
 
       <fieldset style={{ marginTop: 12 }}>
