@@ -87,7 +87,13 @@ function PrintPreviewModal({
             <u>P</u>rint
           </button>
           <button onClick={onExport} disabled={exporting} className="primary-button" accessKey="e">
-            {exporting ? 'PC LOAD LETTER...' : '💾 Export PDF'}
+            {exporting ? (
+              'PC LOAD LETTER...'
+            ) : (
+              <>
+                <u>E</u>xport PDF
+              </>
+            )}
           </button>
         </div>
       </div>
