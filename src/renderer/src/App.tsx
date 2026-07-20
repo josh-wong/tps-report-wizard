@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import '98.css'
 import './styles/initech.css'
 import type { Provider, Report, BobsResult } from '@shared/types'
+import { MODEL_LABELS } from '@shared/modelConfig'
 import { isDesktop } from './platform/isDesktop'
 import { makeReportStore } from './store'
 import { makeReportEngine } from './engine/makeReportEngine'
@@ -185,7 +186,7 @@ function App(): React.JSX.Element {
   const aiStatusLabel = (): string => {
     if (!isDesktop) return 'Web lite – Nonsense Engine only'
     if (providerStatus.hasKey && providerStatus.provider) {
-      return `AI: ${providerStatus.provider === 'claude' ? 'Claude' : 'OpenAI'} – Ready`
+      return `AI: ${MODEL_LABELS[providerStatus.provider]} – Ready`
     }
     return 'AI: Off – Using the Nonsense Engine'
   }
