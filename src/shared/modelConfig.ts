@@ -14,3 +14,9 @@ export const MODEL_CONFIG = {
     default: 'gpt-5.6-luna'
   }
 } as const
+
+// Human-readable names for the models above, for display in the UI.
+export const MODEL_LABELS = {
+  claude: 'Claude Haiku 4.5',
+  openai: 'GPT-5.6 Luna'
+} as const

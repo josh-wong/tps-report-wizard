@@ -10,18 +10,22 @@ const PROVIDER_LABELS: Record<Provider, string> = {
 interface SettingsScreenProps {
   initialProvider: Provider | null
   initialHasKey: boolean
+  initialSavedProviders: Provider[]
   onClose: () => void
-  onStatusChange: (provider: Provider | null, hasKey: boolean) => void
+  onStatusChange: (provider: Provider | null, hasKey: boolean, savedProviders?: Provider[]) => void
 }
 
 function SettingsScreen({
   initialProvider,
   initialHasKey,
+  initialSavedProviders,
   onClose,
   onStatusChange
 }: SettingsScreenProps): React.JSX.Element {
   const [useAi, setUseAi] = useState(initialHasKey)
   const [provider, setProvider] = useState<Provider>(initialProvider ?? 'claude')
+  const [savedProviders, setSavedProviders] = useState<Provider[]>(initialSavedProviders)
+  const [activeProvider, setActiveProviderState] = useState<Provider | null>(initialProvider)
   const [apiKey, setApiKey] = useState('')
   const [saving, setSaving] = useState(false)
   const [testing, setTesting] = useState(false)
@@ -50,7 +54,12 @@ function SettingsScreen({
     setTestResult(null)
     try {
       await window.electronAPI.saveKey({ provider }, apiKey)
-      onStatusChange(provider, true)
+      const updatedSaved = savedProviders.includes(provider)
+        ? savedProviders
+        : [...savedProviders, provider]
+      setSavedProviders(updatedSaved)
+      setActiveProviderState(provider)
+      onStatusChange(provider, true, updatedSaved)
       setSaveMessage('Key saved.')
       setApiKey('')
     } catch {
@@ -80,6 +89,23 @@ function SettingsScreen({
     setTestResult(null)
     setSaveMessage(null)
     setApiKey('') // Clear the API key state when changing providers.
+
+    // A key is already saved for this provider, so switch the active
+    // provider immediately instead of forcing the user to re-enter or
+    // delete a key just to use the one they already have on file.
+    if (savedProviders.includes(p)) {
+      window.electronAPI
+        .setActiveProvider({ provider: p })
+        .then((switched) => {
+          if (switched) {
+            setActiveProviderState(p)
+            onStatusChange(p, true, savedProviders)
+          } else {
+            setSaveMessage('Failed to switch provider.')
+          }
+        })
+        .catch(() => setSaveMessage('Failed to switch provider.'))
+    }
   }
 
   const handleUseAiChange = (checked: boolean): void => {
@@ -99,7 +125,9 @@ function SettingsScreen({
       const success = await window.electronAPI.deleteKeys({ provider })
       if (success) {
         const status = await window.electronAPI.getProviderStatus()
-        onStatusChange(status.provider, status.hasKey)
+        setSavedProviders(status.savedProviders)
+        setActiveProviderState(status.provider)
+        onStatusChange(status.provider, status.hasKey, status.savedProviders)
         setSaveMessage('Key deleted.')
         setApiKey('')
         if (status.provider) {
@@ -188,6 +216,8 @@ function SettingsScreen({
               />
               <label htmlFor="provider-claude">
                 Anthropic (Claude Haiku 4.5) – $1/$5 per 1M tokens
+                {savedProviders.includes('claude') &&
+                  (activeProvider === 'claude' ? ' – active' : ' – key saved')}
               </label>
               <input
                 id="provider-openai"
@@ -196,14 +226,20 @@ function SettingsScreen({
                 checked={provider === 'openai'}
                 onChange={() => handleProviderChange('openai')}
               />
-              <label htmlFor="provider-openai">OpenAI (GPT-5.6 Luna) – $1/$6 per 1M tokens</label>
+              <label htmlFor="provider-openai">
+                OpenAI (GPT-5.6 Luna) – $1/$6 per 1M tokens
+                {savedProviders.includes('openai') &&
+                  (activeProvider === 'openai' ? ' – active' : ' – key saved')}
+              </label>
             </div>
 
             <div className="field-row-stacked" style={{ marginBottom: 10 }}>
               <label htmlFor="api-key">
                 API key{' '}
                 <span className="note">
-                  {initialHasKey ? '– A key is already saved; enter a new one to replace it' : ''}
+                  {savedProviders.includes(provider)
+                    ? '– A key is already saved; enter a new one to replace it'
+                    : ''}
                 </span>
               </label>
               <input
@@ -226,7 +262,7 @@ function SettingsScreen({
               <button type="button" onClick={handleTest} disabled={testing}>
                 {testing ? 'Testing…' : 'Test connection'}
               </button>
-              {initialHasKey && (
+              {savedProviders.includes(provider) && (
                 <button type="button" onClick={() => setConfirmingDelete(true)} disabled={deleting}>
                   {deleting ? 'Deleting…' : 'Delete key'}
                 </button>

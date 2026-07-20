@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import '98.css'
 import './styles/initech.css'
 import type { Provider, Report, BobsResult } from '@shared/types'
+import { MODEL_LABELS } from '@shared/modelConfig'
 import { isDesktop } from './platform/isDesktop'
 import { makeReportStore } from './store'
 import { makeReportEngine } from './engine/makeReportEngine'
@@ -34,7 +35,8 @@ function App(): React.JSX.Element {
   const [providerStatus, setProviderStatus] = useState<{
     provider: Provider | null
     hasKey: boolean
-  }>({ provider: null, hasKey: false })
+    savedProviders: Provider[]
+  }>({ provider: null, hasKey: false, savedProviders: [] })
 
   const [bobsReview, setBobsReview] = useState<BobsResult | null>(null)
   const [reviewing, setReviewing] = useState(false)
@@ -169,14 +171,22 @@ function App(): React.JSX.Element {
     }
   }
 
-  const handleSettingsStatusChange = (provider: Provider | null, hasKey: boolean): void => {
-    setProviderStatus({ provider, hasKey })
+  const handleSettingsStatusChange = (
+    provider: Provider | null,
+    hasKey: boolean,
+    savedProviders?: Provider[]
+  ): void => {
+    setProviderStatus((prev) => ({
+      provider,
+      hasKey,
+      savedProviders: savedProviders ?? prev.savedProviders
+    }))
   }
 
   const aiStatusLabel = (): string => {
     if (!isDesktop) return 'Web lite – Nonsense Engine only'
     if (providerStatus.hasKey && providerStatus.provider) {
-      return `AI: ${providerStatus.provider === 'claude' ? 'Claude' : 'OpenAI'} – Ready`
+      return `AI: ${MODEL_LABELS[providerStatus.provider]} – Ready`
     }
     return 'AI: Off – Using the Nonsense Engine'
   }
@@ -303,6 +313,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
         <SettingsScreen
           initialProvider={providerStatus.provider}
           initialHasKey={providerStatus.hasKey}
+          initialSavedProviders={providerStatus.savedProviders}
           onClose={() => setScreen(activeReport ? 'editor' : 'list')}
           onStatusChange={handleSettingsStatusChange}
         />

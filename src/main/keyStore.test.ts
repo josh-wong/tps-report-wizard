@@ -84,7 +84,7 @@ describe('keyStore', () => {
 
     expect(store.deleteKey('claude')).toBe(true)
     expect(store.getKey('claude')).toBeNull()
-    expect(store.getStatus()).toEqual({ provider: null, hasKey: false })
+    expect(store.getStatus()).toEqual({ provider: null, hasKey: false, savedProviders: [] })
   })
 
   it('deleteKey returns false when there was nothing to delete', () => {
@@ -102,7 +102,11 @@ describe('keyStore', () => {
     expect(store.deleteKey('claude')).toBe(true)
     expect(store.getKey('claude')).toBeNull()
     expect(store.getKey('openai')).toBe('sk-proj-test')
-    expect(store.getStatus()).toEqual({ provider: 'openai', hasKey: true })
+    expect(store.getStatus()).toEqual({
+      provider: 'openai',
+      hasKey: true,
+      savedProviders: ['openai']
+    })
   })
 
   it('deleteKey leaves the active provider untouched when deleting a different, inactive key', () => {
@@ -114,7 +118,11 @@ describe('keyStore', () => {
 
     expect(store.deleteKey('openai')).toBe(true)
     expect(store.getKey('openai')).toBeNull()
-    expect(store.getStatus()).toEqual({ provider: 'claude', hasKey: true })
+    expect(store.getStatus()).toEqual({
+      provider: 'claude',
+      hasKey: true,
+      savedProviders: ['claude']
+    })
   })
 
   it('getStatus reports hasKey only when a provider is set, a key exists, and enabled is true', () => {
@@ -123,10 +131,14 @@ describe('keyStore', () => {
     store.setProvider('claude')
 
     // Not yet enabled.
-    expect(store.getStatus()).toEqual({ provider: null, hasKey: false })
+    expect(store.getStatus()).toEqual({ provider: null, hasKey: false, savedProviders: ['claude'] })
 
     store.setEnabled(true)
-    expect(store.getStatus()).toEqual({ provider: 'claude', hasKey: true })
+    expect(store.getStatus()).toEqual({
+      provider: 'claude',
+      hasKey: true,
+      savedProviders: ['claude']
+    })
   })
 
   it('disabling persists independently of key presence (does not revert on next read)', () => {
@@ -138,7 +150,36 @@ describe('keyStore', () => {
 
     store.setEnabled(false)
     // Key is still in storage, but the user's disable choice must win.
-    expect(store.getStatus()).toEqual({ provider: null, hasKey: false })
+    expect(store.getStatus()).toEqual({ provider: null, hasKey: false, savedProviders: ['claude'] })
     expect(store.getKey('claude')).toBe('sk-ant-test')
+  })
+
+  it('setActiveProvider switches the active provider when a key already exists', () => {
+    const store = createKeyStore()
+    store.saveKey('claude', 'sk-ant-test')
+    store.saveKey('openai', 'sk-proj-test')
+    store.setProvider('claude')
+    store.setEnabled(true)
+
+    expect(store.setActiveProvider('openai')).toBe(true)
+    expect(store.getStatus()).toEqual({
+      provider: 'openai',
+      hasKey: true,
+      savedProviders: ['claude', 'openai']
+    })
+  })
+
+  it('setActiveProvider fails and leaves the active provider unchanged when no key exists for it', () => {
+    const store = createKeyStore()
+    store.saveKey('claude', 'sk-ant-test')
+    store.setProvider('claude')
+    store.setEnabled(true)
+
+    expect(store.setActiveProvider('openai')).toBe(false)
+    expect(store.getStatus()).toEqual({
+      provider: 'claude',
+      hasKey: true,
+      savedProviders: ['claude']
+    })
   })
 })
