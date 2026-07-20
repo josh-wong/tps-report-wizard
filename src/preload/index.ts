@@ -28,6 +28,7 @@ const electronAPI: IpcApi = {
   testConnection: (p, candidateKey) =>
     ipcRenderer.invoke(IPC_CHANNELS.testConnection, p, candidateKey),
   saveKey: (p, key) => ipcRenderer.invoke(IPC_CHANNELS.saveKey, p, key),
+  setActiveProvider: (p) => ipcRenderer.invoke(IPC_CHANNELS.setActiveProvider, p),
   deleteKeys: (p) => ipcRenderer.invoke(IPC_CHANNELS.deleteKeys, p),
   setEngineEnabled: (enabled) => ipcRenderer.invoke(IPC_CHANNELS.setEngineEnabled, enabled),
   getProviderStatus: () => ipcRenderer.invoke(IPC_CHANNELS.getProviderStatus),

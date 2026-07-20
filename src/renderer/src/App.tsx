@@ -34,7 +34,8 @@ function App(): React.JSX.Element {
   const [providerStatus, setProviderStatus] = useState<{
     provider: Provider | null
     hasKey: boolean
-  }>({ provider: null, hasKey: false })
+    savedProviders: Provider[]
+  }>({ provider: null, hasKey: false, savedProviders: [] })
 
   const [bobsReview, setBobsReview] = useState<BobsResult | null>(null)
   const [reviewing, setReviewing] = useState(false)
@@ -169,8 +170,16 @@ function App(): React.JSX.Element {
     }
   }
 
-  const handleSettingsStatusChange = (provider: Provider | null, hasKey: boolean): void => {
-    setProviderStatus({ provider, hasKey })
+  const handleSettingsStatusChange = (
+    provider: Provider | null,
+    hasKey: boolean,
+    savedProviders?: Provider[]
+  ): void => {
+    setProviderStatus((prev) => ({
+      provider,
+      hasKey,
+      savedProviders: savedProviders ?? prev.savedProviders
+    }))
   }
 
   const aiStatusLabel = (): string => {
@@ -303,6 +312,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
         <SettingsScreen
           initialProvider={providerStatus.provider}
           initialHasKey={providerStatus.hasKey}
+          initialSavedProviders={providerStatus.savedProviders}
           onClose={() => setScreen(activeReport ? 'editor' : 'list')}
           onStatusChange={handleSettingsStatusChange}
         />

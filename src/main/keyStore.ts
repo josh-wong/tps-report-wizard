@@ -21,8 +21,9 @@ export interface KeyStore {
   saveKey(provider: Provider, key: string): void
   getKey(provider: Provider): string | null
   setProvider(provider: Provider): void
+  setActiveProvider(provider: Provider): boolean
   setEnabled(enabled: boolean): void
-  getStatus(): { provider: Provider | null; hasKey: boolean }
+  getStatus(): { provider: Provider | null; hasKey: boolean; savedProviders: Provider[] }
   deleteKey(provider: Provider): boolean
 }
 
@@ -56,6 +57,16 @@ export function createKeyStore(): KeyStore {
       store.set('provider', provider)
     },
 
+    // Switches which saved key is active without requiring the user to
+    // re-enter it. Only succeeds if a key already exists for that provider,
+    // otherwise callers should route the user through saveKey instead.
+    setActiveProvider(provider: Provider): boolean {
+      const encryptedKeys = store.get('encryptedKeys')
+      if (!encryptedKeys[provider]) return false
+      store.set('provider', provider)
+      return true
+    },
+
     setEnabled(enabled: boolean): void {
       store.set('enabled', enabled)
     },
@@ -75,12 +86,15 @@ export function createKeyStore(): KeyStore {
       return true
     },
 
-    getStatus(): { provider: Provider | null; hasKey: boolean } {
+    getStatus(): { provider: Provider | null; hasKey: boolean; savedProviders: Provider[] } {
       const provider = store.get('provider')
-      if (!provider || !store.get('enabled')) return { provider: null, hasKey: false }
+      const savedProviders = Object.keys(store.get('encryptedKeys')) as Provider[]
+      if (!provider || !store.get('enabled')) {
+        return { provider: null, hasKey: false, savedProviders }
+      }
       const encryptedKeys = store.get('encryptedKeys')
       const hasKey = !!encryptedKeys[provider]
-      return { provider: provider as Provider | null, hasKey }
+      return { provider: provider as Provider | null, hasKey, savedProviders }
     }
   }
 }

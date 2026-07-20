@@ -157,6 +157,11 @@ export function registerReportIpcHandlers(
     keyStore.setEnabled(true)
   })
 
+  ipcMain.handle(IPC_CHANNELS.setActiveProvider, (_event, p: unknown) => {
+    if (!isValidProviderConfig(p)) throw new Error('Invalid provider config')
+    return keyStore.setActiveProvider(p.provider)
+  })
+
   ipcMain.handle(IPC_CHANNELS.deleteKeys, (_event, p: unknown) => {
     if (!isValidProviderConfig(p)) throw new Error('Invalid provider config')
     return keyStore.deleteKey(p.provider)
