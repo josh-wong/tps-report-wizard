@@ -98,9 +98,14 @@ function SettingsScreen({
     try {
       const success = await window.electronAPI.deleteKeys({ provider })
       if (success) {
-        onStatusChange(null, false)
+        const status = await window.electronAPI.getProviderStatus()
+        onStatusChange(status.provider, status.hasKey)
         setSaveMessage('Key deleted.')
-        setUseAi(false)
+        if (status.provider) {
+          setProvider(status.provider)
+        } else {
+          setUseAi(false)
+        }
       } else {
         setSaveMessage('Failed to delete key.')
       }

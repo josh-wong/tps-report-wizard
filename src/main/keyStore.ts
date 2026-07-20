@@ -69,7 +69,8 @@ export function createKeyStore(): KeyStore {
       store.set('encryptedKeys', newKeys)
 
       if (store.get('provider') === provider) {
-        store.set('provider', null)
+        const remaining = (Object.keys(newKeys) as Provider[])[0] ?? null
+        store.set('provider', remaining)
       }
       return true
     },
