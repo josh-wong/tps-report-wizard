@@ -94,12 +94,17 @@ function SettingsScreen({
     // provider immediately instead of forcing the user to re-enter or
     // delete a key just to use the one they already have on file.
     if (savedProviders.includes(p)) {
-      void window.electronAPI.setActiveProvider({ provider: p }).then((switched) => {
-        if (switched) {
-          setActiveProviderState(p)
-          onStatusChange(p, true, savedProviders)
-        }
-      })
+      window.electronAPI
+        .setActiveProvider({ provider: p })
+        .then((switched) => {
+          if (switched) {
+            setActiveProviderState(p)
+            onStatusChange(p, true, savedProviders)
+          } else {
+            setSaveMessage('Failed to switch provider.')
+          }
+        })
+        .catch(() => setSaveMessage('Failed to switch provider.'))
     }
   }
 
