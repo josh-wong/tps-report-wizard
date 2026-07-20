@@ -22,7 +22,8 @@ nsis:
   createDesktopShortcut: always
 mac:
   entitlementsInherit: buildResources/entitlements.mac.plist
-  notarize: false
+  hardenedRuntime: true
+  notarize: true
 dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
