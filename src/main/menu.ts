@@ -64,6 +64,19 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
     ]
   }
 
+  const editMenu: MenuItemConstructorOptions = {
+    label: '&Edit',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'selectAll' }
+    ]
+  }
+
   const helpMenu: MenuItemConstructorOptions = {
     label: '&Help',
     submenu: [
@@ -79,7 +92,7 @@ export function createAppMenu(mainWindow: BrowserWindow, state: MenuState): Menu
     ]
   }
 
-  const template: MenuItemConstructorOptions[] = [fileMenu, helpMenu]
+  const template: MenuItemConstructorOptions[] = [fileMenu, editMenu, helpMenu]
 
   return Menu.buildFromTemplate(template)
 }

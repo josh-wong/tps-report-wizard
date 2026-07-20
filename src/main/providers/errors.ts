@@ -17,18 +17,17 @@ export function humanizeError(err: unknown): string {
   }
 
   // Check structured error properties first (OpenAI/Anthropic SDKs)
-  if (
-    status === 401 ||
-    errorType === 'authentication_error' ||
-    errorType === 'invalid_request_error'
-  ) {
+  if (status === 401 || errorType === 'authentication_error') {
     return "Yeaaah… that key doesn't seem to be working. If you could go ahead and check it."
   }
   if (status === 429 || errorType === 'rate_limit_error') {
     return 'The Bobs are in a meeting. Rate limit hit—try again in a moment.'
   }
-  if (status === 402 || status === 400 || errorType === 'billing_error') {
+  if (status === 402 || errorType === 'billing_error') {
     return 'Your account appears to be out of quota. Check your billing details.'
+  }
+  if (status === 400 || errorType === 'invalid_request_error') {
+    return 'The request was rejected by the AI provider. Check your model settings and try again.'
   }
 
   // Fall back to message string matching

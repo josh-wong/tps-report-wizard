@@ -162,7 +162,7 @@ function ReportEditorScreen({
             value={report.seed}
             onChange={(e) => update({ seed: e.target.value })}
           />
-          <button type="button" onClick={onGenerate} disabled={generating}>
+          <button type="button" onClick={onGenerate} disabled={generating || !report.seed.trim()}>
             {generating ? 'Generating…' : '✨ Generate'}
           </button>
         </div>
