@@ -11,7 +11,7 @@ export function CloseConfirmDialog({
     <div className="modal-overlay" onClick={onFinishIt}>
       <div className="dialog-window" onClick={(e) => e.stopPropagation()}>
         <div className="title-bar">
-          <div className="title-bar-text">Initech TPS Report Wizard 99</div>
+          <div className="title-bar-text">TPS Report Wizard 99</div>
           <div className="title-bar-controls">
             <button onClick={onFinishIt} aria-label="Close"></button>
           </div>

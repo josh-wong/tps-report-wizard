@@ -121,7 +121,7 @@ export class TrayNagController {
     // Notification actions render on macOS; other platforms fall back to
     // click-to-focus only, which still satisfies "Finish it" (FR-6c.4).
     const notification = new Notification({
-      title: "Initech TPS Report Wizard 99",
+      title: "TPS Report Wizard 99",
       body: message,
       actions: [
         { type: 'button', text: 'Finish it' },
@@ -166,7 +166,7 @@ export class TrayNagController {
   private createTray(): void {
     const trayIcon = nativeImage.createFromPath(trayIconSource).resize({ width: 16, height: 16 })
     this.tray = new Tray(trayIcon)
-    this.tray.setToolTip("Initech TPS Report Wizard 99")
+    this.tray.setToolTip("TPS Report Wizard 99")
     // Deliberately don't use setContextMenu—on macOS that makes every
     // click (not just right-click) pop the menu instead of firing 'click',
     // so a single tap to restore the window opens the menu too. Building

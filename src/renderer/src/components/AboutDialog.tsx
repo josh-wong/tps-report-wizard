@@ -15,7 +15,7 @@ export function AboutDialog({ onClose }: AboutDialogProps): React.JSX.Element {
         <div className="title-bar">
           <div className="title-bar-heading">
             <TitleBarIcon />
-            <div className="title-bar-text">About Initech TPS Report Wizard 99</div>
+            <div className="title-bar-text">About TPS Report Wizard 99</div>
           </div>
           <div className="title-bar-controls">
             <button onClick={onClose} aria-label="Close"></button>
@@ -26,7 +26,7 @@ export function AboutDialog({ onClose }: AboutDialogProps): React.JSX.Element {
             <img className="about-icon" src={`${import.meta.env.BASE_URL}app-icon-64.png`} alt="" />
             <div className="about-text">
               <p>
-                <strong>Initech TPS Report Wizard 99</strong>
+                <strong>TPS Report Wizard 99</strong>
               </p>
               <p className="about-description">
                 A retro-styled TPS report generator. Fan project inspired by the 1999 film Office Space.
