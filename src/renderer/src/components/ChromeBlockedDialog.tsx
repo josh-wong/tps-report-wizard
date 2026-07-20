@@ -1,8 +1,8 @@
-interface ExitBlockedDialogProps {
+interface ChromeBlockedDialogProps {
   onClose: () => void
 }
 
-export function ExitBlockedDialog({ onClose }: ExitBlockedDialogProps): React.JSX.Element {
+export function ChromeBlockedDialog({ onClose }: ChromeBlockedDialogProps): React.JSX.Element {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="dialog-window" onClick={(e) => e.stopPropagation()}>
@@ -14,9 +14,9 @@ export function ExitBlockedDialog({ onClose }: ExitBlockedDialogProps): React.JS
         </div>
         <div className="window-body">
           <p>
-            Yeah, if you could just go ahead and close this tab yourself&mdash;that&apos;d be great.
+            Yeeeah, if you could just go ahead and not minimize, maximize, or close this
+            window&mdash;that&apos;d be greeeat.
           </p>
-          <p>Browser security won&apos;t let me do it for you.</p>
         </div>
         <div className="dialog-actions about-actions">
           <button onClick={onClose} className="primary-button">

@@ -1,5 +1,5 @@
 appId: com.initech.tps-report-wizard
-productName: Initech TPS Report Wizard 99
+productName: TPS Report Wizard 99
 directories:
   buildResources: buildResources
 files:
@@ -22,7 +22,8 @@ nsis:
   createDesktopShortcut: always
 mac:
   entitlementsInherit: buildResources/entitlements.mac.plist
-  notarize: false
+  hardenedRuntime: true
+  notarize: true
 dmg:
   artifactName: ${name}-${version}.${ext}
 linux:

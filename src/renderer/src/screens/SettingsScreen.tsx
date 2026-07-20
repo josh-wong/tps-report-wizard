@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import type { Provider } from '@shared/types'
 
+const PROVIDER_LABELS: Record<Provider, string> = {
+  openai: 'OpenAI',
+  claude: 'Claude'
+}
+
 interface SettingsScreenProps {
   initialProvider: Provider | null
   initialHasKey: boolean
@@ -84,7 +89,7 @@ function SettingsScreen({
   }
 
   const handleDeleteKey = async (): Promise<void> => {
-    if (!window.confirm(`Delete the ${provider} API key?`)) return
+    if (!window.confirm(`Delete the ${PROVIDER_LABELS[provider]} API key?`)) return
     setDeleting(true)
     setSaveMessage(null)
     setTestResult(null)
@@ -126,7 +131,7 @@ function SettingsScreen({
             checked={useAi}
             onChange={(e) => handleUseAiChange(e.target.checked)}
           />
-          <label htmlFor="engine-ai">Use my AI key (desktop only)</label>
+          <label htmlFor="engine-ai">Use my AI API key (desktop only)</label>
         </div>
       </fieldset>
 

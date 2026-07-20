@@ -2,6 +2,7 @@
 import { SAMPLE_REPORTS } from '@shared/sampleReports'
 import type { ReportStore } from '@shared/store'
 import type { Report } from '@shared/types'
+import { migrateReport } from '@shared/migrateReport'
 
 const STORAGE_KEY = 'tps-reports'
 const SEEDED_KEY = 'tps-seeded'
@@ -29,7 +30,11 @@ export class LocalStorageBackend implements ReportStore {
       localStorage.setItem(SEEDED_KEY, '1')
       return [...SAMPLE_REPORTS]
     }
-    return reports
+    const migrated = reports.map(migrateReport)
+    if (migrated.some((r, i) => r !== reports[i])) {
+      writeAll(migrated)
+    }
+    return migrated
   }
 
   async get(id: string): Promise<Report | null> {
