@@ -101,6 +101,7 @@ function SettingsScreen({
         const status = await window.electronAPI.getProviderStatus()
         onStatusChange(status.provider, status.hasKey)
         setSaveMessage('Key deleted.')
+        setApiKey('')
         if (status.provider) {
           setProvider(status.provider)
         } else {
