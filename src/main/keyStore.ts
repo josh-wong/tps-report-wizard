@@ -7,7 +7,7 @@ interface KeyStoreData {
   // Encrypted key bytes stored as base64 strings, one per provider.
   encryptedKeys: Partial<Record<Provider, string>>
   // Whether the user wants the AI engine active. Tracked separately from key
-  // presence so unchecking "Use my AI key" persists across restarts instead
+  // presence so unchecking "Use my AI API key" persists across restarts instead
   // of reverting to AI mode just because a key still exists in safeStorage.
   enabled: boolean
 }

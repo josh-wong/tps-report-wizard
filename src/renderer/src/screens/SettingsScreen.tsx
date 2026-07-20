@@ -126,7 +126,7 @@ function SettingsScreen({
             checked={useAi}
             onChange={(e) => handleUseAiChange(e.target.checked)}
           />
-          <label htmlFor="engine-ai">Use my AI key (desktop only)</label>
+          <label htmlFor="engine-ai">Use my AI API key (desktop only)</label>
         </div>
       </fieldset>
 
