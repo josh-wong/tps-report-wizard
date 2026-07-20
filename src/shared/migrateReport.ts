@@ -1,7 +1,9 @@
 import { AUTHORS, type Author, type Report } from './types'
 
 // Pre-#13 schema used a free-text `author` display name plus a separate
-// `tone` enum that actually drove the generated voice.
+// `tone` enum that actually drove the generated voice. The pre-#13 tone selector only ever
+// offered these 4 values, so this map is intentionally a subset of `AUTHORS` — any other
+// `tone` (or a missing one) falls back to 'peter' below.
 const LEGACY_TONE_TO_AUTHOR: Record<string, Author> = {
   corporate: 'peter',
   lumbergh: 'lumbergh',
