@@ -3,6 +3,7 @@ import Store from 'electron-store'
 import { SAMPLE_REPORTS } from '@shared/sampleReports'
 import type { ReportStore } from '@shared/store'
 import type { Report } from '@shared/types'
+import { migrateReport } from '@shared/migrateReport'
 
 interface ReportsSchema {
   reports: Report[]
@@ -25,7 +26,11 @@ export class ElectronStoreBackend implements ReportStore {
       this.store.set({ reports: SAMPLE_REPORTS, seeded: true })
       return [...SAMPLE_REPORTS]
     }
-    return reports
+    const migrated = reports.map(migrateReport)
+    if (migrated.some((r, i) => r !== reports[i])) {
+      this.store.set('reports', migrated)
+    }
+    return migrated
   }
 
   async get(id: string): Promise<Report | null> {
