@@ -1,6 +1,6 @@
 {
   "name": "tps-report-wizard",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Initech TPS Report Wizard 99 — a tongue-in-cheek, retro-styled desktop app (and web \"lite\" version) for generating TPS reports.",
   "main": "./out/main/index.js",
   "author": "josh-wong",
