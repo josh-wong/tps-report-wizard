@@ -224,6 +224,18 @@ ul.tree-view {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cost-estimate {
+  white-space: nowrap;
 }
 
 .seed-row * {
