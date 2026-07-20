@@ -16,6 +16,7 @@ import { TitleBarIcon } from './components/TitleBarIcon'
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog'
 import { CloseConfirmDialog } from './components/CloseConfirmDialog'
 import { ExitBlockedDialog } from './components/ExitBlockedDialog'
+import { ChromeBlockedDialog } from './components/ChromeBlockedDialog'
 
 type Screen = 'list' | 'editor' | 'settings' | 'bobs-review'
 
@@ -42,6 +43,7 @@ function App(): React.JSX.Element {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false)
   const [showCloseConfirm, setShowCloseConfirm] = useState(false)
   const [showExitBlocked, setShowExitBlocked] = useState(false)
+  const [showChromeBlocked, setShowChromeBlocked] = useState(false)
   const exitBlockedTimeoutRef = useRef<number | undefined>(undefined)
 
   useEffect(() => {
@@ -260,9 +262,9 @@ Ctrl+Q (Cmd+Q)    - Quit`
           </div>
         </div>
         <div className="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close"></button>
+          <button aria-label="Minimize" onClick={() => setShowChromeBlocked(true)}></button>
+          <button aria-label="Maximize" onClick={() => setShowChromeBlocked(true)}></button>
+          <button aria-label="Close" onClick={() => setShowChromeBlocked(true)}></button>
         </div>
       </div>
       <MenuBar
@@ -359,6 +361,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
         />
       )}
       {showExitBlocked && <ExitBlockedDialog onClose={() => setShowExitBlocked(false)} />}
+      {showChromeBlocked && <ChromeBlockedDialog onClose={() => setShowChromeBlocked(false)} />}
 
       <div className="status-bar">
         <p className="status-bar-field">{aiStatusLabel()}</p>
