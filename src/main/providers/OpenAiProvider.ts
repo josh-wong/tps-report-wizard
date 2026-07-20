@@ -26,7 +26,7 @@ export class OpenAiProvider implements LlmProvider {
     const res = await withRateLimitRetry(() =>
       this.client.chat.completions.create({
         model: this.model,
-        max_tokens: maxTokens,
+        max_completion_tokens: maxTokens,
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: user }

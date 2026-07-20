@@ -162,23 +162,25 @@ function ReportEditorScreen({
             value={report.seed}
             onChange={(e) => update({ seed: e.target.value })}
           />
-          <button type="button" onClick={onGenerate} disabled={generating}>
+          <button type="button" onClick={onGenerate} disabled={generating || !report.seed.trim()}>
             {generating ? 'Generating…' : '✨ Generate'}
           </button>
         </div>
-        {provider && report.seed.trim() && (
-          <span className="note">
-            Estimated cost:{' '}
-            {formatCost(estimateGenerationCost(report.seed, report.author, provider))} (actual may
-            vary)
-          </span>
-        )}
       </div>
 
       <div className="field-row-stacked">
-        <label htmlFor="body">
-          Report body – <span className="note">Generated output, editable</span>
-        </label>
+        <div className="label-row">
+          <label htmlFor="body">
+            Report body – <span className="note">Generated output, editable</span>
+          </label>
+          {provider && report.seed.trim() && (
+            <span className="note cost-estimate">
+              Estimated cost:{' '}
+              {formatCost(estimateGenerationCost(report.seed, report.author, provider))} (actual
+              may vary)
+            </span>
+          )}
+        </div>
         <textarea
           id="body"
           rows={7}

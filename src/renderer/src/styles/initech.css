@@ -224,6 +224,18 @@ ul.tree-view {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cost-estimate {
+  white-space: nowrap;
 }
 
 .seed-row * {
@@ -442,6 +454,10 @@ ul.tree-view {
 }
 
 .about-actions button {
+  min-width: 140px;
+}
+
+.delete-key-confirm-actions button {
   min-width: 140px;
 }
 
