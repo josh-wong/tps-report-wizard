@@ -125,7 +125,7 @@ Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2
 
 ### 6.5 Corporate Nonsense Engine – local fallback (P0)
 - FR-16 – A fully offline generator that stitches buzzwords and boilerplate into grammatically valid, semantically empty corporate prose.
-- FR-17 – Honors the selected tone via separate word-banks/templates.
+- FR-17 – Honors the selected author via separate word-banks/templates.
 - FR-18 – Available on **both** desktop and web builds. Is the *only* engine on web.
 - FR-19 – Produces output of a length/shape comparable to AI output (so the two are interchangeable in the UI).
 
@@ -159,7 +159,7 @@ Priority: **P0** = must ship in v1, **P1** = strongly desired in v1, **P2** = v2
 
 ### 6.9 Platform degradation shim (P0)
 - FR-29 – The renderer must **feature-detect** the Electron environment and gracefully hide/disable anything desktop-only when running as a plain webpage: provider settings, `safeStorage`, IPC-backed actions, and AI generation.
-- FR-30 – On web, the visible surface is: New Report (local engine), Cover Sheet, tone presets, Bobs (canned), and PDF export.
+- FR-30 – On web, the visible surface is: New Report (local engine), Cover Sheet, Author selector, Bobs (canned), and PDF export.
 - FR-31 – No web code path may request, accept, store, or transmit an API key.
 
 ### 6.10 Flair (P2 – v2)

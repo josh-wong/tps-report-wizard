@@ -7,7 +7,7 @@ A tongue-in-cheek, retro-styled app for generating TPS reports. **Fan project in
 - **Core workflow:** Seed a report with a one-line description, generate the body (AI or local), edit the result, attach the cover sheet, and export to PDF.
 - **Desktop (Electron):** Optional AI providers (OpenAI or Claude); API keys stored locally and encrypted.
 - **Web "lite":** Static version that uses the local Corporate Nonsense Engine—no AI functionality.
-- **Tones:** Presets include Lumbergh, Milton, and the Bobs to control voice/style.
+- **Authors:** Choose the report's voice from seven characters (Peter Gibbons, Bill Lumbergh, Milton Waddams, Michael Bolton, Samir Nagheenanajar, Joanna, and Tom Smykowski); the Bobs appear only as reviewers in Bobs Review mode.
 - **Cover sheet enforcement:** Cover sheet is ON by default; export and reviews require attaching it (the joke).
 - **Persistence:** Local drafts and filed reports are saved for reopening.
 - **Export:** PDF export supported on desktop and web builds.
