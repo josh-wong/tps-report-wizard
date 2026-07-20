@@ -46,14 +46,6 @@ jobs:
           fi
           echo "APPLE_API_KEY=/tmp/apple_api_key.p8" >> "$GITHUB_ENV"
 
-      - name: Debug Apple API key structure (temporary)
-        if: matrix.os == 'macos-latest'
-        run: |
-          echo "Line count: $(wc -l < /tmp/apple_api_key.p8)"
-          echo "First line (first 30 chars): $(sed -n '1p' /tmp/apple_api_key.p8 | cut -c1-30)"
-          echo "Last line (first 30 chars): $(tail -1 /tmp/apple_api_key.p8 | cut -c1-30)"
-          openssl pkey -in /tmp/apple_api_key.p8 -noout -text > /dev/null 2>&1 && echo "openssl: VALID key" || echo "openssl: INVALID key"
-
       - name: Build and package
         run: npm run ${{ matrix.script }} -- --publish never
         env:
