@@ -141,6 +141,17 @@ function App(): React.JSX.Element {
     }
   }
 
+  const handleExportPdf = async (): Promise<void> => {
+    if (!activeReport) return
+    setSaveError(null)
+    try {
+      await window.electronAPI.exportPdf(activeReport)
+    } catch (err) {
+      console.error('Export failed:', err)
+      setSaveError(err instanceof Error ? err.message : 'Export failed. Please try again.')
+    }
+  }
+
   const handleBack = (): void => {
     setActiveReport(null)
     setScreen('list')
@@ -202,16 +213,7 @@ function App(): React.JSX.Element {
       })
     )
     unsubscribe.push(window.menuAPI.onSaveReport(handleSave))
-    unsubscribe.push(
-      window.menuAPI.onExportPdf(async () => {
-        if (!activeReport) return
-        try {
-          await window.electronAPI.exportPdf(activeReport)
-        } catch (err) {
-          console.error('Export failed:', err)
-        }
-      })
-    )
+    unsubscribe.push(window.menuAPI.onExportPdf(handleExportPdf))
     unsubscribe.push(
       window.menuAPI.onPrint(() => {
         window.print()
@@ -287,14 +289,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
           }
         }}
         onSaveReport={handleSave}
-        onExportPdf={async () => {
-          if (!activeReport) return
-          try {
-            await window.electronAPI.exportPdf(activeReport)
-          } catch (err) {
-            console.error('Export failed:', err)
-          }
-        }}
+        onExportPdf={handleExportPdf}
         onPrint={() => window.print()}
         onSettings={() =>
           setScreen(screen === 'settings' ? (activeReport ? 'editor' : 'list') : 'settings')
