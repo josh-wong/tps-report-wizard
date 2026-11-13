@@ -11,9 +11,10 @@ import { TrayNagController } from './nag/trayNagController'
 import { createAppMenu, updateMenuState } from './menu'
 import type { MenuState } from './menu'
 import { IPC_CHANNELS } from '@shared/ipc'
+import { buildContentSecurityPolicy } from '@shared/csp'
 
-const CONTENT_SECURITY_POLICY =
-  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+// Strict in production; dev also allows the inline React Fast Refresh preamble.
+const CONTENT_SECURITY_POLICY = buildContentSecurityPolicy(is.dev)
 
 function createWindow(hasDraftPresent: () => boolean): BrowserWindow {
   // Create the browser window.
