@@ -141,18 +141,33 @@ function App(): React.JSX.Element {
     }
   }
 
+  const exportingRef = useRef(false)
+
   const handleExportPdf = async (): Promise<void> => {
-    if (!activeReport) return
+    if (!activeReport || exportingRef.current) return
+    if (!activeReport.coverSheet) {
+      setSaveError('Add a cover sheet before exporting. Open the report and use its Export button.')
+      return
+    }
+    exportingRef.current = true
     setSaveError(null)
     try {
       await window.electronAPI.exportPdf(activeReport)
     } catch (err) {
       console.error('Export failed:', err)
-      setSaveError(err instanceof Error ? err.message : 'Export failed. Please try again.')
+      // Electron prefixes invoke errors with "Error invoking remote method '...': Error: "
+      const message =
+        err instanceof Error
+          ? err.message.replace(/^Error invoking remote method '[^']*': (Error: )?/, '')
+          : ''
+      setSaveError(message || 'Export failed. Please try again.')
+    } finally {
+      exportingRef.current = false
     }
   }
 
   const handleBack = (): void => {
+    setSaveError(null)
     setActiveReport(null)
     setScreen('list')
   }
@@ -258,7 +273,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
     return () => {
       unsubscribe.forEach((fn) => fn())
     }
-  }, [activeReport, screen, handleNew, handleSave])
+  }, [activeReport, screen, handleNew, handleSave, handleExportPdf])
 
   return (
     <div className="window tps-window">
