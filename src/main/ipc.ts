@@ -13,6 +13,7 @@ import type {
   Verdict
 } from '@shared/types'
 import { AUTHORS, REPORT_STATUSES } from '@shared/types'
+import { PDF_PAGE_SIZE_INCHES } from './pdf/pageSize'
 import { buildSystemPrompt, buildBobsReviewSystem } from '@shared/authorPrompts'
 import { pickReviewer } from '@shared/reviewer'
 import { rollVerdict } from '@shared/verdict'
@@ -223,7 +224,7 @@ async function exportReportPdf(report: Report): Promise<{ path: string } | null>
     await offscreenWindow.loadURL(`data:text/html;base64,${Buffer.from(html).toString('base64')}`)
 
     const pdfBuffer = await offscreenWindow.webContents.printToPDF({
-      pageSize: { height: 279600, width: 215900 },
+      pageSize: PDF_PAGE_SIZE_INCHES,
       printBackground: true
     })
 
