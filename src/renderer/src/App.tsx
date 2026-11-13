@@ -141,7 +141,33 @@ function App(): React.JSX.Element {
     }
   }
 
+  const exportingRef = useRef(false)
+
+  const handleExportPdf = async (): Promise<void> => {
+    if (!activeReport || exportingRef.current) return
+    if (!activeReport.coverSheet) {
+      setSaveError('Add a cover sheet before exporting. Open the report and use its Export button.')
+      return
+    }
+    exportingRef.current = true
+    setSaveError(null)
+    try {
+      await window.electronAPI.exportPdf(activeReport)
+    } catch (err) {
+      console.error('Export failed:', err)
+      // Electron prefixes invoke errors with "Error invoking remote method '...': Error: "
+      const message =
+        err instanceof Error
+          ? err.message.replace(/^Error invoking remote method '[^']*': (Error: )?/, '')
+          : ''
+      setSaveError(message || 'Export failed. Please try again.')
+    } finally {
+      exportingRef.current = false
+    }
+  }
+
   const handleBack = (): void => {
+    setSaveError(null)
     setActiveReport(null)
     setScreen('list')
   }
@@ -202,16 +228,7 @@ function App(): React.JSX.Element {
       })
     )
     unsubscribe.push(window.menuAPI.onSaveReport(handleSave))
-    unsubscribe.push(
-      window.menuAPI.onExportPdf(async () => {
-        if (!activeReport) return
-        try {
-          await window.electronAPI.exportPdf(activeReport)
-        } catch (err) {
-          console.error('Export failed:', err)
-        }
-      })
-    )
+    unsubscribe.push(window.menuAPI.onExportPdf(handleExportPdf))
     unsubscribe.push(
       window.menuAPI.onPrint(() => {
         window.print()
@@ -256,7 +273,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
     return () => {
       unsubscribe.forEach((fn) => fn())
     }
-  }, [activeReport, screen, handleNew, handleSave])
+  }, [activeReport, screen, handleNew, handleSave, handleExportPdf])
 
   return (
     <div className="window tps-window">
@@ -287,14 +304,7 @@ Ctrl+Q (Cmd+Q)    - Quit`
           }
         }}
         onSaveReport={handleSave}
-        onExportPdf={async () => {
-          if (!activeReport) return
-          try {
-            await window.electronAPI.exportPdf(activeReport)
-          } catch (err) {
-            console.error('Export failed:', err)
-          }
-        }}
+        onExportPdf={handleExportPdf}
         onPrint={() => window.print()}
         onSettings={() =>
           setScreen(screen === 'settings' ? (activeReport ? 'editor' : 'list') : 'settings')
